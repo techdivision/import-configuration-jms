@@ -65,6 +65,8 @@ class Configuration implements ConfigurationInterface
      * The operation name to use.
      *
      * @var string
+     * @Type("string")
+     * @SerializedName("operation-name")
      */
     protected $operationName;
 
@@ -72,6 +74,8 @@ class Configuration implements ConfigurationInterface
      * The entity type code to use.
      *
      * @var string
+     * @Type("string")
+     * @SerializedName("entity-type-code")
      */
     protected $entityTypeCode;
 
@@ -79,6 +83,8 @@ class Configuration implements ConfigurationInterface
      * The Magento installation directory.
      *
      * @var string
+     * @Type("string")
+     * @SerializedName("installation-dir")
      */
     protected $installationDir;
 
@@ -86,6 +92,8 @@ class Configuration implements ConfigurationInterface
      * The source directory that has to be watched for new files.
      *
      * @var string
+     * @Type("string")
+     * @SerializedName("source-dir")
      */
     protected $sourceDir;
 
@@ -93,6 +101,8 @@ class Configuration implements ConfigurationInterface
      * The target directory with the files that has been imported.
      *
      * @var string
+     * @Type("string")
+     * @SerializedName("target-dir")
      */
     protected $targetDir;
 
