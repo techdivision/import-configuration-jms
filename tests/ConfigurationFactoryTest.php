@@ -33,6 +33,38 @@ class ConfigurationFactoryTest extends \PHPUnit_Framework_TestCase
 {
 
     /**
+     *
+     * {@inheritDoc}
+     * @see PHPUnit_Framework_TestCase::setUp()
+     */
+    protected function setUp()
+    {
+
+        // intialize the vendor directory
+        $vendorDirectory = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'vendor';
+
+        // the path of the JMS serializer directory, relative to the vendor directory
+        $jmsDirectory = DIRECTORY_SEPARATOR . 'jms' . DIRECTORY_SEPARATOR . 'serializer' . DIRECTORY_SEPARATOR . 'src';
+
+        // try to find the path to the JMS Serializer annotations
+        if (!file_exists($annotationDirectory = $vendorDirectory . DIRECTORY_SEPARATOR . $jmsDirectory)) {
+            // stop processing, if the JMS annotations can't be found
+            throw new \Exception(
+                sprintf(
+                    'The jms/serializer libarary can not be found in %s',
+                    $vendorDirectory
+                )
+            );
+        }
+
+        // register the autoloader for the JMS serializer annotations
+        \Doctrine\Common\Annotations\AnnotationRegistry::registerAutoloadNamespace(
+            'JMS\Serializer\Annotation',
+            $annotationDirectory
+        );
+    }
+
+    /**
      * Test's the factory() method.
      *
      * @return void
