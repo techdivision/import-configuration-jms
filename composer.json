@@ -1,32 +1,31 @@
 {
-	"name": "techdivision/import-configuration-jms",
-	"description": "Library providing a JMS based configuration implementation for the M2IF",
-	"minimum-stability": "alpha",
-	"license": "OSL-3.0",
-	"require": {
-		"php": ">=5.6.0",
-		"doctrine/dbal": "~2.0",
-		"jms/serializer": "~1.0",
-		"techdivision/import": "~1.0"
+	"name" : "techdivision/import-configuration-jms",
+	"description" : "Library providing a JMS based configuration implementation for the M2IF",
+	"minimum-stability" : "alpha",
+	"license" : "OSL-3.0",
+	"require" : {
+		"php" : ">=5.6.0",
+		"doctrine/dbal" : "~2.0",
+		"jms/serializer" : "~1.0",
+		"techdivision/import" : "~1.0"
 	},
-	"require-dev": {
-		"phpmd/phpmd": "2.5.*",
-		"phploc/phploc": "2.0.*",
-		"pdepend/pdepend": "2.0.*",
-		"phpunit/phpunit": "4.4.*",
-		"sebastian/phpcpd": "2.0.*",
-		"squizlabs/php_codesniffer": "2.2.*",
-		"consolidation/robo": "~1.0"
+	"require-dev" : {
+		"phpmd/phpmd" : "2.5.*",
+		"phploc/phploc" : "2.0.*",
+		"pdepend/pdepend" : "2.0.*",
+		"phpunit/phpunit" : "4.4.*",
+		"sebastian/phpcpd" : "2.0.*",
+		"squizlabs/php_codesniffer" : "2.2.*",
+		"consolidation/robo" : "~1.0"
 	},
-	"authors": [
-		{
-			"name": "Tim Wagner",
-			"email": "t.wagner@techdivision.com"
+	"authors" : [{
+			"name" : "Tim Wagner",
+			"email" : "t.wagner@techdivision.com"
 		}
 	],
-	"autoload": {
-		"psr-4": {
-			"TechDivision\\Import\\Configuration\\Jms\\": [
+	"autoload" : {
+		"psr-4" : {
+			"TechDivision\\Import\\Configuration\\Jms\\" : [
 				"src/",
 				"tests/"
 			]
