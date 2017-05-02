@@ -1,3 +1,13 @@
+# Version 1.0.0-beta2
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Add getMultipleValueDelimiter() method to Configuration implementation
+
 # Version 1.0.0-beta1
 
 ## Bugfixes

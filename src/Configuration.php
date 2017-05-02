@@ -167,6 +167,15 @@ class Configuration implements ConfigurationInterface
     protected $multipleFieldDelimiter = ',';
 
     /**
+     * The subject's multiple value delimiter character for fields with multiple values, defaults to (|).
+     *
+     * @var string
+     * @Type("string")
+     * @SerializedName("multiple-value-delimiter")
+     */
+    protected $multipleValueDelimiter = '|';
+
+    /**
      * The subject's delimiter character for CSV files.
      *
      * @var string
@@ -533,6 +542,16 @@ class Configuration implements ConfigurationInterface
     public function getMultipleFieldDelimiter()
     {
         return $this->multipleFieldDelimiter;
+    }
+
+    /**
+     * Return's the multiple value delimiter character to use, default value is comma (|).
+     *
+     * @return string The multiple value delimiter character
+     */
+    public function getMultipleValueDelimiter()
+    {
+        return $this->multipleValueDelimiter;
     }
 
     /**
