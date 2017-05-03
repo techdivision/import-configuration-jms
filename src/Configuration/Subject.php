@@ -104,6 +104,16 @@ class Subject implements SubjectConfigurationInterface
     }
 
     /**
+     * Return's the multiple value delimiter character to use, default value is comma (|).
+     *
+     * @return string The multiple value delimiter character
+     */
+    public function getMultipleValueDelimiter()
+    {
+        return $this->getConfiguration()->getMultipleValueDelimiter();
+    }
+
+    /**
      * Return's the delimiter character to use, default value is comma (,).
      *
      * @return string The delimiter character
