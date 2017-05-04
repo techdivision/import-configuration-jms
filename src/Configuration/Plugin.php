@@ -38,6 +38,13 @@ class Plugin implements PluginConfigurationInterface
 {
 
     /**
+     * The trait that provides parameter configuration functionality.
+     *
+     * @var \TechDivision\Import\Configuration\Jms\Configuration\ParamsTrait
+     */
+    use ParamsTrait;
+
+    /**
      * The main configuration.
      *
      * @var string
