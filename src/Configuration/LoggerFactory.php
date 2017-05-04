@@ -22,6 +22,7 @@ namespace TechDivision\Import\Configuration\Jms\Configuration;
 
 use TechDivision\Import\Utils\LoggerKeys;
 use TechDivision\Import\Utils\SwiftMailerKeys;
+use TechDivision\Import\ConfigurationInterface;
 use TechDivision\Import\Configuration\LoggerConfigurationInterface;
 
 /**
@@ -39,12 +40,15 @@ class LoggerFactory
     /**
      * Creates a new logger instance based on the passed logger configuration.
      *
+     * @param \TechDivision\Import\ConfigurationInterface                     $configuration       The system configuration
      * @param \TechDivision\Import\Configuration\LoggerConfigurationInterface $loggerConfiguration The logger configuration
      *
      * @return \Psr\Log\LoggerInterface The logger instance
      */
-    public static function factory(LoggerConfigurationInterface $loggerConfiguration)
-    {
+    public static function factory(
+        ConfigurationInterface $configuration,
+        LoggerConfigurationInterface $loggerConfiguration
+    ) {
 
         // initialize the processors
         $processors = array();
@@ -77,7 +81,7 @@ class LoggerFactory
 
                 // initialize the message template
                 $message = $swiftMailer->createMessage()
-                    ->setSubject($subject)
+                    ->setSubject(sprintf('[%s] %s', $configuration->getSystemName(), $subject))
                     ->setFrom($from)
                     ->setTo($to)
                     ->setBody('', $contentType);
