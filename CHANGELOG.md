@@ -1,3 +1,13 @@
+# Version 1.0.0-beta5
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Add system-name configuration option
+
 # Version 1.0.0-beta4
 
 ## Bugfixes

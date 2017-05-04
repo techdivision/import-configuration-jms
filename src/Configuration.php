@@ -62,6 +62,15 @@ class Configuration implements ConfigurationInterface
     );
 
     /**
+     * The system name to use.
+     *
+     * @var string
+     * @Type("string")
+     * @SerializedName("system-name")
+     */
+    protected $systemName;
+
+    /**
      * The operation name to use.
      *
      * @var string
@@ -306,6 +315,14 @@ class Configuration implements ConfigurationInterface
      * @SerializedName("extension-libraries")
      */
     protected $extensionLibraries = array();
+
+    /**
+     * Initializes the instance.
+     */
+    public function __construct()
+    {
+        $this->systemName = gethostname();
+    }
 
     /**
      * Return's the array with the plugins of the operation to use.
@@ -818,6 +835,28 @@ class Configuration implements ConfigurationInterface
     public function getPidFilename()
     {
         return $this->pidFilename;
+    }
+
+    /**
+     * Set's the systemm name to be used.
+     *
+     * @param string $systemName The system name to be used
+     *
+     * @return void
+     */
+    public function setSystemName($systemName)
+    {
+        $this->systemName = $systemName;
+    }
+
+    /**
+     * Return's the systemm name to be used.
+     *
+     * @return string The system name to be used
+     */
+    public function getSystemName()
+    {
+        return $this->systemName;
     }
 
     /**
