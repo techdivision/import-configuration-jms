@@ -317,14 +317,6 @@ class Configuration implements ConfigurationInterface
     protected $extensionLibraries = array();
 
     /**
-     * Initializes the instance.
-     */
-    public function __construct()
-    {
-        $this->systemName = gethostname();
-    }
-
-    /**
      * Return's the array with the plugins of the operation to use.
      *
      * @return \Doctrine\Common\Collections\ArrayCollection The ArrayCollection with the plugins
@@ -664,6 +656,16 @@ class Configuration implements ConfigurationInterface
     }
 
     /**
+     * Return's the number database configurations.
+     *
+     * @return integer The number of database configurations
+     */
+    public function countDatabases()
+    {
+        return $this->databases->count();
+    }
+
+    /**
      * Return's the database configuration.
      *
      * If an explicit DB ID is specified, the method tries to return the database with this ID. If
@@ -860,13 +862,15 @@ class Configuration implements ConfigurationInterface
     }
 
     /**
-     * Return's a collection with the path to additional vendor directories.
+     * Set's the collection with the path of the Magento Edition specific extension libraries.
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection The paths to additional vendor directories
+     * @param array $extensionLibraries The paths of the Magento Edition specific extension libraries
+     *
+     * @return void
      */
-    public function getAdditionalVendorDirs()
+    public function setExtensionLibraries(array $extensionLibraries)
     {
-        return $this->additionalVendorDirs;
+        $this->extensionLibraries = $extensionLibraries;
     }
 
     /**
@@ -877,5 +881,15 @@ class Configuration implements ConfigurationInterface
     public function getExtensionLibraries()
     {
         return $this->extensionLibraries;
+    }
+
+    /**
+     * Return's a collection with the path to additional vendor directories.
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection The paths to additional vendor directories
+     */
+    public function getAdditionalVendorDirs()
+    {
+        return $this->additionalVendorDirs;
     }
 }
