@@ -744,6 +744,18 @@ class Configuration implements ConfigurationInterface
     /**
      * The directory where the archives will be stored.
      *
+     * @param string $archiveDir The archive directory
+     *
+     * @return void
+     */
+    public function setArchiveDir($archiveDir)
+    {
+        $this->archiveDir = $archiveDir;
+    }
+
+    /**
+     * The directory where the archives will be stored.
+     *
      * @return string The archive directory
      */
     public function getArchiveDir()
