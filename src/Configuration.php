@@ -732,6 +732,18 @@ class Configuration implements ConfigurationInterface
     }
 
     /**
+     * Set's the flag that import artefacts have to be archived or not.
+     *
+     * @param boolean $archiveArtefacts TRUE if artefacts have to be archived, else FALSE
+     *
+     * @return void
+     */
+    public function setArchiveArtefacts($archiveArtefacts)
+    {
+        $this->archiveArtefacts = $archiveArtefacts;
+    }
+
+    /**
      * Return's the TRUE if the import artefacts have to be archived.
      *
      * @return boolean TRUE if the import artefacts have to be archived
