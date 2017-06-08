@@ -1,3 +1,13 @@
+# Version 1.0.0-beta8
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Add setArchiveArtefacts() method to Configuration class
+
 # Version 1.0.0-beta7
 
 ## Bugfixes
