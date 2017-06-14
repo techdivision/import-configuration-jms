@@ -1,3 +1,13 @@
+# Version 1.0.0-beta9
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Use Robo for Travis-CI build process
+
 # Version 1.0.0-beta8
 
 ## Bugfixes
