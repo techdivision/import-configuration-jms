@@ -1,3 +1,14 @@
+# Version 1.0.0-beta10
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Refactory ConfigurationFactory::factory() method from static non-static
+* ConfigurationFactory now implements ConfigurationFactoryInterface
+
 # Version 1.0.0-beta9
 
 ## Bugfixes
