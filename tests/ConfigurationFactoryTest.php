@@ -20,6 +20,8 @@
 
 namespace TechDivision\Import\Configuration\Jms;
 
+use Doctrine\DBAL\Configuration;
+
 /**
  * Test class for the JMS configuration factory.
  *
@@ -31,6 +33,13 @@ namespace TechDivision\Import\Configuration\Jms;
  */
 class ConfigurationFactoryTest extends \PHPUnit_Framework_TestCase
 {
+
+    /**
+     * The configuration factory instance.
+     *
+     * @var \TechDivision\Import\Configuration\Jms\ConfigurationFactory
+     */
+    protected $configurationFactory;
 
     /**
      *
@@ -62,6 +71,9 @@ class ConfigurationFactoryTest extends \PHPUnit_Framework_TestCase
             'JMS\Serializer\Annotation',
             $annotationDirectory
         );
+
+        // initialize the configuration factory instance we want to test
+        $this->configurationFactory = new ConfigurationFactory();
     }
 
     /**
@@ -73,11 +85,11 @@ class ConfigurationFactoryTest extends \PHPUnit_Framework_TestCase
     {
 
         // load the configuration
-        $configuration = ConfigurationFactory::factory(
+        $configuration = $this->configurationFactory->factory(
             __DIR__ . DIRECTORY_SEPARATOR . '_files' . DIRECTORY_SEPARATOR . 'techdivision-import.json'
         );
 
         // query whether or not the configuration instance has the expected type
-        $this->assertInstanceOf(Configuration::class, $configuration);
+        $this->assertInstanceOf('TechDivision\Import\ConfigurationInterface', $configuration);
     }
 }

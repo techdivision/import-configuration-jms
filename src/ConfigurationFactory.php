@@ -21,6 +21,7 @@
 namespace TechDivision\Import\Configuration\Jms;
 
 use JMS\Serializer\SerializerBuilder;
+use TechDivision\Import\ConfigurationFactoryInterface;
 
 /**
  * The configuration factory implementation.
@@ -31,7 +32,7 @@ use JMS\Serializer\SerializerBuilder;
  * @link      https://github.com/techdivision/import-configuration-jms
  * @link      http://www.techdivision.com
  */
-class ConfigurationFactory
+class ConfigurationFactory implements ConfigurationFactoryInterface
 {
 
     /**
@@ -43,7 +44,7 @@ class ConfigurationFactory
      * @return \TechDivision\Import\Configuration\Jms\Configuration The configuration instance
      * @throws \Exception Is thrown, if the specified configuration file doesn't exist
      */
-    public static function factory($filename, $type = 'json')
+    public function factory($filename, $type = 'json')
     {
 
         // load the JSON data
@@ -52,8 +53,6 @@ class ConfigurationFactory
         }
 
         // initialize the JMS serializer, load and return the configuration
-        return SerializerBuilder::create()
-            ->build()
-            ->deserialize($jsonData, Configuration::class, $type);
+        return SerializerBuilder::create()->build()->deserialize($jsonData, Configuration::class, $type);
     }
 }
