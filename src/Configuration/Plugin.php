@@ -22,6 +22,8 @@ namespace TechDivision\Import\Configuration\Jms\Configuration;
 
 use JMS\Serializer\Annotation\Type;
 use JMS\Serializer\Annotation\SerializedName;
+use JMS\Serializer\Annotation\PostDeserialize;
+use Doctrine\Common\Collections\ArrayCollection;
 use TechDivision\Import\ConfigurationInterface;
 use TechDivision\Import\Configuration\PluginConfigurationInterface;
 
@@ -66,7 +68,7 @@ class Plugin implements PluginConfigurationInterface
      * @var \Doctrine\Common\Collections\ArrayCollection
      * @Type("ArrayCollection<TechDivision\Import\Configuration\Jms\Configuration\Subject>")
      */
-    protected $subjects = array();
+    protected $subjects;
 
     /**
      * The swift mailer configuration to use.
@@ -76,6 +78,21 @@ class Plugin implements PluginConfigurationInterface
      * @SerializedName("swift-mailer")
      */
     protected $swiftMailer;
+
+    /**
+     * Lifecycle callback that will be invoked after deserialization.
+     *
+     * @return void
+     * @PostDeserialize
+     */
+    public function postDeserialize()
+    {
+
+        // create an empty collection if no subjects has been specified
+        if ($this->subjects === null) {
+            $this->subjects = new ArrayCollection();
+        }
+    }
 
     /**
      * Set's the reference to the configuration instance.

@@ -21,6 +21,8 @@
 namespace TechDivision\Import\Configuration\Jms\Configuration;
 
 use JMS\Serializer\Annotation\Type;
+use JMS\Serializer\Annotation\PostDeserialize;
+use Doctrine\Common\Collections\ArrayCollection;
 use TechDivision\Import\Configuration\OperationConfigurationInterface;
 
 /**
@@ -60,6 +62,21 @@ class Operation implements OperationConfigurationInterface
     {
         if ($name != null) {
             $this->name = $name;
+        }
+    }
+
+    /**
+     * Lifecycle callback that will be invoked after deserialization.
+     *
+     * @return void
+     * @PostDeserialize
+     */
+    public function postDeserialize()
+    {
+
+        // create an empty collection if no plugins has been specified
+        if ($this->plugins === null) {
+            $this->plugins= new ArrayCollection();
         }
     }
 

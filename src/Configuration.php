@@ -22,7 +22,10 @@ namespace TechDivision\Import\Configuration\Jms;
 
 use Psr\Log\LogLevel;
 use JMS\Serializer\Annotation\Type;
+use JMS\Serializer\Annotation\Exclude;
 use JMS\Serializer\Annotation\SerializedName;
+use JMS\Serializer\Annotation\PostDeserialize;
+use JMS\Serializer\Annotation\ExclusionPolicy;
 use Doctrine\Common\Collections\ArrayCollection;
 use TechDivision\Import\ConfigurationInterface;
 use TechDivision\Import\Configuration\Jms\Configuration\Operation;
@@ -36,6 +39,8 @@ use TechDivision\Import\Configuration\DatabaseConfigurationInterface;
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      https://github.com/techdivision/import-configuration-jms
  * @link      http://www.techdivision.com
+ *
+ * @ExclusionPolicy("none")
  */
 class Configuration implements ConfigurationInterface
 {
@@ -51,6 +56,7 @@ class Configuration implements ConfigurationInterface
      * Mapping for boolean values passed on the console.
      *
      * @var array
+     * @Exclude
      */
     protected $booleanMapping = array(
         'true'  => true,
@@ -142,10 +148,10 @@ class Configuration implements ConfigurationInterface
     protected $databases;
 
     /**
-     * ArrayCollection with the information of the configured loggers.
+     * Array with the information of the configured loggers.
      *
-     * @var \Doctrine\Common\Collections\ArrayCollection
-     * @Type("ArrayCollection<TechDivision\Import\Configuration\Jms\Configuration\Logger>")
+     * @var array
+     * @Type("array")
      */
     protected $loggers = array();
 
@@ -155,7 +161,7 @@ class Configuration implements ConfigurationInterface
      * @var \Doctrine\Common\Collections\ArrayCollection
      * @Type("ArrayCollection<TechDivision\Import\Configuration\Jms\Configuration\Operation>")
      */
-    protected $operations = array();
+    protected $operations;
 
     /**
      * The source date format to use in the subject.
@@ -305,7 +311,7 @@ class Configuration implements ConfigurationInterface
      * @Type("ArrayCollection<TechDivision\Import\Configuration\Jms\Configuration\VendorDir>")
      * @SerializedName("additional-vendor-dirs")
      */
-    protected $additionalVendorDirs = array();
+    protected $additionalVendorDirs;
 
     /**
      * The array with the Magento Edition specific extension libraries.
@@ -915,5 +921,25 @@ class Configuration implements ConfigurationInterface
     public function getAdditionalVendorDirs()
     {
         return $this->additionalVendorDirs;
+    }
+
+    /**
+     * Lifecycle callback that will be invoked after deserialization.
+     *
+     * @return void
+     * @PostDeserialize
+     */
+    public function postDeserialize()
+    {
+
+        // create an empty collection if no loggers has been specified
+        if ($this->additionalVendorDirs === null) {
+            $this->additionalVendorDirs = new ArrayCollection();
+        }
+
+        // create an empty collection if no operations has been specified
+        if ($this->operations === null) {
+            $this->operations = new ArrayCollection();
+        }
     }
 }
