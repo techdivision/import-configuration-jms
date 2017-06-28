@@ -1,3 +1,13 @@
+# Version 1.0.0-beta11
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Add configuration implementations for import/export adapters
+
 # Version 1.0.0-beta10
 
 ## Bugfixes
