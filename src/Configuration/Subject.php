@@ -22,8 +22,11 @@ namespace TechDivision\Import\Configuration\Jms\Configuration;
 
 use JMS\Serializer\Annotation\Type;
 use JMS\Serializer\Annotation\SerializedName;
+use JMS\Serializer\Annotation\PostDeserialize;
 use TechDivision\Import\ConfigurationInterface;
 use TechDivision\Import\Configuration\SubjectConfigurationInterface;
+use TechDivision\Import\Configuration\Jms\Configuration\Subject\ImportAdapter;
+use TechDivision\Import\Configuration\Jms\Configuration\Subject\ExportAdapter;
 
 /**
  * The subject configuration implementation.
@@ -62,6 +65,14 @@ class Subject implements SubjectConfigurationInterface
     protected $prefix = 'magento-import';
 
     /**
+     * The file suffix for import files.
+     *
+     * @var string
+     * @Type("string")
+     */
+    protected $suffix = 'csv';
+
+    /**
      * The array with the subject's observers.
      *
      * @var array
@@ -92,6 +103,44 @@ class Subject implements SubjectConfigurationInterface
      * @SerializedName("ok-file-needed")
      */
     protected $okFileNeeded = false;
+
+    /**
+     * The import adapter configuration instance.
+     *
+     * @var \TechDivision\Import\Configuration\Subject\ImportAdapterConfigurationInterface
+     * @Type("TechDivision\Import\Configuration\Jms\Configuration\Subject\ImportAdapter")
+     * @SerializedName("import-adapter")
+     */
+    protected $importAdapter;
+
+    /**
+     * The export adapter configuration instance.
+     *
+     * @var \TechDivision\Import\Configuration\Subject\ExportAdapterConfigurationInterface
+     * @Type("TechDivision\Import\Configuration\Jms\Configuration\Subject\ExportAdapter")
+     * @SerializedName("export-adapter")
+     */
+    protected $exportAdapter;
+
+    /**
+     * Lifecycle callback that will be invoked after deserialization.
+     *
+     * @return void
+     * @PostDeserialize
+     */
+    public function postDeserialize()
+    {
+
+        // set a default import adatper if none has been configured
+        if ($this->importAdapter === null) {
+            $this->importAdapter = new ImportAdapter();
+        }
+
+        // set a default export adatper if none has been configured
+        if ($this->exportAdapter === null) {
+            $this->exportAdapter = new ExportAdapter();
+        }
+    }
 
     /**
      * Return's the multiple field delimiter character to use, default value is comma (,).
@@ -278,6 +327,28 @@ class Subject implements SubjectConfigurationInterface
     }
 
     /**
+     * Set's the suffix for the import files.
+     *
+     * @param string $suffix The suffix
+     *
+     * @return void
+     */
+    public function setSuffix($suffix)
+    {
+        $this->suffix = $suffix;
+    }
+
+    /**
+     * Return's the suffix for the import files.
+     *
+     * @return string The suffix
+     */
+    public function getSuffix()
+    {
+        return $this->suffix;
+    }
+
+    /**
      * Return's the array with the subject's observers.
      *
      * @return array The subject's observers
@@ -318,5 +389,25 @@ class Subject implements SubjectConfigurationInterface
     public function isOkFileNeeded()
     {
         return $this->okFileNeeded;
+    }
+
+    /**
+     * Return's the import adapter configuration instance.
+     *
+     * @return \TechDivision\Import\Subject\ImportAdapterConfigurationInterface The import adapter configuration instance
+     */
+    public function getImportAdapter()
+    {
+        return $this->importAdapter;
+    }
+
+    /**
+     * Return's the export adapter configuration instance.
+     *
+     * @return \TechDivision\Import\Subject\ExportAdapterConfigurationInterface The export adapter configuration instance
+     */
+    public function getExportAdapter()
+    {
+        return $this->exportAdapter;
     }
 }
