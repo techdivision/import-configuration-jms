@@ -1,3 +1,13 @@
+# Version 1.0.0-beta12
+
+## Bugfixes
+
+* Fixed invalid array + ArrayCollection initialization
+
+## Features
+
+* None
+
 # Version 1.0.0-beta11
 
 ## Bugfixes
