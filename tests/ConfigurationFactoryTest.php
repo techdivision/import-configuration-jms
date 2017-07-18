@@ -50,7 +50,7 @@ class ConfigurationFactoryTest extends \PHPUnit_Framework_TestCase
     {
 
         // intialize the vendor directory
-        $vendorDirectory = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'vendor';
+        $vendorDirectory = 'vendor';
 
         // the path of the JMS serializer directory, relative to the vendor directory
         $jmsDirectory = DIRECTORY_SEPARATOR . 'jms' . DIRECTORY_SEPARATOR . 'serializer' . DIRECTORY_SEPARATOR . 'src';

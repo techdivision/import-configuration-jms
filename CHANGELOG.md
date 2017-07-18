@@ -1,3 +1,13 @@
+# Version 1.0.0-beta13
+
+## Bugfixes
+
+* Update PHPUnit test to also support loading library JMS in library context
+
+## Features
+
+* None
+
 # Version 1.0.0-beta12
 
 ## Bugfixes
