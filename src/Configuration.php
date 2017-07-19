@@ -28,8 +28,8 @@ use JMS\Serializer\Annotation\PostDeserialize;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use Doctrine\Common\Collections\ArrayCollection;
 use TechDivision\Import\ConfigurationInterface;
-use TechDivision\Import\Configuration\Jms\Configuration\Operation;
 use TechDivision\Import\Configuration\DatabaseConfigurationInterface;
+use TechDivision\Import\Configuration\Jms\Configuration\Operation;
 
 /**
  * A simple JMS based configuration implementation.
@@ -148,12 +148,12 @@ class Configuration implements ConfigurationInterface
     protected $databases;
 
     /**
-     * Array with the information of the configured loggers.
+     * ArrayCollection with the information of the configured loggers.
      *
-     * @var array
-     * @Type("array")
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     * @Type("ArrayCollection<TechDivision\Import\Configuration\Jms\Configuration\Logger>")
      */
-    protected $loggers = array();
+    protected $loggers;
 
     /**
      * ArrayCollection with the information of the configured operations.
@@ -366,7 +366,7 @@ class Configuration implements ConfigurationInterface
     /**
      * Return's the operation, initialize from the actual operation name.
      *
-     * @return \TechDivision\Import\Configuration\OperationInterface The operation instance
+     * @return \TechDivision\Import\Configuration\OperationConfigurationInterface The operation instance
      */
     protected function getOperation()
     {
@@ -932,14 +932,19 @@ class Configuration implements ConfigurationInterface
     public function postDeserialize()
     {
 
-        // create an empty collection if no loggers has been specified
-        if ($this->additionalVendorDirs === null) {
-            $this->additionalVendorDirs = new ArrayCollection();
+        // create an empty collection if no operations has been specified
+        if ($this->loggers === null) {
+            $this->loggers = new ArrayCollection();
         }
 
         // create an empty collection if no operations has been specified
         if ($this->operations === null) {
             $this->operations = new ArrayCollection();
+        }
+
+        // create an empty collection if no loggers has been specified
+        if ($this->additionalVendorDirs === null) {
+            $this->additionalVendorDirs = new ArrayCollection();
         }
     }
 }

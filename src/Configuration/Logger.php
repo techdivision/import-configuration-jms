@@ -22,6 +22,7 @@ namespace TechDivision\Import\Configuration\Jms\Configuration;
 
 use JMS\Serializer\Annotation\Type;
 use JMS\Serializer\Annotation\SerializedName;
+use JMS\Serializer\Annotation\PostDeserialize;
 use Doctrine\Common\Collections\ArrayCollection;
 use TechDivision\Import\Configuration\LoggerConfigurationInterface;
 
@@ -83,7 +84,7 @@ class Logger implements LoggerConfigurationInterface
      * @var \Doctrine\Common\Collections\ArrayCollection
      * @Type("ArrayCollection<TechDivision\Import\Configuration\Jms\Configuration\Logger\Processor>")
      */
-    protected $processors = array();
+    protected $processors;
 
     /**
      * ArrayCollection with the information of the configured handlers.
@@ -91,15 +92,26 @@ class Logger implements LoggerConfigurationInterface
      * @var \Doctrine\Common\Collections\ArrayCollection
      * @Type("ArrayCollection<TechDivision\Import\Configuration\Jms\Configuration\Logger\Handler>")
      */
-    protected $handlers = array();
+    protected $handlers;
 
     /**
-     * Initialize the logger instance.
+     * Lifecycle callback that will be invoked after deserialization.
+     *
+     * @return void
+     * @PostDeserialize
      */
-    public function __construct()
+    public function postDeserialize()
     {
-        $this->processors = new ArrayCollection();
-        $this->handlers = new ArrayCollection();
+
+        // create an empty collection if no processors has been specified
+        if ($this->processors === null) {
+            $this->processors = new ArrayCollection();
+        }
+
+        // create an empty collection if no handlers has been specified
+        if ($this->handlers === null) {
+            $this->handlers = new ArrayCollection();
+        }
     }
 
     /**

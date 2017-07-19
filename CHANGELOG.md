@@ -1,3 +1,13 @@
+# Version 1.0.0-beta14
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Replace array configuration nodes with ArrayCollection types
+
 # Version 1.0.0-beta13
 
 ## Bugfixes
