@@ -1,3 +1,13 @@
+# Version 1.0.0-beta15
+
+## Bugfixes
+
+* Merge constructor params for logger initialization by name instead of using order
+
+## Features
+
+* None
+
 # Version 1.0.0-beta14
 
 ## Bugfixes

@@ -55,7 +55,7 @@ class LoggerFactory
         /** @var \TechDivision\Import\Configuration\Logger\ProcessorConfigurationInterface $processorConfiguration */
         foreach ($loggerConfiguration->getProcessors() as $processorConfiguration) {
             $reflectionClass = new \ReflectionClass($processorConfiguration->getType());
-            $processors[] = $reflectionClass->newInstanceArgs($processorConfiguration->getParams());
+            $processors[] = $reflectionClass->newInstanceArgs(LoggerFactory::prepareConstructorArgs($reflectionClass, $processorConfiguration->getParams()));
         }
 
         // initialize the handlers
@@ -93,13 +93,23 @@ class LoggerFactory
             } else {
                 // initialize the handler node
                 $reflectionClass = new \ReflectionClass($handlerConfiguration->getType());
-                $handler = $reflectionClass->newInstanceArgs($handlerConfiguration->getParams());
+
+                // load the params
+                $params = $handlerConfiguration->getParams();
+
+                // set the default log level, if not already set explicitly
+                if (!isset($params['level'])) {
+                    $params['level'] = $configuration->getLogLevel();
+                }
+
+                // create the handler instance
+                $handler = $reflectionClass->newInstanceArgs(LoggerFactory::prepareConstructorArgs($reflectionClass, $params));
             }
 
             // if we've a formatter, initialize the formatter also
             if ($formatterConfiguration = $handlerConfiguration->getFormatter()) {
                 $reflectionClass = new \ReflectionClass($formatterConfiguration->getType());
-                $handler->setFormatter($reflectionClass->newInstanceArgs($formatterConfiguration->getParams()));
+                $handler->setFormatter($reflectionClass->newInstanceArgs(LoggerFactory::prepareConstructorArgs($reflectionClass, $formatterConfiguration->getParams())));
             }
 
             // add the handler
@@ -107,11 +117,57 @@ class LoggerFactory
         }
 
         // prepare the logger params
-        $loggerParams = array($loggerConfiguration->getChannelName(), $handlers, $processors);
+        $loggerParams = array(
+            'name' => $loggerConfiguration->getChannelName(),
+            'handlers' => $handlers,
+            'processors' => $processors
+        );
+
+        // append the params from the logger configuration
         $loggerParams = array_merge($loggerParams, $loggerConfiguration->getParams());
 
         // initialize the logger instance itself
         $reflectionClass = new \ReflectionClass($loggerConfiguration->getType());
-        return $reflectionClass->newInstanceArgs($loggerParams);
+        return $reflectionClass->newInstanceArgs(LoggerFactory::prepareConstructorArgs($reflectionClass, $loggerParams));
+    }
+
+    /**
+     * Prepare's the arguments for the passed reflection class by applying the values from the passed configuration array
+     * to the apropriate arguments. If no value is found in the configuration, the constructor argument's default value is
+     * used.
+     *
+     * @param \ReflectionClass $reflectionClass The reflection class to prepare the arguments for
+     * @param array            $params          The constructor arguments from the configuration
+     *
+     * @return array The array with the constructor arguements
+     */
+    protected static function prepareConstructorArgs(\ReflectionClass $reflectionClass, array $params)
+    {
+
+        // prepare the array for the initialized arguments
+        $initializedParams = array();
+
+        // prepare the array for the arguments in camel case (in configuration we use a '-' notation)
+        $paramsInCamelCase = array();
+
+        // convert the configuration keys to camelcase
+        foreach ($params as $key => $value) {
+            $paramsInCamelCase[lcfirst(str_replace('-', '', ucwords($key, '-')))] = $value;
+        }
+
+        // prepare the arguments by applying the values from the configuration
+        /** @var \ReflectionParameter $reflectionParameter */
+        foreach ($reflectionClass->getConstructor()->getParameters() as $reflectionParameter) {
+            if (isset($paramsInCamelCase[$paramName = $reflectionParameter->getName()])) {
+                $initializedParams[$paramName] = $paramsInCamelCase[$paramName];
+            } elseif ($reflectionParameter->isOptional()) {
+                $initializedParams[$paramName] = $reflectionParameter->getDefaultValue();
+            } else {
+                $initializedParams[$paramName] = null;
+            }
+        }
+
+        // return the array with the prepared arguments
+        return $initializedParams;
     }
 }
