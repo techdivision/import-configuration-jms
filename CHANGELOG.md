@@ -1,3 +1,13 @@
+# Version 1.0.0-beta16
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Add filesystem adapter configuration
+
 # Version 1.0.0-beta15
 
 ## Bugfixes

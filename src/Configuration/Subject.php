@@ -27,6 +27,7 @@ use TechDivision\Import\ConfigurationInterface;
 use TechDivision\Import\Configuration\SubjectConfigurationInterface;
 use TechDivision\Import\Configuration\Jms\Configuration\Subject\ImportAdapter;
 use TechDivision\Import\Configuration\Jms\Configuration\Subject\ExportAdapter;
+use TechDivision\Import\Configuration\Jms\Configuration\Subject\FilesystemAdapter;
 
 /**
  * The subject configuration implementation.
@@ -123,6 +124,15 @@ class Subject implements SubjectConfigurationInterface
     protected $exportAdapter;
 
     /**
+     * The filesystem adapter configuration instance.
+     *
+     * @var \TechDivision\Import\Configuration\Subject\FilesystemAdapterConfigurationInterface
+     * @Type("TechDivision\Import\Configuration\Jms\Configuration\Subject\FilesystemAdapter")
+     * @SerializedName("filesystem-adapter")
+     */
+    protected $filesystemAdapter;
+
+    /**
      * Lifecycle callback that will be invoked after deserialization.
      *
      * @return void
@@ -139,6 +149,11 @@ class Subject implements SubjectConfigurationInterface
         // set a default export adatper if none has been configured
         if ($this->exportAdapter === null) {
             $this->exportAdapter = new ExportAdapter();
+        }
+
+        // set a default filesystem adatper if none has been configured
+        if ($this->filesystemAdapter === null) {
+            $this->filesystemAdapter = new FilesystemAdapter();
         }
     }
 
@@ -394,7 +409,7 @@ class Subject implements SubjectConfigurationInterface
     /**
      * Return's the import adapter configuration instance.
      *
-     * @return \TechDivision\Import\Subject\ImportAdapterConfigurationInterface The import adapter configuration instance
+     * @return \TechDivision\Import\Configuration\Subject\ImportAdapterConfigurationInterface The import adapter configuration instance
      */
     public function getImportAdapter()
     {
@@ -404,10 +419,20 @@ class Subject implements SubjectConfigurationInterface
     /**
      * Return's the export adapter configuration instance.
      *
-     * @return \TechDivision\Import\Subject\ExportAdapterConfigurationInterface The export adapter configuration instance
+     * @return \TechDivision\Import\Configuration\Subject\ExportAdapterConfigurationInterface The export adapter configuration instance
      */
     public function getExportAdapter()
     {
         return $this->exportAdapter;
+    }
+
+    /**
+     * Return's the filesystem adapter configuration instance.
+     *
+     * @return \TechDivision\Import\Configuration\Subject\FilesystemAdapterConfigurationInterface The filesystem adapter configuration instance
+     */
+    public function getFilesystemAdapter()
+    {
+        return $this->filesystemAdapter;
     }
 }

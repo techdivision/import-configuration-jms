@@ -76,7 +76,7 @@ class Logger implements LoggerConfigurationInterface
      * @var string
      * @Type("string")
      */
-    protected $factory = 'TechDivision\Import\Configuration\Jms\Configuration\LoggerFactory';
+    protected $factory = 'TechDivision\Import\Utils\LoggerFactory';
 
     /**
      * ArrayCollection with the information of the configured processors.
