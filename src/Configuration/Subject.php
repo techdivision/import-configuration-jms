@@ -173,18 +173,6 @@ class Subject implements SubjectConfigurationInterface
         if ($this->filesystemAdapter === null) {
             $this->filesystemAdapter = new FilesystemAdapter();
         }
-
-        /*
-        // initialize the images types, if not found
-        if ($this->imageTypes === null) {
-            $this->imageTypes = array();
-        }
-
-        // initialize the header mappings, if not found
-        if ($this->headerMappings === null) {
-            $this->headerMappings = array();
-        }
-        */
     }
 
     /**
