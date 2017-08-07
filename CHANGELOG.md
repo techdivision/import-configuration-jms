@@ -1,3 +1,13 @@
+# Version 1.0.0-beta17
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Implement Subject::getHeaderMappings() + Subject::getImageTypes() methods
+
 # Version 1.0.0-beta16
 
 ## Bugfixes
