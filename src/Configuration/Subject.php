@@ -133,24 +133,6 @@ class Subject implements SubjectConfigurationInterface
     protected $filesystemAdapter;
 
     /**
-     * The array with the custom header mappings.
-     *
-     * @var array
-     * @Type("array")
-     * @SerializedName("header-mappings")
-     */
-    protected $headerMappings = array();
-
-    /**
-     * The array with the custom image types.
-     *
-     * @var array
-     * @Type("array")
-     * @SerializedName("image-types")
-     */
-    protected $imageTypes = array();
-
-    /**
      * Lifecycle callback that will be invoked after deserialization.
      *
      * @return void
@@ -461,17 +443,7 @@ class Subject implements SubjectConfigurationInterface
      */
     public function getHeaderMappings()
     {
-
-        // initialize the array for the custom header mappings
-        $headerMappings = array();
-
-        // try to load the configured header mappings
-        if ($headerMappingsAvailable = reset($this->headerMappings)) {
-            $headerMappings = $headerMappingsAvailable;
-        }
-
-        // return the custom header mappings
-        return $headerMappings;
+        return $this->getConfiguration()->getHeaderMappings();
     }
 
     /**
@@ -481,16 +453,6 @@ class Subject implements SubjectConfigurationInterface
      */
     public function getImageTypes()
     {
-
-        // initialize the array for the custom image types
-        $imageTypes = array();
-
-        // try to load the configured image types
-        if ($imageTypesAvailable = reset($this->imageTypes)) {
-            $imageTypes = $imageTypesAvailable;
-        }
-
-        // return the custom image types
-        return $imageTypes;
+        return $this->getConfiguration()->getImageTypes();
     }
 }
