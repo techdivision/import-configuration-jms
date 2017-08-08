@@ -323,6 +323,24 @@ class Configuration implements ConfigurationInterface
     protected $extensionLibraries = array();
 
     /**
+     * The array with the custom header mappings.
+     *
+     * @var array
+     * @Type("array")
+     * @SerializedName("header-mappings")
+     */
+    protected $headerMappings = array();
+
+    /**
+     * The array with the custom image types.
+     *
+     * @var array
+     * @Type("array")
+     * @SerializedName("image-types")
+     */
+    protected $imageTypes = array();
+
+    /**
      * Return's the array with the plugins of the operation to use.
      *
      * @return \Doctrine\Common\Collections\ArrayCollection The ArrayCollection with the plugins
@@ -946,5 +964,45 @@ class Configuration implements ConfigurationInterface
         if ($this->additionalVendorDirs === null) {
             $this->additionalVendorDirs = new ArrayCollection();
         }
+    }
+
+    /**
+     * The array with the subject's custom header mappings.
+     *
+     * @return array The custom header mappings
+     */
+    public function getHeaderMappings()
+    {
+
+        // initialize the array for the custom header mappings
+        $headerMappings = array();
+
+        // try to load the configured header mappings
+        if ($headerMappingsAvailable = reset($this->headerMappings)) {
+            $headerMappings = $headerMappingsAvailable;
+        }
+
+        // return the custom header mappings
+        return $headerMappings;
+    }
+
+    /**
+     * The array with the subject's custom image types.
+     *
+     * @return array The custom image types
+     */
+    public function getImageTypes()
+    {
+
+        // initialize the array for the custom image types
+        $imageTypes = array();
+
+        // try to load the configured image types
+        if ($imageTypesAvailable = reset($this->imageTypes)) {
+            $imageTypes = $imageTypesAvailable;
+        }
+
+        // return the custom image types
+        return $imageTypes;
     }
 }
