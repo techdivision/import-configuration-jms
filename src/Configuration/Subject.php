@@ -90,6 +90,15 @@ class Subject implements SubjectConfigurationInterface
     protected $callbacks = array();
 
     /**
+     * The array with the subject's frontend input callbacks.
+     *
+     * @var array
+     * @Type("array<string, array>")
+     * @SerializedName("frontend-input-callbacks")
+     */
+    protected $frontendInputCallbacks = array();
+
+    /**
      * A reference to the parent configuration instance.
      *
      * @var \TechDivision\Import\ConfigurationInterface
@@ -381,6 +390,16 @@ class Subject implements SubjectConfigurationInterface
     public function getCallbacks()
     {
         return $this->callbacks;
+    }
+
+    /**
+     * Return's the array with the subject's frontend input callbacks.
+     *
+     * @return array The subject's frontend input callbacks
+     */
+    public function getFrontendInputCallbacks()
+    {
+        return $this->frontendInputCallbacks;
     }
 
     /**
