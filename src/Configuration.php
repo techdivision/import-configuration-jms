@@ -68,6 +68,15 @@ class Configuration implements ConfigurationInterface
     );
 
     /**
+     * The application's unique DI identifier.
+     *
+     * @var string
+     * @Type("string")
+     * @SerializedName("id")
+     */
+    protected $id;
+
+    /**
      * The system name to use.
      *
      * @var string
@@ -389,6 +398,16 @@ class Configuration implements ConfigurationInterface
     protected function getOperation()
     {
         return new Operation($this->getOperationName());
+    }
+
+    /**
+     * Return's the application's unique DI identifier.
+     *
+     * @return string The application's unique DI identifier
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**
