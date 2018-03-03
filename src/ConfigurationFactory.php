@@ -47,12 +47,27 @@ class ConfigurationFactory implements ConfigurationFactoryInterface
     public function factory($filename, $type = 'json')
     {
 
-        // load the JSON data
-        if (!$jsonData = file_get_contents($filename)) {
-            throw new \Exception(sprintf('Can\'t load configuration file %s', $filename));
+        // try to load the JSON data
+        if ($data = file_get_contents($filename)) {
+            // initialize the JMS serializer, load and return the configuration
+            return $this->factoryFromString($data, $type);
         }
 
+        // throw an exception if the data can not be loaded from the passed file
+        throw new \Exception(sprintf('Can\'t load configuration file %s', $filename));
+    }
+
+    /**
+     * Factory implementation to create a new initialized configuration instance.
+     *
+     * @param string $data The configuration data
+     * @param string $type The format of the configuration data, either one of json, yaml or xml
+     *
+     * @return \TechDivision\Import\Configuration\Jms\Configuration The configuration instance
+     */
+    public function factoryFromString($data, $type = 'json')
+    {
         // initialize the JMS serializer, load and return the configuration
-        return SerializerBuilder::create()->build()->deserialize($jsonData, Configuration::class, $type);
+        return SerializerBuilder::create()->build()->deserialize($data, Configuration::class, $type);
     }
 }
