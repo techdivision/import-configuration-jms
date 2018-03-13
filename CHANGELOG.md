@@ -1,3 +1,13 @@
+# Version 1.0.0-beta20
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Add configuration for event listeners
+
 # Version 1.0.0-beta19
 
 ## Bugfixes

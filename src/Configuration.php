@@ -350,6 +350,14 @@ class Configuration implements ConfigurationInterface
     protected $imageTypes = array();
 
     /**
+     * ArrayCollection with the listeners.
+     *
+     * @var array
+     * @Type("array")
+     */
+    protected $listeners = array();
+
+    /**
      * Return's the array with the plugins of the operation to use.
      *
      * @return \Doctrine\Common\Collections\ArrayCollection The ArrayCollection with the plugins
@@ -1023,5 +1031,15 @@ class Configuration implements ConfigurationInterface
 
         // return the custom image types
         return $imageTypes;
+    }
+
+    /**
+     * Return's the array with the configured listeners.
+     *
+     * @return array The array with the listeners
+     */
+    public function getListeners()
+    {
+        return $this->listeners;
     }
 }
