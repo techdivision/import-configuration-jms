@@ -358,6 +358,15 @@ class Configuration implements ConfigurationInterface
     protected $listeners = array();
 
     /**
+     * The flag to signal that the should be wrapped within a single transation or not.
+     *
+     * @var boolean
+     * @Type("boolean")
+     * @SerializedName("single-transaction")
+     */
+    protected $singleTransaction = false;
+
+    /**
      * Return's the array with the plugins of the operation to use.
      *
      * @return \Doctrine\Common\Collections\ArrayCollection The ArrayCollection with the plugins
@@ -1041,5 +1050,27 @@ class Configuration implements ConfigurationInterface
     public function getListeners()
     {
         return $this->listeners;
+    }
+
+    /**
+     * Set's the flag that decides whether or not the import should be wrapped within a single transaction.
+     *
+     * @param boolean $singleTransaction TRUE if the import should be wrapped in a single transation, else FALSE
+     *
+     * return void
+     */
+    public function setSingleTransaction($singleTransaction)
+    {
+        $this->singleTransaction = $singleTransaction;
+    }
+
+    /**
+     * Whether or not the import should be wrapped within a single transation.
+     *
+     * @return boolean TRUE if the import should be wrapped in a single transation, else FALSE
+     */
+    public function isSingleTransaction()
+    {
+        return $this->singleTransaction;
     }
 }

@@ -1,3 +1,13 @@
+# Version 1.0.0-beta21
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Add configuration for single transaction flag
+
 # Version 1.0.0-beta20
 
 ## Bugfixes
