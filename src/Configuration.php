@@ -1057,7 +1057,7 @@ class Configuration implements ConfigurationInterface
      *
      * @param boolean $singleTransaction TRUE if the import should be wrapped in a single transation, else FALSE
      *
-     * return void
+     * @return void
      */
     public function setSingleTransaction($singleTransaction)
     {
