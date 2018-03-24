@@ -1,7 +1,6 @@
 {
     "name": "techdivision/import-configuration-jms",
     "description": "Library providing a JMS based configuration implementation for the M2IF",
-    "minimum-stability": "alpha",
     "license": "OSL-3.0",
     "require": {
         "php": ">=5.6.0",
@@ -28,7 +27,7 @@
         "psr-4": {
             "TechDivision\\Import\\Configuration\\Jms\\": [
                 "src/",
-                "tests/"
+                "tests/unit"
             ]
         }
     }
