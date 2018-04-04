@@ -9,3 +9,5 @@
 
 This library provides a [JMS](https://github.com/schmittjoh/serializer) based configuration 
 implementation for the M2IF.
+
+Please visit the M2IF [website](https://m2if.com) for documentation and additional information
