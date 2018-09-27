@@ -92,7 +92,7 @@ class Handler implements HandlerConfigurationInterface
     /**
      * Return's the swift mailer configuration to use.
      *
-     * @return TechDivision\Import\Configuration\Jms\Configuration\SwiftMailer The swift mailer configuration to use
+     * @return \TechDivision\Import\Configuration\Jms\Configuration\SwiftMailer The swift mailer configuration to use
      */
     public function getSwiftMailer()
     {

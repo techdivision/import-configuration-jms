@@ -115,6 +115,15 @@ class Subject implements SubjectConfigurationInterface
     protected $okFileNeeded = false;
 
     /**
+     *The flag to signal that the subject has to create a .imported flagfile or not.
+     *
+     * @var boolean
+     * @Type("boolean")
+     * @SerializedName("create-finished-file")
+     */
+    protected $createImportedFile = true;
+
+    /**
      * The import adapter configuration instance.
      *
      * @var \TechDivision\Import\Configuration\Subject\ImportAdapterConfigurationInterface
@@ -423,6 +432,16 @@ class Subject implements SubjectConfigurationInterface
     public function isOkFileNeeded()
     {
         return $this->okFileNeeded;
+    }
+
+    /**
+     * Queries whether or not the subject should create a .imported flagfile
+     *
+     * @return boolean TRUE if subject has to create the .imported flagfile, else FALSE
+     */
+    public function isCreatingImportedFile()
+    {
+        return $this->createImportedFile;
     }
 
     /**

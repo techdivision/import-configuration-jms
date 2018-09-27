@@ -20,8 +20,6 @@
 
 namespace TechDivision\Import\Configuration\Jms;
 
-use Doctrine\DBAL\Configuration;
-
 /**
  * Test class for the JMS configuration factory.
  *
@@ -44,7 +42,7 @@ class ConfigurationFactoryTest extends \PHPUnit_Framework_TestCase
     /**
      *
      * {@inheritDoc}
-     * @see PHPUnit_Framework_TestCase::setUp()
+     * @see \PHPUnit_Framework_TestCase::setUp()
      */
     protected function setUp()
     {

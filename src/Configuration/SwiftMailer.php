@@ -91,7 +91,7 @@ class SwiftMailer implements SwiftMailerConfigurationInterface
     /**
      * Return's the swift mailer transport configuration to use.
      *
-     * @return TechDivision\Import\Configuration\Jms\Configuration\SwiftMailer\Transport The transport configuration to use
+     * @return \TechDivision\Import\Configuration\Jms\Configuration\SwiftMailer\Transport The transport configuration to use
      */
     public function getTransport()
     {

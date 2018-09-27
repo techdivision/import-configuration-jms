@@ -1,3 +1,13 @@
+# Version 2.0.0
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Add SubjectConfiguration::isCreatingImportedFile() method to return create-imported-file configuration flag
+
 # Version 1.0.0
 
 ## Bugfixes
