@@ -1,3 +1,13 @@
+# Version 2.0.1
+
+## Bugfixes
+
+* Fixed invalid JMS (un-)serialization name for Subject::$createImportedFile property
+
+## Features
+
+* None
+
 # Version 2.0.0
 
 ## Bugfixes
