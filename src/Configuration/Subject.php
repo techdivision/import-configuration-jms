@@ -119,7 +119,7 @@ class Subject implements SubjectConfigurationInterface
      *
      * @var boolean
      * @Type("boolean")
-     * @SerializedName("create-finished-file")
+     * @SerializedName("create-imported-file")
      */
     protected $createImportedFile = true;
 
