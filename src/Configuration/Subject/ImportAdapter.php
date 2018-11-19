@@ -22,6 +22,7 @@ namespace TechDivision\Import\Configuration\Jms\Configuration\Subject;
 
 use JMS\Serializer\Annotation\Type;
 use TechDivision\Import\Utils\DependencyInjectionKeys;
+use TechDivision\Import\Configuration\Jms\Configuration\CsvTrait;
 use TechDivision\Import\Configuration\Subject\ImportAdapterConfigurationInterface;
 
 /**
@@ -37,12 +38,19 @@ class ImportAdapter implements ImportAdapterConfigurationInterface
 {
 
     /**
+     * Trait that provides CSV configuration functionality.
+     *
+     * @var \TechDivision\Import\Configuration\Jms\CsvTrait
+     */
+    use CsvTrait;
+
+    /**
      * The import adapter's unique DI identifier.
      *
      * @var string
      * @Type("string")
      */
-    protected $id = DependencyInjectionKeys::IMPORT_ADAPTER_IMPORT_CSV;
+    protected $id = DependencyInjectionKeys::IMPORT_ADAPTER_IMPORT_CSV_FACTORY;
 
     /**
      * Return's the import adapter's unique DI identifier

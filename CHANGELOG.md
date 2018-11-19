@@ -1,3 +1,15 @@
+# Version 4.0.0
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Add FileResolver configuration
+* Add ParamsTrait to Configuration also
+* Move CSV configuration from subject to CsvTrait
+
 # Version 3.0.0
 
 ## Bugfixes

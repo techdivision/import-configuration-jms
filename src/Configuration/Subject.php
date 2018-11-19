@@ -25,6 +25,7 @@ use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\PostDeserialize;
 use TechDivision\Import\ConfigurationInterface;
 use TechDivision\Import\Configuration\SubjectConfigurationInterface;
+use TechDivision\Import\Configuration\Jms\Configuration\Subject\FileResolver;
 use TechDivision\Import\Configuration\Jms\Configuration\Subject\ImportAdapter;
 use TechDivision\Import\Configuration\Jms\Configuration\Subject\ExportAdapter;
 use TechDivision\Import\Configuration\Jms\Configuration\Subject\FilesystemAdapter;
@@ -56,22 +57,6 @@ class Subject implements SubjectConfigurationInterface
      * @SerializedName("id")
      */
     protected $id;
-
-    /**
-     * The file prefix for import files.
-     *
-     * @var string
-     * @Type("string")
-     */
-    protected $prefix = 'magento-import';
-
-    /**
-     * The file suffix for import files.
-     *
-     * @var string
-     * @Type("string")
-     */
-    protected $suffix = 'csv';
 
     /**
      * The array with the subject's observers.
@@ -151,6 +136,33 @@ class Subject implements SubjectConfigurationInterface
     protected $filesystemAdapter;
 
     /**
+     * The filesystem adapter configuration instance.
+     *
+     * @var \TechDivision\Import\Configuration\Subject\FileResolverConfigurationInterface
+     * @Type("TechDivision\Import\Configuration\Jms\Configuration\Subject\FileResolver")
+     * @SerializedName("file-resolver")
+     */
+    protected $fileResolver;
+
+    /**
+     * The source directory that has to be watched for new files.
+     *
+     * @var string
+     * @Type("string")
+     * @SerializedName("source-dir")
+     */
+    protected $sourceDir;
+
+    /**
+     * The target directory with the files that has been imported.
+     *
+     * @var string
+     * @Type("string")
+     * @SerializedName("target-dir")
+     */
+    protected $targetDir;
+
+    /**
      * Lifecycle callback that will be invoked after deserialization.
      *
      * @return void
@@ -172,6 +184,11 @@ class Subject implements SubjectConfigurationInterface
         // set a default filesystem adatper if none has been configured
         if ($this->filesystemAdapter === null) {
             $this->filesystemAdapter = new FilesystemAdapter();
+        }
+
+        // set a default file resolver if none has been configured
+        if ($this->fileResolver === null) {
+            $this->fileResolver = new FileResolver();
         }
     }
 
@@ -282,7 +299,7 @@ class Subject implements SubjectConfigurationInterface
      */
     public function getSourceDir()
     {
-        return $this->getConfiguration()->getSourceDir();
+        return $this->sourceDir ? $this->sourceDir : $this->getConfiguration()->getSourceDir();
     }
 
     /**
@@ -292,7 +309,7 @@ class Subject implements SubjectConfigurationInterface
      */
     public function getTargetDir()
     {
-        return $this->getConfiguration()->getTargetDir();
+        return $this->targetDir ? $this->targetDir : $this->getConfiguration()->getTargetDir();
     }
 
     /**
@@ -338,47 +355,13 @@ class Subject implements SubjectConfigurationInterface
     }
 
     /**
-     * Set's the prefix for the import files.
-     *
-     * @param string $prefix The prefix
-     *
-     * @return void
-     */
-    public function setPrefix($prefix)
-    {
-        $this->prefix = $prefix;
-    }
-
-    /**
      * Return's the prefix for the import files.
      *
      * @return string The prefix
      */
     public function getPrefix()
     {
-        return $this->prefix;
-    }
-
-    /**
-     * Set's the suffix for the import files.
-     *
-     * @param string $suffix The suffix
-     *
-     * @return void
-     */
-    public function setSuffix($suffix)
-    {
-        $this->suffix = $suffix;
-    }
-
-    /**
-     * Return's the suffix for the import files.
-     *
-     * @return string The suffix
-     */
-    public function getSuffix()
-    {
-        return $this->suffix;
+        return $this->getFileResolver()->getPrefix();
     }
 
     /**
@@ -472,6 +455,16 @@ class Subject implements SubjectConfigurationInterface
     public function getFilesystemAdapter()
     {
         return $this->filesystemAdapter;
+    }
+
+    /**
+     * Return's the file resolver configuration instance.
+     *
+     * @return \TechDivision\Import\Configuration\Subject\FileResolverConfigurationInterface The file resolver configuration instance
+     */
+    public function getFileResolver()
+    {
+        return $this->fileResolver;
     }
 
     /**
