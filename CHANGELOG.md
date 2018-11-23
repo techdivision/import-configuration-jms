@@ -8,6 +8,7 @@
 
 * Add FileResolver configuration
 * Add ParamsTrait to Configuration also
+* Add DateConverter + Number Converter configuration
 * Move CSV configuration from subject to CsvTrait
 
 # Version 3.0.0
