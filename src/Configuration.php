@@ -189,15 +189,6 @@ class Configuration implements ConfigurationInterface
     protected $operations;
 
     /**
-     * The source date format to use in the subject.
-     *
-     * @var string
-     * @Type("string")
-     * @SerializedName("source-date-format")
-     */
-    protected $sourceDateFormat = 'n/d/y, g:i A';
-
-    /**
      * The subject's multiple field delimiter character for fields with multiple values, defaults to (,).
      *
      * @var string
@@ -522,16 +513,6 @@ class Configuration implements ConfigurationInterface
     public function getMagentoVersion()
     {
         return $this->magentoVersion;
-    }
-
-    /**
-     * Return's the subject's source date format to use.
-     *
-     * @return string The source date format
-     */
-    public function getSourceDateFormat()
-    {
-        return $this->sourceDateFormat;
     }
 
     /**

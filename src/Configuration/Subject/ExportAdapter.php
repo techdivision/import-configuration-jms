@@ -21,6 +21,8 @@
 namespace TechDivision\Import\Configuration\Jms\Configuration\Subject;
 
 use JMS\Serializer\Annotation\Type;
+use JMS\Serializer\Annotation\SerializedName;
+use JMS\Serializer\Annotation\PostDeserialize;
 use TechDivision\Import\Utils\DependencyInjectionKeys;
 use TechDivision\Import\Configuration\Jms\Configuration\CsvTrait;
 use TechDivision\Import\Configuration\Subject\ExportAdapterConfigurationInterface;
@@ -53,6 +55,15 @@ class ExportAdapter implements ExportAdapterConfigurationInterface
     protected $id = DependencyInjectionKeys::IMPORT_ADAPTER_EXPORT_CSV_FACTORY;
 
     /**
+     * The filesystem adapter configuration instance.
+     *
+     * @var \TechDivision\Import\Configuration\Subject\SerializerConfigurationInterface
+     * @Type("TechDivision\Import\Configuration\Jms\Configuration\Subject\Serializer")
+     * @SerializedName("serializer")
+     */
+    protected $serializer;
+
+    /**
      * Return's the export adapter's unique DI identifier
      *
      * @return string The export adapter's unique DI identifier
@@ -60,5 +71,30 @@ class ExportAdapter implements ExportAdapterConfigurationInterface
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Return's the serializer configuration instance.
+     *
+     * @return \TechDivision\Import\Configuration\Subject\SerializerConfigurationInterface The serializer configuration instance
+     */
+    public function getSerializer()
+    {
+        return $this->serializer;
+    }
+
+    /**
+     * Lifecycle callback that will be invoked after deserialization.
+     *
+     * @return void
+     * @PostDeserialize
+     */
+    public function postDeserialize()
+    {
+
+        // set a default serializer if none has been configured
+        if ($this->serializer === null) {
+            $this->serializer = new Serializer();
+        }
     }
 }

@@ -45,7 +45,7 @@ class FileResolver implements FileResolverConfigurationInterface
      * @var string
      * @Type("string")
      */
-    protected $id = DependencyInjectionKeys::IMPORT_PLUGIN_FILE_RESOLVER_SIMPLE;
+    protected $id = DependencyInjectionKeys::IMPORT_SUBJECT_FILE_RESOLVER_SIMPLE;
 
     /**
      * The prefix/meta sequence of the import files.

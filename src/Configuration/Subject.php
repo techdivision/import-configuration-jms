@@ -28,6 +28,8 @@ use TechDivision\Import\Configuration\SubjectConfigurationInterface;
 use TechDivision\Import\Configuration\Jms\Configuration\Subject\FileResolver;
 use TechDivision\Import\Configuration\Jms\Configuration\Subject\ImportAdapter;
 use TechDivision\Import\Configuration\Jms\Configuration\Subject\ExportAdapter;
+use TechDivision\Import\Configuration\Jms\Configuration\Subject\DateConverter;
+use TechDivision\Import\Configuration\Jms\Configuration\Subject\NumberConverter;
 use TechDivision\Import\Configuration\Jms\Configuration\Subject\FilesystemAdapter;
 
 /**
@@ -136,13 +138,31 @@ class Subject implements SubjectConfigurationInterface
     protected $filesystemAdapter;
 
     /**
-     * The filesystem adapter configuration instance.
+     * The file resolver configuration instance.
      *
      * @var \TechDivision\Import\Configuration\Subject\FileResolverConfigurationInterface
      * @Type("TechDivision\Import\Configuration\Jms\Configuration\Subject\FileResolver")
      * @SerializedName("file-resolver")
      */
     protected $fileResolver;
+
+    /**
+     * The number converter configuration instance.
+     *
+     * @var \TechDivision\Import\Configuration\Subject\NumberConverterConfigurationInterface
+     * @Type("TechDivision\Import\Configuration\Jms\Configuration\Subject\NumberConverter")
+     * @SerializedName("number-converter")
+     */
+    protected $numberConverter;
+
+    /**
+     * The date converter configuration instance.
+     *
+     * @var \TechDivision\Import\Configuration\Subject\DateConverterConfigurationInterface
+     * @Type("TechDivision\Import\Configuration\Jms\Configuration\Subject\DateConverter")
+     * @SerializedName("date-converter")
+     */
+    protected $dateConverter;
 
     /**
      * The source directory that has to be watched for new files.
@@ -189,6 +209,16 @@ class Subject implements SubjectConfigurationInterface
         // set a default file resolver if none has been configured
         if ($this->fileResolver === null) {
             $this->fileResolver = new FileResolver();
+        }
+
+        // set a default number converter if none has been configured
+        if ($this->numberConverter === null) {
+            $this->numberConverter = new NumberConverter();
+        }
+
+        // set a default date converter if none has been configured
+        if ($this->dateConverter === null) {
+            $this->dateConverter = new DateConverter();
         }
     }
 
@@ -289,7 +319,7 @@ class Subject implements SubjectConfigurationInterface
      */
     public function getSourceDateFormat()
     {
-        return $this->getConfiguration()->getSourceDateFormat();
+        return $this->getDateConverter()->getSourceDateFormat();
     }
 
     /**
@@ -465,6 +495,26 @@ class Subject implements SubjectConfigurationInterface
     public function getFileResolver()
     {
         return $this->fileResolver;
+    }
+
+    /**
+     * Return's the number converter configuration instance.
+     *
+     * @return \TechDivision\Import\Configuration\Subject\NumberConverterConfigurationInterface The number converter configuration instance
+     */
+    public function getNumberConverter()
+    {
+        return $this->numberConverter;
+    }
+
+    /**
+     * Return's the date converter configuration instance.
+     *
+     * @return \TechDivision\Import\Configuration\Subject\DateConverterConfigurationInterface The date converter configuration instance
+     */
+    public function getDateConverter()
+    {
+        return $this->dateConverter;
     }
 
     /**

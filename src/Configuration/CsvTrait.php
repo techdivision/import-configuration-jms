@@ -41,7 +41,7 @@ trait CsvTrait
      * @var string
      * @Type("string")
      */
-    protected $delimiter;
+    protected $delimiter = ',';
 
     /**
      * The subject's enclosure character for CSV files.
@@ -49,7 +49,7 @@ trait CsvTrait
      * @var string
      * @Type("string")
      */
-    protected $enclosure;
+    protected $enclosure = '"';
 
     /**
      * The subject's escape character for CSV files.
@@ -57,7 +57,7 @@ trait CsvTrait
      * @var string
      * @Type("string")
      */
-    protected $escape;
+    protected $escape = '\\';
 
     /**
      * The subject's source charset for the CSV file.
