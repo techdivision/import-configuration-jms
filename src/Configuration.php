@@ -32,6 +32,7 @@ use TechDivision\Import\Configuration\DatabaseConfigurationInterface;
 use TechDivision\Import\Configuration\Jms\Configuration\Operation;
 use TechDivision\Import\Configuration\Jms\Configuration\ParamsTrait;
 use TechDivision\Import\Configuration\Jms\Configuration\CsvTrait;
+use TechDivision\Import\Configuration\Jms\Configuration\ListenersTrait;
 
 /**
  * A simple JMS based configuration implementation.
@@ -67,6 +68,13 @@ class Configuration implements ConfigurationInterface
      * @var \TechDivision\Import\Configuration\Jms\Configuration\ParamsTrait
      */
     use ParamsTrait;
+
+    /**
+     * Trait that provides CSV configuration functionality.
+     *
+     * @var \TechDivision\Import\Configuration\Jms\Configuration\ListenersTrait
+     */
+    use ListenersTrait;
 
     /**
      * Mapping for boolean values passed on the console.
@@ -306,14 +314,6 @@ class Configuration implements ConfigurationInterface
     protected $imageTypes = array();
 
     /**
-     * ArrayCollection with the listeners.
-     *
-     * @var array
-     * @Type("array")
-     */
-    protected $listeners = array();
-
-    /**
      * The flag to signal that the should be wrapped within a single transation or not.
      *
      * @var boolean
@@ -368,7 +368,7 @@ class Configuration implements ConfigurationInterface
      *
      * @return \TechDivision\Import\Configuration\OperationConfigurationInterface The operation instance
      */
-    protected function getOperation()
+    public function getOperation()
     {
         return new Operation($this->getOperationName());
     }
@@ -612,6 +612,29 @@ class Configuration implements ConfigurationInterface
     }
 
     /**
+     * Return's the database configuration with the passed ID.
+     *
+     * @param string $id The ID of the database connection to return
+     *
+     * @return \TechDivision\Import\Configuration\DatabaseConfigurationInterface The database configuration
+     * @throws \Exception Is thrown, if no database configuration is available
+     */
+    public function getDatabaseById($id)
+    {
+
+        // iterate over the configured databases and return the one with the passed ID
+        /** @var TechDivision\Import\Configuration\DatabaseInterface  $database */
+        foreach ($this->databases as $database) {
+            if ($database->getId() === $id) {
+                return $database;
+            }
+        }
+
+        // throw an exception, if the database with the passed ID is NOT configured
+        throw new \Exception(sprintf('Database with ID %s can not be found', $id));
+    }
+
+    /**
      * Return's the database configuration.
      *
      * If an explicit DB ID is specified, the method tries to return the database with this ID. If
@@ -620,7 +643,7 @@ class Configuration implements ConfigurationInterface
      * If no explicit DB ID is specified, the method tries to return the default database configuration,
      * if not available the first one.
      *
-     * @return \TechDivision\Import\Configuration\Jms\Configuration\Database The database configuration
+     * @return \TechDivision\Import\Configuration\DatabaseConfigurationInterface The database configuration
      * @throws \Exception Is thrown, if no database configuration is available
      */
     public function getDatabase()
@@ -628,16 +651,7 @@ class Configuration implements ConfigurationInterface
 
         // if a DB ID has been set, try to load the database
         if ($useDbId = $this->getUseDbId()) {
-            // iterate over the configured databases and return the one with the passed ID
-            /** @var TechDivision\Import\Configuration\DatabaseInterface  $database */
-            foreach ($this->databases as $database) {
-                if ($database->getId() === $useDbId) {
-                    return $database;
-                }
-            }
-
-            // throw an exception, if the database with the passed ID is NOT configured
-            throw new \Exception(sprintf('Database with ID %s can not be found', $useDbId));
+            return $this->getDatabaseById($useDbId);
         }
 
         // iterate over the configured databases and try return the default database
@@ -926,16 +940,6 @@ class Configuration implements ConfigurationInterface
 
         // return the custom image types
         return $imageTypes;
-    }
-
-    /**
-     * Return's the array with the configured listeners.
-     *
-     * @return array The array with the listeners
-     */
-    public function getListeners()
-    {
-        return $this->listeners;
     }
 
     /**

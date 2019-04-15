@@ -1,3 +1,15 @@
+# Version 7.0.0
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Extract listener configuration into an trait to make it reusable
+* Extend configuration for Redis specific database configuration
+* Switch to latest techdivision/import 7.0.* version as dependency
+
 # Version 6.0.0
 
 ## Bugfixes

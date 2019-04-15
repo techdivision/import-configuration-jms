@@ -38,6 +38,13 @@ class Operation implements OperationConfigurationInterface
 {
 
     /**
+     * Trait that provides CSV configuration functionality.
+     *
+     * @var \TechDivision\Import\Configuration\Jms\Configuration\ListenersTrait
+     */
+    use ListenersTrait;
+
+    /**
      * The operation's name.
      *
      * @var string
