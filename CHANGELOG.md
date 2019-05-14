@@ -1,3 +1,14 @@
+# Version 9.0.0
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Add --cache-enabled option
+* Switch to latest techdivision/import 9.0.* version as dependency
+
 # Version 8.0.0
 
 ## Bugfixes
