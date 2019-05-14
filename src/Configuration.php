@@ -314,13 +314,22 @@ class Configuration implements ConfigurationInterface
     protected $imageTypes = array();
 
     /**
-     * The flag to signal that the should be wrapped within a single transation or not.
+     * The flag to signal that the import should be wrapped within a single transation or not.
      *
      * @var boolean
      * @Type("boolean")
      * @SerializedName("single-transaction")
      */
     protected $singleTransaction = false;
+
+    /**
+     * The flag to signal that the cache should be enabled or not.
+     *
+     * @var boolean
+     * @Type("boolean")
+     * @SerializedName("cache-enabled")
+     */
+    protected $cacheEnabled = true;
 
     /**
      * Return's the array with the plugins of the operation to use.
@@ -962,5 +971,27 @@ class Configuration implements ConfigurationInterface
     public function isSingleTransaction()
     {
         return $this->singleTransaction;
+    }
+
+    /**
+     * Set's the flag that decides whether or not the the cache has been enabled.
+     *
+     * @param boolean $cacheEnabled TRUE if the cache has been enabled, else FALSE
+     *
+     * @return void
+     */
+    public function setCacheEnabled($cacheEnabled)
+    {
+        $this->cacheEnabled = $cacheEnabled;
+    }
+
+    /**
+     * Whether or not the cache functionality should be enabled.
+     *
+     * @return boolean TRUE if the cache has to be enabled, else FALSE
+     */
+    public function isCacheEnabled()
+    {
+        return $this->cacheEnabled;
     }
 }

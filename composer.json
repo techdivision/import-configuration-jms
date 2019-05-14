@@ -6,7 +6,7 @@
         "php": ">=5.6.0",
         "doctrine/dbal": "2.5.*",
         "jms/serializer": "~1.0",
-        "techdivision/import": "8.0.*"
+        "techdivision/import": "9.x-dev as 8.0.0"
     },
     "require-dev": {
         "phpmd/phpmd": "2.5.*",
