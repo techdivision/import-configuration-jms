@@ -7,6 +7,7 @@
 ## Features
 
 * Add --cache-enabled option
+* Refactoring for plugin and subject listeners
 * Switch to latest techdivision/import 9.0.* version as dependency
 
 # Version 8.0.0

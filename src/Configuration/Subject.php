@@ -25,12 +25,14 @@ use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\PostDeserialize;
 use TechDivision\Import\ConfigurationInterface;
 use TechDivision\Import\Configuration\SubjectConfigurationInterface;
+use TechDivision\Import\Configuration\ListenerAwareConfigurationInterface;
 use TechDivision\Import\Configuration\Jms\Configuration\Subject\FileResolver;
 use TechDivision\Import\Configuration\Jms\Configuration\Subject\ImportAdapter;
 use TechDivision\Import\Configuration\Jms\Configuration\Subject\ExportAdapter;
 use TechDivision\Import\Configuration\Jms\Configuration\Subject\DateConverter;
 use TechDivision\Import\Configuration\Jms\Configuration\Subject\NumberConverter;
 use TechDivision\Import\Configuration\Jms\Configuration\Subject\FilesystemAdapter;
+use TechDivision\Import\Configuration\PluginConfigurationInterface;
 
 /**
  * The subject configuration implementation.
@@ -41,7 +43,7 @@ use TechDivision\Import\Configuration\Jms\Configuration\Subject\FilesystemAdapte
  * @link      https://github.com/techdivision/import-configuration-jms
  * @link      http://www.techdivision.com
  */
-class Subject implements SubjectConfigurationInterface
+class Subject implements SubjectConfigurationInterface, ListenerAwareConfigurationInterface
 {
 
     /**
@@ -52,6 +54,13 @@ class Subject implements SubjectConfigurationInterface
     use ParamsTrait;
 
     /**
+     * Trait that provides CSV configuration functionality.
+     *
+     * @var \TechDivision\Import\Configuration\Jms\Configuration\ListenersTrait
+     */
+    use ListenersTrait;
+
+    /**
      * The subject's unique DI identifier.
      *
      * @var string
@@ -59,6 +68,15 @@ class Subject implements SubjectConfigurationInterface
      * @SerializedName("id")
      */
     protected $id;
+
+    /**
+     * The subject's name.
+     *
+     * @var string
+     * @Type("string")
+     * @SerializedName("name")
+     */
+    protected $name;
 
     /**
      * The array with the subject's observers.
@@ -84,13 +102,6 @@ class Subject implements SubjectConfigurationInterface
      * @SerializedName("frontend-input-callbacks")
      */
     protected $frontendInputCallbacks = array();
-
-    /**
-     * A reference to the parent configuration instance.
-     *
-     * @var \TechDivision\Import\ConfigurationInterface
-     */
-    protected $configuration;
 
     /**
      * The flag to signal that the subjects needs a OK file to be processed or not.
@@ -181,6 +192,20 @@ class Subject implements SubjectConfigurationInterface
      * @SerializedName("target-dir")
      */
     protected $targetDir;
+
+    /**
+     * A reference to the parent configuration instance.
+     *
+     * @var \TechDivision\Import\ConfigurationInterface
+     */
+    protected $configuration;
+
+    /**
+     * The configuration of the parent plugin.
+     *
+     * @var \TechDivision\Import\Configuration\PluginConfigurationInterface
+     */
+    protected $pluginConfiguration;
 
     /**
      * Lifecycle callback that will be invoked after deserialization.
@@ -363,6 +388,17 @@ class Subject implements SubjectConfigurationInterface
     }
 
     /**
+     * Return's the subject's name or the ID, if the name is NOT set.
+     *
+     * @return string The subject's name
+     * @see \TechDivision\Import\Configuration\SubjectConfigurationInterface::getId()
+     */
+    public function getName()
+    {
+        return $this->name ? $this->name : $this->getId();
+    }
+
+    /**
      * Set's the reference to the configuration instance.
      *
      * @param \TechDivision\Import\ConfigurationInterface $configuration The configuration instance
@@ -382,6 +418,28 @@ class Subject implements SubjectConfigurationInterface
     public function getConfiguration()
     {
         return $this->configuration;
+    }
+
+    /**
+     * Set's the reference to the parent plugin configuration instance.
+     *
+     * @param \TechDivision\Import\Configuration\PluginConfigurationInterface $pluginConfiguration The parent plugin configuration instance
+     *
+     * @return void
+     */
+    public function setPluginConfiguration(PluginConfigurationInterface $pluginConfiguration)
+    {
+        $this->pluginConfiguration = $pluginConfiguration;
+    }
+
+    /**
+     * Return's the reference to the parent plugin configuration instance.
+     *
+     * @return \TechDivision\Import\ConfigurationInterface The parent plugin configuration instance
+     */
+    public function getPluginConfiguration()
+    {
+        return $this->pluginConfiguration;
     }
 
     /**
