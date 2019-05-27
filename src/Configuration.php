@@ -33,6 +33,7 @@ use TechDivision\Import\Configuration\Jms\Configuration\Operation;
 use TechDivision\Import\Configuration\Jms\Configuration\ParamsTrait;
 use TechDivision\Import\Configuration\Jms\Configuration\CsvTrait;
 use TechDivision\Import\Configuration\Jms\Configuration\ListenersTrait;
+use TechDivision\Import\Configuration\ListenerAwareConfigurationInterface;
 
 /**
  * A simple JMS based configuration implementation.
@@ -45,7 +46,7 @@ use TechDivision\Import\Configuration\Jms\Configuration\ListenersTrait;
  *
  * @ExclusionPolicy("none")
  */
-class Configuration implements ConfigurationInterface
+class Configuration implements ConfigurationInterface, ListenerAwareConfigurationInterface
 {
 
     /**

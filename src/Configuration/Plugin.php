@@ -26,6 +26,7 @@ use JMS\Serializer\Annotation\PostDeserialize;
 use Doctrine\Common\Collections\ArrayCollection;
 use TechDivision\Import\ConfigurationInterface;
 use TechDivision\Import\Configuration\PluginConfigurationInterface;
+use TechDivision\Import\Configuration\ListenerAwareConfigurationInterface;
 
 /**
  * A simple plugin configuration implementation.
@@ -36,7 +37,7 @@ use TechDivision\Import\Configuration\PluginConfigurationInterface;
  * @link      https://github.com/techdivision/import-configuration-jms
  * @link      http://www.techdivision.com
  */
-class Plugin implements PluginConfigurationInterface
+class Plugin implements PluginConfigurationInterface, ListenerAwareConfigurationInterface
 {
 
     /**
@@ -45,6 +46,13 @@ class Plugin implements PluginConfigurationInterface
      * @var \TechDivision\Import\Configuration\Jms\Configuration\ParamsTrait
      */
     use ParamsTrait;
+
+    /**
+     * Trait that provides CSV configuration functionality.
+     *
+     * @var \TechDivision\Import\Configuration\Jms\Configuration\ListenersTrait
+     */
+    use ListenersTrait;
 
     /**
      * The main configuration.
@@ -61,6 +69,15 @@ class Plugin implements PluginConfigurationInterface
      * @SerializedName("id")
      */
     protected $id;
+
+    /**
+     * The plugin's name.
+     *
+     * @var string
+     * @Type("string")
+     * @SerializedName("name")
+     */
+    protected $name;
 
     /**
      * ArrayCollection with the information of the configured subjects.
@@ -117,13 +134,24 @@ class Plugin implements PluginConfigurationInterface
     }
 
     /**
-     * Return's the subject's unique DI identifier.
+     * Return's the plugin's unique DI identifier.
      *
-     * @return string The subject's unique DI identifier
+     * @return string The plugin's unique DI identifier
      */
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Return's the plugin's name or the ID, if the name is NOT set.
+     *
+     * @return string The plugin's name
+     * @see \TechDivision\Import\Configuration\PluginConfigurationInterface::getId()
+     */
+    public function getName()
+    {
+        return $this->name ? $this->name : $this->getId();
     }
 
     /**
@@ -133,7 +161,20 @@ class Plugin implements PluginConfigurationInterface
      */
     public function getSubjects()
     {
-        return $this->subjects;
+
+        // initialize the array with the subject configurations
+        $subjects = array();
+
+        // iterate over the subject configurations
+        foreach ($this->subjects as $subject) {
+            // inject the parent plugin configuration
+            $subject->setPluginConfiguration($this);
+            // add the subject to the array
+            $subjects[] = $subject;
+        }
+
+        // return the array with subject configurations
+        return $subjects;
     }
 
     /**

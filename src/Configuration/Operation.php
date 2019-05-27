@@ -24,6 +24,7 @@ use JMS\Serializer\Annotation\Type;
 use JMS\Serializer\Annotation\PostDeserialize;
 use Doctrine\Common\Collections\ArrayCollection;
 use TechDivision\Import\Configuration\OperationConfigurationInterface;
+use TechDivision\Import\Configuration\ListenerAwareConfigurationInterface;
 
 /**
  * The configuration implementation for the options.
@@ -34,7 +35,7 @@ use TechDivision\Import\Configuration\OperationConfigurationInterface;
  * @link      https://github.com/techdivision/import-configuration-jms
  * @link      http://www.techdivision.com
  */
-class Operation implements OperationConfigurationInterface
+class Operation implements OperationConfigurationInterface, ListenerAwareConfigurationInterface
 {
 
     /**
