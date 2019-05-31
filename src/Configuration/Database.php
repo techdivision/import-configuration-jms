@@ -120,6 +120,14 @@ class Database implements DatabaseConfigurationInterface
     protected $name;
 
     /**
+     * The DB type to use.
+     *
+     * @var string
+     * @Type("string")
+     */
+    protected $type = DatabaseConfigurationInterface::TYPE_MYSQL;
+
+    /**
      * Set's the database identifier for this database connection.
      *
      * @param string $id The database identifier
@@ -277,5 +285,15 @@ class Database implements DatabaseConfigurationInterface
     public function getPort()
     {
         return $this->port;
+    }
+
+    /**
+     * Return's the DB type to use.
+     *
+     * @return string The DB type
+     */
+    public function getType()
+    {
+        return $this->type;
     }
 }

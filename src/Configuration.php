@@ -77,6 +77,11 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
      */
     use ListenersTrait;
 
+    protected $availableDatabaseTypes = array(
+        DatabaseConfigurationInterface::TYPE_MYSQL,
+        DatabaseConfigurationInterface::TYPE_REDIS
+    );
+
     /**
      * Mapping for boolean values passed on the console.
      *
@@ -635,13 +640,48 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
         // iterate over the configured databases and return the one with the passed ID
         /** @var TechDivision\Import\Configuration\DatabaseInterface  $database */
         foreach ($this->databases as $database) {
-            if ($database->getId() === $id) {
+            if ($database->getId() === $id && $this->isValidDatabaseType($database)) {
                 return $database;
             }
         }
 
         // throw an exception, if the database with the passed ID is NOT configured
-        throw new \Exception(sprintf('Database with ID %s can not be found', $id));
+        throw new \Exception(sprintf('Database with ID %s can not be found or has an invalid type', $id));
+    }
+
+    /**
+     * Return's the databases for the given type.
+     *
+     * @param string $type The database type to return the configurations for
+     *
+     * @return \Doctrine\Common\Collections\Collection The collection with the database configurations
+     */
+    public function getDatabasesByType($type)
+    {
+
+        // initialize the collection for the database configurations
+        $databases = new ArrayCollection();
+
+        // iterate over the configured databases and return the one with the passed ID
+        /** @var TechDivision\Import\Configuration\DatabaseInterface  $database */
+        foreach ($this->databases as $database) {
+            if ($database->getType() === $type && $this->isValidDatabaseType($database)) {
+                $databases->add($database);
+            }
+        }
+
+        // return the database configurations
+        return $databases;
+    }
+
+    /**
+     * Query's whether or not the passed database configuration has a valid type.
+     *
+     * @return boolean TRUE if the passed database configuration has a valid type, else FALSE
+     */
+    protected function isValidDatabaseType(DatabaseConfigurationInterface $database)
+    {
+        return in_array(strtolower($database->getType()), $this->availableDatabaseTypes);
     }
 
     /**
@@ -667,7 +707,7 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
         // iterate over the configured databases and try return the default database
         /** @var TechDivision\Import\Configuration\DatabaseInterface  $database */
         foreach ($this->databases as $database) {
-            if ($database->isDefault()) {
+            if ($database->isDefault() && $this->isValidDatabaseType($database)) {
                 return $database;
             }
         }
