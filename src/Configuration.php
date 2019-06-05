@@ -77,6 +77,12 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
      */
     use ListenersTrait;
 
+    /**
+     * The array with the available database types.
+     *
+     * @var array
+     * @Exclude
+     */
     protected $availableDatabaseTypes = array(
         DatabaseConfigurationInterface::TYPE_MYSQL,
         DatabaseConfigurationInterface::TYPE_REDIS
@@ -96,6 +102,14 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
         'on'    => true,
         'off'   => false
     );
+
+    /**
+     * The serial that will be passed as commandline option (can not be specified in configuration file).
+     *
+     * @var string
+     * @Exclude
+     */
+    protected $serial;
 
     /**
      * The application's unique DI identifier.
@@ -336,6 +350,22 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
      * @SerializedName("cache-enabled")
      */
     protected $cacheEnabled = true;
+
+    /**
+     * ArrayCollection with the information of the configured aliases.
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     * @Type("ArrayCollection<TechDivision\Import\Configuration\Jms\Configuration\Alias>")
+     */
+    protected $aliases;
+
+    /**
+     * ArrayCollection with the information of the configured caches.
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     * @Type("ArrayCollection<TechDivision\Import\Configuration\Jms\Configuration\Cache>")
+     */
+    protected $caches;
 
     /**
      * Return's the array with the plugins of the operation to use.
@@ -936,7 +966,7 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
     public function postDeserialize()
     {
 
-        // create an empty collection if no operations has been specified
+        // create an empty collection if no loggers has been specified
         if ($this->loggers === null) {
             $this->loggers = new ArrayCollection();
         }
@@ -946,9 +976,19 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
             $this->operations = new ArrayCollection();
         }
 
-        // create an empty collection if no loggers has been specified
+        // create an empty collection if no additional venor directories has been specified
         if ($this->additionalVendorDirs === null) {
             $this->additionalVendorDirs = new ArrayCollection();
+        }
+
+        // create an empty collection if no caches has been specified
+        if ($this->caches === null) {
+            $this->caches = new ArrayCollection();
+        }
+
+        // create an empty collection if no aliases has been specified
+        if ($this->aliases === null) {
+            $this->aliases = new ArrayCollection();
         }
     }
 
@@ -1034,5 +1074,74 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
     public function isCacheEnabled()
     {
         return $this->cacheEnabled;
+    }
+
+    /**
+     * Set's the passed serial from the commandline to the configuration.
+     *
+     * @param string $serial The serial from the commandline
+     */
+    public function setSerial($serial)
+    {
+        $this->serial = $serial;
+    }
+
+    /**
+     * Return's the serial from the commandline.
+     *
+     * @return string The serial
+     */
+    public function getSerial()
+    {
+        return $this->serial;
+    }
+
+    /**
+     * Return's the configuration for the caches.
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection The cache configurations
+     */
+    public function getCaches()
+    {
+
+        // iterate over the caches and set the parent configuration instance
+        foreach ($this->caches as $cache) {
+            $cache->setConfiguration($this);
+        }
+
+        // return the array with the caches
+        return $this->caches;
+    }
+
+    /**
+     * Return's the cache configuration for the passed type.
+     *
+     * @param string $type The cache type to return the configuation for
+     *
+     * @return \TechDivision\Import\Configuration\CacheConfigurationInterface The cache configuration
+     */
+    public function getCacheByType($type)
+    {
+
+        // load the available cache configurations
+        $caches = $this->getCaches();
+
+        // try to load the cache for the passed type
+        /** @var \TechDivision\Import\Configuration\CacheConfigurationInterface $cache */
+        foreach ($caches as $cache) {
+            if ($cache->getType() === $type) {
+                return $cache;
+            }
+        }
+    }
+
+    /**
+     * Return's the alias configuration.
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection The alias configuration
+     */
+    public function getAliases()
+    {
+        return $this->aliases;
     }
 }
