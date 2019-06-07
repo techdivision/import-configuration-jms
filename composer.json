@@ -30,14 +30,5 @@
                 "tests/unit"
             ]
         }
-    },
-    "repositories": [
-        {
-            "type": "path",
-            "url": "/Users/wagnert/Workspace_Idea/techdivision/import",
-            "options": {
-                "symlink": true
-            }
-        }
-    ]
+    }
 }
