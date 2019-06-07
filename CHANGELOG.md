@@ -1,3 +1,13 @@
+# Version 10.0.1
+
+## Bugfixes
+
+* Remove local repository registration
+
+## Features
+
+* None
+
 # Version 10.0.0
 
 ## Bugfixes
