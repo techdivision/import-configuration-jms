@@ -707,6 +707,8 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
     /**
      * Query's whether or not the passed database configuration has a valid type.
      *
+     * @param \TechDivision\Import\Configuration\DatabaseConfigurationInterface $database The database configuration
+     *
      * @return boolean TRUE if the passed database configuration has a valid type, else FALSE
      */
     protected function isValidDatabaseType(DatabaseConfigurationInterface $database)
@@ -1080,6 +1082,8 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
      * Set's the passed serial from the commandline to the configuration.
      *
      * @param string $serial The serial from the commandline
+     *
+     * @return void
      */
     public function setSerial($serial)
     {
