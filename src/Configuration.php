@@ -100,9 +100,7 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
         '1'     => true,
         '0'     => false,
         'on'    => true,
-        'off'   => false,
-        1       => true,
-        0       => false
+        'off'   => false
     );
 
     /**
@@ -402,8 +400,8 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
     {
 
         // try to map the passed value to a boolean
-        if (isset($this->booleanMapping[$value])) {
-            return $this->booleanMapping[$value];
+        if (isset($this->booleanMapping[$val = strtolower($value)])) {
+            return $this->booleanMapping[$val];
         }
 
         // throw an exception if we can't convert the passed value
@@ -560,18 +558,6 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
     public function getMagentoVersion()
     {
         return $this->magentoVersion;
-    }
-
-    /**
-     * Set's the subject's source date format to use.
-     *
-     * @param string $sourceDateFormat The source date format
-     *
-     * @return void
-     */
-    public function setSourceDateFormat($sourceDateFormat)
-    {
-        $this->sourceDateFormat = $sourceDateFormat;
     }
 
     /**
