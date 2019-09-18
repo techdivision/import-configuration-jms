@@ -40,12 +40,12 @@ class FileResolver implements FileResolverConfigurationInterface
 {
 
     /**
-     * The file resolver's class name.
+     * The file resolver's Symfony DI name.
      *
      * @var string
      * @Type("string")
      */
-    protected $id = DependencyInjectionKeys::IMPORT_SUBJECT_FILE_RESOLVER_SIMPLE;
+    protected $id = DependencyInjectionKeys::IMPORT_SUBJECT_FILE_RESOLVER_OK_FILE_AWARE;
 
     /**
      * The prefix/meta sequence of the import files.
@@ -105,6 +105,19 @@ class FileResolver implements FileResolverConfigurationInterface
      * @SerializedName("pattern-elements")
      */
     protected $patternElements = null;
+
+    /**
+     * Initialize the instance with the file resolver's Symfony DI name.
+     *
+     * @param string $id The Symfony DI name
+     */
+    public function __construct($id = DependencyInjectionKeys::IMPORT_SUBJECT_FILE_RESOLVER_OK_FILE_AWARE)
+    {
+        // set the Symfony DI of the file resolver
+        $this->id = $id;
+        // initialize the pattern elements
+        $this->patternElements = BunchKeys::getAllKeys();
+    }
 
     /**
      * Return's the file resolver's unique DI identifier.
@@ -184,14 +197,6 @@ class FileResolver implements FileResolverConfigurationInterface
     public function getPatternElements()
     {
         return $this->patternElements;
-    }
-
-    /**
-     * Initializes the pattern elements with the available bunch keys.
-     */
-    public function __construct()
-    {
-        $this->patternElements = BunchKeys::getAllKeys();
     }
 
     /**

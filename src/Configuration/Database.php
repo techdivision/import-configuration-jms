@@ -120,6 +120,15 @@ class Database implements DatabaseConfigurationInterface
     protected $name;
 
     /**
+     * The DB table prefix to use.
+     *
+     * @var string
+     * @Type("string")
+     * @SerializedName("table-prefix")
+     */
+    protected $tablePrefix;
+
+    /**
      * The DB type to use.
      *
      * @var string
@@ -228,6 +237,18 @@ class Database implements DatabaseConfigurationInterface
     }
 
     /**
+     * Set's the DB table prefix to use.
+     *
+     * @param string $tablePrefix The DB table prefix
+     *
+     * @return void
+     */
+    public function setTablePrefix($tablePrefix)
+    {
+        $this->tablePrefix = $tablePrefix;
+    }
+
+    /**
      * Return's the flag to signal that this is the default datasource or not.
      *
      * @return boolean TRUE if this is the default datasource, else FALSE
@@ -295,5 +316,15 @@ class Database implements DatabaseConfigurationInterface
     public function getType()
     {
         return $this->type;
+    }
+
+    /**
+     * Return's the DB table prefix to use.
+     *
+     * @return string The DB table prefix
+     */
+    public function getTablePrefix()
+    {
+        return $this->tablePrefix;
     }
 }

@@ -100,7 +100,9 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
         '1'     => true,
         '0'     => false,
         'on'    => true,
-        'off'   => false
+        'off'   => false,
+        1       => true,
+        0       => false
     );
 
     /**
