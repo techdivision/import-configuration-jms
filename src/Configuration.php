@@ -29,11 +29,14 @@ use JMS\Serializer\Annotation\ExclusionPolicy;
 use Doctrine\Common\Collections\ArrayCollection;
 use TechDivision\Import\ConfigurationInterface;
 use TechDivision\Import\Configuration\DatabaseConfigurationInterface;
-use TechDivision\Import\Configuration\Jms\Configuration\Operation;
 use TechDivision\Import\Configuration\Jms\Configuration\ParamsTrait;
 use TechDivision\Import\Configuration\Jms\Configuration\CsvTrait;
 use TechDivision\Import\Configuration\Jms\Configuration\ListenersTrait;
 use TechDivision\Import\Configuration\ListenerAwareConfigurationInterface;
+use TechDivision\Import\Utils\OperationKeys;
+use TechDivision\Import\Configuration\OperationConfigurationInterface;
+use TechDivision\Import\Configuration\Jms\Configuration\Plugin;
+use TechDivision\Import\Configuration\Jms\Configuration\Subject;
 
 /**
  * A simple JMS based configuration implementation.
@@ -130,13 +133,13 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
     protected $systemName;
 
     /**
-     * The operation name to use.
+     * The operation names to be executed.
      *
-     * @var string
-     * @Type("string")
-     * @SerializedName("operation-name")
+     * @var array
+     * @Type("array<string>")
+     * @SerializedName("operation-names")
      */
-    protected $operationName;
+    protected $operationNames = array();
 
     /**
      * The entity type code to use.
@@ -184,13 +187,13 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
     protected $magentoEdition = 'CE';
 
     /**
-     * The Magento version, e. g. 2.1.0.
+     * The Magento version, e. g. 2.2.0.
      *
      * @var string
      * @Type("string")
      * @SerializedName("magento-version")
      */
-    protected $magentoVersion = '2.1.2';
+    protected $magentoVersion = '2.2.0';
 
     /**
      * ArrayCollection with the information of the configured databases.
@@ -368,6 +371,24 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
     protected $caches;
 
     /**
+     * The flag to signal that the files should be move from the source to the target directory or not.
+     *
+     * @var boolean
+     * @Type("boolean")
+     * @SerializedName("move-files")
+     */
+    protected $moveFiles = true;
+
+    /**
+     * The prefix for the move files subject.
+     *
+     * @var string
+     * @Type("string")
+     * @SerializedName("move-files-prefix")
+     */
+    protected $moveFilesPrefix;
+
+    /**
      * Return's the array with the plugins of the operation to use.
      *
      * @return \Doctrine\Common\Collections\ArrayCollection The ArrayCollection with the plugins
@@ -376,16 +397,43 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
     public function getPlugins()
     {
 
+        // initialize the array with the plugins that have to be executed
+        $plugins = array();
+
+        // prepend the operation to move the files from the source to the target directory
+        if ($this->shouldMoveFiles()) {
+            $this->addOperationName(OperationKeys::MOVE_FILES, true);
+        }
+
         // iterate over the operations and return the subjects of the actual one
-        /** @var TechDivision\Import\Configuration\OperationInterface $operation */
+        /** @var \TechDivision\Import\Configuration\OperationConfigurationInterface $operation */
         foreach ($this->getOperations() as $operation) {
-            if ($this->getOperation()->equals($operation)) {
-                return $operation->getPlugins();
+            // query whether or not the operation is in the array of operation that has to be executed
+            if ($this->inOperationNames($operation)) {
+                /** @var \TechDivision\Import\Configuration\PluginConfigurationInterface $plugin */
+                foreach ($operation->getPlugins() as $plugin) {
+                    // if NO prefix for the move files subject has been set, we use the prefix from the first plugin's subject
+                    if ($this->getMoveFilesPrefix() === null) {
+                        /** @var \TechDivision\Import\Configuration\SubjectConfigurationInterface $subject */
+                        foreach ($plugin->getSubjects() as $subject) {
+                            $this->setMoveFilesPrefix($subject->getFileResolver()->getPrefix());
+                            break;
+                        }
+                    }
+
+                    // append the plugin
+                    $plugins[] = $plugin;
+                }
             }
         }
 
+        // query whether or not we've at least ONE plugin to be executed
+        if (sizeof($plugins) > 0) {
+            return $plugins;
+        }
+
         // throw an exception if no plugins are available
-        throw new \Exception(sprintf('Can\'t find any plugins for operation %s', $this->getOperation()));
+        throw new \Exception(sprintf('Can\'t find any plugins for operation(s) %s', implode(' > ', $this->getOperationNames())));
     }
 
     /**
@@ -409,16 +457,6 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
     }
 
     /**
-     * Return's the operation, initialize from the actual operation name.
-     *
-     * @return \TechDivision\Import\Configuration\OperationConfigurationInterface The operation instance
-     */
-    public function getOperation()
-    {
-        return new Operation($this->getOperationName());
-    }
-
-    /**
      * Return's the application's unique DI identifier.
      *
      * @return string The application's unique DI identifier
@@ -429,25 +467,59 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
     }
 
     /**
-     * Return's the operation name that has to be used.
+     * Add's the operation with the passed name ot the operations that has to be executed.
      *
-     * @param string $operationName The operation name that has to be used
+     * If the operation name has already been added, it'll not be added again.
+     *
+     * @param string  $operationName The operation to be executed
+     * @param boolean $prepend       TRUE if the operation name should be prepended, else FALSE
      *
      * @return void
      */
-    public function setOperationName($operationName)
+    public function addOperationName($operationName, $prepend = false)
     {
-        return $this->operationName = $operationName;
+
+        // do nothing if the operation has already been added
+        if (in_array($operationName, $this->operationNames)) {
+            return;
+        }
+
+        // add the operation otherwise
+        $prepend ? array_unshift($this->operationNames, $operationName) : array_push($this->operationNames, $operationName);
     }
 
     /**
-     * Return's the operation name that has to be used.
+     * Return's the operation names that has to be executed.
      *
-     * @return string The operation name that has to be used
+     * @param array $operationNames The operation names that has to be executed
+     *
+     * @return void
      */
-    public function getOperationName()
+    public function setOperationNames(array $operationNames)
     {
-        return $this->operationName;
+        return $this->operationNames = $operationNames;
+    }
+
+    /**
+     * Return's the operation names that has to be executed.
+     *
+     * @return array The operation names that has to be executed
+     */
+    public function getOperationNames()
+    {
+        return $this->operationNames;
+    }
+
+    /**
+     * Queries whether or not the passed operation has to be exceuted or not.
+     *
+     * @param \TechDivision\Import\Configuration\OperationConfigurationInterface $operation The operation to query for
+     *
+     * @return boolean TRUE if the operation has to be executed, else FALSE
+     */
+    public function inOperationNames(OperationConfigurationInterface $operation)
+    {
+        return in_array($operation->getName(), $this->getOperationNames());
     }
 
     /**
@@ -1135,5 +1207,51 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
     public function getAliases()
     {
         return $this->aliases;
+    }
+
+    /**
+     * Set's the prefix for the move files subject.
+     *
+     * @param string $moveFilesPrefix The prefix for the move files subject
+     *
+     * @return void
+     */
+    public function setMoveFilesPrefix($moveFilesPrefix)
+    {
+        $this->moveFilesPrefix = $moveFilesPrefix;
+    }
+
+    /**
+     * Return's the prefix for the move files subject.
+     *
+     * @return string The prefix for the move files subject
+     *
+     * @return string The prefix for the move files subject
+     */
+    public function getMoveFilesPrefix()
+    {
+        return $this->moveFilesPrefix;
+    }
+
+    /**
+     * Set's the flag that whether the files have to be moved from the source to the target directory or not.
+     *
+     * @param boolean $moveFiles TRUE if the files should be moved, else FALSE
+     *
+     * return void
+     */
+    public function setMoveFiles($moveFiles)
+    {
+        $this->moveFiles = $moveFiles;
+    }
+
+    /**
+     * Whether or not the files should be moved from the source to the target directory.
+     *
+     * @return TRUE if the files should be moved, FALSE otherwise
+     */
+    public function shouldMoveFiles()
+    {
+        return $this->moveFiles;
     }
 }

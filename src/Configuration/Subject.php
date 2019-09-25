@@ -33,6 +33,7 @@ use TechDivision\Import\Configuration\Jms\Configuration\Subject\DateConverter;
 use TechDivision\Import\Configuration\Jms\Configuration\Subject\NumberConverter;
 use TechDivision\Import\Configuration\Jms\Configuration\Subject\FilesystemAdapter;
 use TechDivision\Import\Configuration\PluginConfigurationInterface;
+use TechDivision\Import\Configuration\Subject\FileResolverConfigurationInterface;
 
 /**
  * The subject configuration implementation.

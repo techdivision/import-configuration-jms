@@ -29,6 +29,7 @@ use TechDivision\Import\Configuration\PluginConfigurationInterface;
 use TechDivision\Import\Configuration\ListenerAwareConfigurationInterface;
 use TechDivision\Import\Configuration\Jms\Configuration\Subject\ImportAdapter;
 use TechDivision\Import\Configuration\Jms\Configuration\Subject\ExportAdapter;
+use TechDivision\Import\Configuration\SubjectConfigurationInterface;
 
 /**
  * A simple plugin configuration implementation.

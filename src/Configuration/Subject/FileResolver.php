@@ -130,6 +130,18 @@ class FileResolver implements FileResolverConfigurationInterface
     }
 
     /**
+     * Set's the prefix/meta sequence for the import files.
+     *
+     * @param string $prefix The prefix
+     *
+     * @return void
+     */
+    public function setPrefix($prefix)
+    {
+        $this->prefix = $prefix;
+    }
+
+    /**
      * Return's the prefix/meta sequence for the import files.
      *
      * @return string The prefix
