@@ -27,6 +27,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use TechDivision\Import\ConfigurationInterface;
 use TechDivision\Import\Configuration\PluginConfigurationInterface;
 use TechDivision\Import\Configuration\ListenerAwareConfigurationInterface;
+use TechDivision\Import\Configuration\Jms\Configuration\Subject\ImportAdapter;
+use TechDivision\Import\Configuration\Jms\Configuration\Subject\ExportAdapter;
 
 /**
  * A simple plugin configuration implementation.
@@ -97,6 +99,24 @@ class Plugin implements PluginConfigurationInterface, ListenerAwareConfiguration
     protected $swiftMailer;
 
     /**
+     * The import adapter configuration instance.
+     *
+     * @var \TechDivision\Import\Configuration\Subject\ImportAdapterConfigurationInterface
+     * @Type("TechDivision\Import\Configuration\Jms\Configuration\Subject\ImportAdapter")
+     * @SerializedName("import-adapter")
+     */
+    protected $importAdapter;
+
+    /**
+     * The export adapter configuration instance.
+     *
+     * @var \TechDivision\Import\Configuration\Subject\ExportAdapterConfigurationInterface
+     * @Type("TechDivision\Import\Configuration\Jms\Configuration\Subject\ExportAdapter")
+     * @SerializedName("export-adapter")
+     */
+    protected $exportAdapter;
+
+    /**
      * Lifecycle callback that will be invoked after deserialization.
      *
      * @return void
@@ -108,6 +128,16 @@ class Plugin implements PluginConfigurationInterface, ListenerAwareConfiguration
         // create an empty collection if no subjects has been specified
         if ($this->subjects === null) {
             $this->subjects = new ArrayCollection();
+        }
+
+        // set a default import adatper if none has been configured
+        if ($this->importAdapter === null) {
+            $this->importAdapter = new ImportAdapter();
+        }
+
+        // set a default export adatper if none has been configured
+        if ($this->exportAdapter === null) {
+            $this->exportAdapter = new ExportAdapter();
         }
     }
 
@@ -185,5 +215,25 @@ class Plugin implements PluginConfigurationInterface, ListenerAwareConfiguration
     public function getSwiftMailer()
     {
         return $this->swiftMailer;
+    }
+
+    /**
+     * Return's the import adapter configuration instance.
+     *
+     * @return \TechDivision\Import\Configuration\Subject\ImportAdapterConfigurationInterface The import adapter configuration instance
+     */
+    public function getImportAdapter()
+    {
+        return $this->importAdapter;
+    }
+
+    /**
+     * Return's the export adapter configuration instance.
+     *
+     * @return \TechDivision\Import\Configuration\Subject\ExportAdapterConfigurationInterface The export adapter configuration instance
+     */
+    public function getExportAdapter()
+    {
+        return $this->exportAdapter;
     }
 }
