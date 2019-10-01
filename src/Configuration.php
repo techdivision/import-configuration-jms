@@ -21,22 +21,22 @@
 namespace TechDivision\Import\Configuration\Jms;
 
 use Psr\Log\LogLevel;
+use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation\Type;
 use JMS\Serializer\Annotation\Exclude;
 use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\PostDeserialize;
 use JMS\Serializer\Annotation\ExclusionPolicy;
-use Doctrine\Common\Collections\ArrayCollection;
+use TechDivision\Import\Utils\OperationKeys;
 use TechDivision\Import\ConfigurationInterface;
 use TechDivision\Import\Configuration\DatabaseConfigurationInterface;
 use TechDivision\Import\Configuration\Jms\Configuration\ParamsTrait;
 use TechDivision\Import\Configuration\Jms\Configuration\CsvTrait;
 use TechDivision\Import\Configuration\Jms\Configuration\ListenersTrait;
 use TechDivision\Import\Configuration\ListenerAwareConfigurationInterface;
-use TechDivision\Import\Utils\OperationKeys;
 use TechDivision\Import\Configuration\OperationConfigurationInterface;
-use TechDivision\Import\Configuration\Jms\Configuration\Plugin;
-use TechDivision\Import\Configuration\Jms\Configuration\Subject;
+use TechDivision\Import\Configuration\Jms\Configuration\ExecutionContext;
+use TechDivision;
 
 /**
  * A simple JMS based configuration implementation.
@@ -105,6 +105,21 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
         'on'    => true,
         'off'   => false
     );
+
+    /**
+     * Mapping for entity type to edition mapping (for configuration purposes only).
+     *
+     * @var array
+     * @Exclude
+     */
+    protected $entityTypeToEditionMapping = array(/*
+        'eav_attribute'                 => 'general',
+        'eav_attribte_set'              => 'general',
+        'catalog_product_inventory_msi' => 'general',
+        'catalog_product_tier_price'    => 'general',
+        'customer_address'              => 'general',
+        'customer'                      => 'general'
+    */);
 
     /**
      * The serial that will be passed as commandline option (can not be specified in configuration file).
@@ -215,7 +230,7 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
      * ArrayCollection with the information of the configured operations.
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
-     * @Type("ArrayCollection<TechDivision\Import\Configuration\Jms\Configuration\Operation>")
+     * @Type("array<string, array<string, ArrayCollection<TechDivision\Import\Configuration\Jms\Configuration\Operation>>>")
      */
     protected $operations;
 
@@ -389,6 +404,71 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
     protected $moveFilesPrefix;
 
     /**
+     * The flag to signal that the configuration files have to be loaded, merged and compiled.
+     *
+     * @var boolean
+     * @Type("boolean")
+     * @SerializedName("compile")
+     */
+    protected $compile = true;
+
+    /**
+     * The array with the shortcuts.
+     *
+     * @var array
+     * @Type("array<string, array<string, array>>")
+     * @SerializedName("shortcuts")
+     */
+    protected $shortcuts = array();
+
+    /**
+     * Return's an array with the configurations of the operations that has to be executed.
+     *
+     * @return \TechDivision\Import\Configuration\OperationConfigurationInterface[] The operations
+     */
+    public function getOperationsToExecute()
+    {
+
+        // prepend the operation to move the files from the source to the target directory
+        if ($this->shouldMoveFiles()) {
+            $this->addOperationName(OperationKeys::MOVE_FILES, true);
+        }
+
+        // initialize the array for the operations that has to be executed
+        $operations = array();
+
+        // load the mapped Magento Edition
+        $magentoEdition = $this->mapEntityTypeToMagentoEdition($entityTypeCode = $this->getEntityTypeCode());
+
+        // load the operation names from the shorcuts
+        foreach ($this->shortcuts[$magentoEdition][$entityTypeCode] as $operationName => $ops) {
+            // query whether or not the operation has to be executed or nt
+            if (in_array($operationName, $this->operationNames)) {
+                // if yes, extract the operation data from the shortcut
+                foreach ($ops as $op) {
+                    // explode the shortcut to get Magento Edition, Entity Type Code and Operation Name
+                    list($edition, $type, $name) = explode('/', $op);
+                    // initialize the execution context with the Magento Edition + Entity Type Code
+                    $executionContext = new ExecutionContext($edition, $type);
+                    // load the operations we want to execute
+                    foreach ($this->operations[$edition][$type] as $operation) {
+                        // query whether or not the operation is in the array of operation that has to be executed
+                        if ($operation->getName() === $name) {
+                            // pass the execution context to the operation configuration
+                            $operation->setExecutionContext($executionContext);
+                            // finally add the operation to the array
+                            $operations[] = $operation;
+                        }
+                    }
+                }
+            }
+        }
+
+        // return the array with the operations
+        return $operations;
+    }
+
+    /**
      * Return's the array with the plugins of the operation to use.
      *
      * @return \Doctrine\Common\Collections\ArrayCollection The ArrayCollection with the plugins
@@ -400,30 +480,28 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
         // initialize the array with the plugins that have to be executed
         $plugins = array();
 
-        // prepend the operation to move the files from the source to the target directory
-        if ($this->shouldMoveFiles()) {
-            $this->addOperationName(OperationKeys::MOVE_FILES, true);
-        }
+        // load the operations that has to be executed
+        $operations = $this->getOperationsToExecute();
 
-        // iterate over the operations and return the subjects of the actual one
-        /** @var \TechDivision\Import\Configuration\OperationConfigurationInterface $operation */
-        foreach ($this->getOperations() as $operation) {
-            // query whether or not the operation is in the array of operation that has to be executed
-            if ($this->inOperationNames($operation)) {
-                /** @var \TechDivision\Import\Configuration\PluginConfigurationInterface $plugin */
-                foreach ($operation->getPlugins() as $plugin) {
-                    // if NO prefix for the move files subject has been set, we use the prefix from the first plugin's subject
-                    if ($this->getMoveFilesPrefix() === null) {
-                        /** @var \TechDivision\Import\Configuration\SubjectConfigurationInterface $subject */
-                        foreach ($plugin->getSubjects() as $subject) {
-                            $this->setMoveFilesPrefix($subject->getFileResolver()->getPrefix());
-                            break;
-                        }
+        // initialize the plugin configurations of the selected operations
+        foreach ($operations as $operation) {
+            // iterate over the operation's plugins and initialize their configuration
+            /** @var \TechDivision\Import\Configuration\PluginConfigurationInterface $plugin */
+            foreach ($operation->getPlugins() as $plugin) {
+                // pass the operation configuration instance to the plugin configuration
+                $plugin->setOperationConfiguration($operation);
+                // if NO prefix for the move files subject has been set, we use the prefix from the first plugin's subject
+                if ($this->getMoveFilesPrefix() === null) {
+                    // use the prefix of the first subject
+                    /** @var \TechDivision\Import\Configuration\SubjectConfigurationInterface $subject */
+                    foreach ($plugin->getSubjects() as $subject) {
+                        $this->setMoveFilesPrefix($subject->getFileResolver()->getPrefix());
+                        break;
                     }
-
-                    // append the plugin
-                    $plugins[] = $plugin;
                 }
+
+                // finally append the plugin
+                $plugins[] = $plugin;
             }
         }
 
@@ -434,6 +512,28 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
 
         // throw an exception if no plugins are available
         throw new \Exception(sprintf('Can\'t find any plugins for operation(s) %s', implode(' > ', $this->getOperationNames())));
+    }
+
+    /**
+     * Return's the Entity Type to the configuration specific Magento Edition.
+     *
+     * @param string $entityType The Entity Type fot map
+     *
+     * @return string The mapped configuration specific Magento Edition
+     */
+    protected function mapEntityTypeToMagentoEdition($entityType)
+    {
+
+        // load the actual Magento Edition
+        $magentoEdition = strtolower($this->getMagentoEdition());
+
+        // map the Entity Type to the configuration specific Magento Edition
+        if (isset($this->entityTypeToEditionMapping[$entityType])) {
+            $magentoEdition = $this->entityTypeToEditionMapping[$entityType];
+        }
+
+        // return the Magento Edition
+        return $magentoEdition;
     }
 
     /**
@@ -1052,6 +1152,12 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
         if ($this->aliases === null) {
             $this->aliases = new ArrayCollection();
         }
+
+        foreach ($this->shortcuts as $edition => $shortcuts) {
+            foreach (array_keys($shortcuts) as $entityType) {
+                $this->entityTypeToEditionMapping[$entityType] = $edition;
+            }
+        }
     }
 
     /**
@@ -1253,5 +1359,27 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
     public function shouldMoveFiles()
     {
         return $this->moveFiles;
+    }
+
+    /**
+     * Set's the flag that whether the configuration files have to be compiled or not.
+     *
+     * @param boolean $compile TRUE if the configuration files have to be compiled, else FALSE
+     *
+     * return void
+     */
+    public function setCompile($compile)
+    {
+        $this->compile = $compile;
+    }
+
+    /**
+     * Whether or not the configuration files have to be compiled or not.
+     *
+     * @return TRUE if the configuration files have to be compiled, FALSE otherwise
+     */
+    public function shouldCompile()
+    {
+        return $this->compile;
     }
 }

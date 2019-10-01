@@ -1,0 +1,103 @@
+{
+  "shortcuts": {
+    "general": {
+      "customer_address": {
+        "delete": [
+          "general/general/global-data",
+          "general/general/move-files",
+          "general/customer_address/delete",
+          "general/general/archive-artefacts"
+        ],
+        "replace": [
+          "general/general/global-data",
+          "general/general/move-files",
+          "general/general/cache-warmer",
+          "general/customer_address/replace",
+          "general/general/archive-artefacts"
+        ],
+        "add-update": [
+          "general/general/global-data",
+          "general/general/move-files",
+          "general/general/cache-warmer",
+          "general/customer_address/add-update",
+          "general/general/archive-artefacts"
+        ]
+      }
+    }
+  },
+  "operations": {
+    "general": {
+      "customer_address": [
+        {
+          "name": "delete",
+          "plugins": [
+            {
+              "id": "import.plugin.subject",
+              "subjects": [
+                {
+                  "id": "import_customer_address.subject.bunch",
+                  "file-resolver": {
+                    "prefix": "customer-address-import"
+                  },
+                  "observers": [
+                    {
+                      "import": [
+                        "import_customer_address.observer.clear.customer.address"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "replace",
+          "plugins": [
+            {
+              "id": "import.plugin.subject",
+              "subjects": [
+                {
+                  "id": "import_customer_address.subject.bunch",
+                  "file-resolver": {
+                    "prefix": "customer-address-import"
+                  },
+                  "observers": [
+                    {
+                      "import": [
+                        "import_customer_address.observer.composite.replace"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "add-update",
+          "plugins": [
+            {
+              "id": "import.plugin.subject",
+              "subjects": [
+                {
+                  "id": "import_customer_address.subject.bunch",
+                  "file-resolver": {
+                    "prefix": "customer-address-import"
+                  },
+                  "observers": [
+                    {
+                      "import": [
+                        "import_customer_address.observer.composite.add_update"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

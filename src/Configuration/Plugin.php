@@ -26,10 +26,10 @@ use JMS\Serializer\Annotation\PostDeserialize;
 use Doctrine\Common\Collections\ArrayCollection;
 use TechDivision\Import\ConfigurationInterface;
 use TechDivision\Import\Configuration\PluginConfigurationInterface;
+use TechDivision\Import\Configuration\OperationConfigurationInterface;
 use TechDivision\Import\Configuration\ListenerAwareConfigurationInterface;
 use TechDivision\Import\Configuration\Jms\Configuration\Subject\ImportAdapter;
 use TechDivision\Import\Configuration\Jms\Configuration\Subject\ExportAdapter;
-use TechDivision\Import\Configuration\SubjectConfigurationInterface;
 
 /**
  * A simple plugin configuration implementation.
@@ -63,6 +63,13 @@ class Plugin implements PluginConfigurationInterface, ListenerAwareConfiguration
      * @var string
      */
     protected $configuration;
+
+    /**
+     * The execution context.
+     *
+     * @var \TechDivision\Import\Configuration\OperationConfigurationInterface
+     */
+    protected $operationConfiguration;
 
     /**
      * The plugin's unique DI identifier.
@@ -236,5 +243,37 @@ class Plugin implements PluginConfigurationInterface, ListenerAwareConfiguration
     public function getExportAdapter()
     {
         return $this->exportAdapter;
+    }
+
+    /**
+     * Set's the configuration of the operation the plugin has been configured for.
+     *
+     * @param \\TechDivision\Import\Configuration\OperationConfigurationInterface $operationConfiguration The operation configuration
+     *
+     * @return void
+     */
+    public function setOperationConfiguration(OperationConfigurationInterface $operationConfiguration)
+    {
+        $this->operationConfiguration = $operationConfiguration;
+    }
+
+    /**
+     * Return's the configuration of the operation the plugin has been configured for.
+     *
+     * @return \TechDivision\Import\Configuration\OperationConfigurationInterface The operation configuration
+     */
+    public function getOperationConfiguration()
+    {
+        return $this->operationConfiguration;
+    }
+
+    /**
+     * Return's the execution context configuration for the actualy plugin configuration.
+     *
+     * @return \TechDivision\Import\Configuration\ExecutionContextConfigurationInterface The execution context to use
+     */
+    public function getExecutionContext()
+    {
+        return $this->getOperationConfiguration()->getExecutionContext();
     }
 }

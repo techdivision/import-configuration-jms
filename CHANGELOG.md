@@ -7,6 +7,7 @@
 ## Features
 
 * Add techdivision/import-cli-simple#216
+* Add techdivision/import-configuration-jms#25
 * Switch to latest techdivision/import 15.* version as dependency
 
 # Version 14.0.0

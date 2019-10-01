@@ -37,6 +37,46 @@ class ConfigurationFactory implements ConfigurationFactoryInterface
 {
 
     /**
+     * The configuration parser factory instance used to create a parser that
+     * parsers and merges the configuration from different directories.
+     *
+     * @var \TechDivision\Import\Configuration\Jms\ConfigurationParserFactoryInterface
+     */
+    protected $configurationParserFactory;
+
+    /**
+     * Initializes the instance with the configuration parser factory instance.
+     *
+     * @param \TechDivision\Import\Configuration\Jms\ConfigurationParserFactoryInterface $configurationParserFactory The configuration parser factory instance
+     */
+    public function __construct(ConfigurationParserFactoryInterface $configurationParserFactory)
+    {
+        $this->configurationParserFactory = $configurationParserFactory;
+    }
+
+    /**
+     * Return's the configuration parser factory instance.
+     *
+     * @return \TechDivision\Import\Configuration\Jms\ConfigurationParserFactoryInterface The configuration parser factory instance
+     */
+    protected function getConfigurationParserFactory()
+    {
+        return $this->configurationParserFactory;
+    }
+
+    /**
+     * Returns the configuration parser for the passed format.
+     *
+     * @param string $format The format of the configuration file to return the parser for (either one of json, yaml or xml)
+     *
+     * @return \TechDivision\Import\Configuration\Jms\ConfigurationParserInterface The configuration parser instance
+     */
+    protected function getConfigurationParser($format)
+    {
+        return $this->getConfigurationParserFactory()->factory($format);
+    }
+
+    /**
      * Factory implementation to create a new initialized configuration instance.
      *
      * @param string $filename   The configuration filename
@@ -61,6 +101,22 @@ class ConfigurationFactory implements ConfigurationFactoryInterface
     }
 
     /**
+     * Factory implementation to create a new initialized configuration instance from a file
+     * with configurations that'll be parsed and merged.
+     *
+     * @param array  $directories An array with diretories to parse and merge
+     * @param string $format      The format of the configuration file, either one of json, yaml or xml
+     * @param string $params      A serialized string with additional params that'll be passed to the configuration
+     * @param string $paramsFile  A filename that contains serialized data with additional params that'll be passed to the configuration
+     *
+     * @return void
+     */
+    public function factoryFromDirectories(array $directories = array(), $format = 'json', $params = null, $paramsFile = null)
+    {
+        return $this->factoryFromString($this->getConfigurationParser($format)->parse($directories), $format, $params, $paramsFile);
+    }
+
+    /**
      * Factory implementation to create a new initialized configuration instance.
      *
      * @param string $data       The configuration data
@@ -68,7 +124,7 @@ class ConfigurationFactory implements ConfigurationFactoryInterface
      * @param string $params     A serialized string with additional params that'll be passed to the configuration
      * @param string $paramsFile A filename that contains serialized data with additional params that'll be passed to the configuration
      *
-     * @return \TechDivision\Import\Configuration\Jms\Configuration The configuration instance
+     * @return \TechDivision\Import\ConfigurationInterface The configuration instance
      */
     public function factoryFromString($data, $format = 'json', $params = null, $paramsFile = null)
     {

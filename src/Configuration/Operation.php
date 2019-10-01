@@ -25,6 +25,7 @@ use JMS\Serializer\Annotation\PostDeserialize;
 use Doctrine\Common\Collections\ArrayCollection;
 use TechDivision\Import\Configuration\OperationConfigurationInterface;
 use TechDivision\Import\Configuration\ListenerAwareConfigurationInterface;
+use TechDivision\Import\Configuration\ExecutionContextConfigurationInterface;
 
 /**
  * The configuration implementation for the options.
@@ -44,6 +45,13 @@ class Operation implements OperationConfigurationInterface, ListenerAwareConfigu
      * @var \TechDivision\Import\Configuration\Jms\Configuration\ListenersTrait
      */
     use ListenersTrait;
+
+    /**
+     * The execution context.
+     *
+     * @var \TechDivision\Import\Configuration\ExecutionContextConfigurationInterface
+     */
+    protected $executionContext;
 
     /**
      * The operation's name.
@@ -118,6 +126,28 @@ class Operation implements OperationConfigurationInterface, ListenerAwareConfigu
     public function getPlugins()
     {
         return $this->plugins;
+    }
+
+    /**
+     * Set's the execution context configuration for the actualy plugin configuration.
+     *
+     * @param \TechDivision\Import\Configuration\ExecutionContextConfigurationInterface $executionContext The execution context to use
+     *
+     * @return void
+     */
+    public function setExecutionContext(ExecutionContextConfigurationInterface $executionContext)
+    {
+        $this->executionContext = $executionContext;
+    }
+
+    /**
+     * Return's the execution context configuration for the actualy plugin configuration.
+     *
+     * @return \TechDivision\Import\Configuration\ExecutionContextConfigurationInterface The execution context to use
+     */
+    public function getExecutionContext()
+    {
+        return $this->executionContext;
     }
 
     /**

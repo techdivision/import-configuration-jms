@@ -24,6 +24,7 @@ use JMS\Serializer\Annotation\Type;
 use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\PostDeserialize;
 use TechDivision\Import\ConfigurationInterface;
+use TechDivision\Import\Configuration\PluginConfigurationInterface;
 use TechDivision\Import\Configuration\SubjectConfigurationInterface;
 use TechDivision\Import\Configuration\ListenerAwareConfigurationInterface;
 use TechDivision\Import\Configuration\Jms\Configuration\Subject\FileResolver;
@@ -32,8 +33,6 @@ use TechDivision\Import\Configuration\Jms\Configuration\Subject\ExportAdapter;
 use TechDivision\Import\Configuration\Jms\Configuration\Subject\DateConverter;
 use TechDivision\Import\Configuration\Jms\Configuration\Subject\NumberConverter;
 use TechDivision\Import\Configuration\Jms\Configuration\Subject\FilesystemAdapter;
-use TechDivision\Import\Configuration\PluginConfigurationInterface;
-use TechDivision\Import\Configuration\Subject\FileResolverConfigurationInterface;
 
 /**
  * The subject configuration implementation.
@@ -436,7 +435,7 @@ class Subject implements SubjectConfigurationInterface, ListenerAwareConfigurati
     /**
      * Return's the reference to the parent plugin configuration instance.
      *
-     * @return \TechDivision\Import\ConfigurationInterface The parent plugin configuration instance
+     * @return \TechDivision\Import\Configuration\PluginConfigurationInterface The parent plugin configuration instance
      */
     public function getPluginConfiguration()
     {
@@ -594,5 +593,15 @@ class Subject implements SubjectConfigurationInterface, ListenerAwareConfigurati
     public function getImageTypes()
     {
         return $this->getConfiguration()->getImageTypes();
+    }
+
+    /**
+     * Return's the execution context configuration for the actualy plugin configuration.
+     *
+     * @return \TechDivision\Import\Configuration\ExecutionContextConfigurationInterface The execution context to use
+     */
+    public function getExecutionContext()
+    {
+        return $this->getPluginConfiguration()->getExecutionContext();
     }
 }

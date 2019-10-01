@@ -1,0 +1,123 @@
+{
+  "shortcuts": {
+    "general": {
+      "catalog_product_tier_price": {
+        "delete": [
+          "general/general/global-data",
+          "general/general/move-files",
+          "general/catalog_product_tier_price/delete",
+          "general/general/archive-artefacts"
+        ],
+        "replace": [
+          "general/general/global-data",
+          "general/general/move-files",
+          "general/general/cache-warmer",
+          "general/catalog_product_tier_price/replace",
+          "general/general/archive-artefacts"
+        ],
+        "add-update": [
+          "general/general/global-data",
+          "general/general/move-files",
+          "general/general/cache-warmer",
+          "general/catalog_product_tier_price/add-update",
+          "general/general/archive-artefacts"
+        ]
+      }
+    }
+  },
+  "operations": {
+    "general": {
+      "catalog_product_tier_price": [
+        {
+          "name": "delete",
+          "plugins": [
+            {
+              "id": "import.plugin.subject",
+              "subjects": [
+                {
+                  "id": "import_product_tier_price.subject.tier_price",
+                  "file-resolver": {
+                    "prefix": "product-import-tier-price"
+                  },
+                  "observers": [
+                    {
+                      "import": [
+                        "import_product_tier_price.observer.clear.tier_price"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "replace",
+          "plugins": [
+            {
+              "id": "import.plugin.subject",
+              "subjects": [
+                {
+                  "id": "import_product_tier_price.subject.tier_price",
+                  "file-resolver": {
+                    "prefix": "product-import-tier-price"
+                  },
+                  "observers": [
+                    {
+                      "import": [
+                        "import_product_tier_price.observer.clear.tier_price",
+                        "import_product_tier_price.observer.tier_price"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "add-update",
+          "plugins": [
+            {
+              "id": "import.plugin.subject",
+              "listeners": [
+                {
+                  "plugin.process.success": [
+                    "import_product_tier_price.listener.delete.obsolete.tier_prices"
+                  ]
+                }
+              ],
+              "params": [
+                {
+                  "clean-up-tier-prices": true
+                }
+              ],
+              "subjects": [
+                {
+                  "id": "import_product_tier_price.subject.tier_price",
+                  "listeners": [
+                    {
+                      "subject.import.success": [
+                        "import_product.listener.register.sku.to.pk.mapping"
+                      ]
+                    }
+                  ],
+                  "file-resolver": {
+                    "prefix": "product-import-tier-price"
+                  },
+                  "observers": [
+                    {
+                      "import": [
+                        "import_product_tier_price.observer.tier_price.update"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
