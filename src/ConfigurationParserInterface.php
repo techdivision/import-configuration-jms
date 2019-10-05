@@ -38,6 +38,7 @@ interface ConfigurationParserInterface
      * @param array $directories An array with diretories to parse
      *
      * @return void
+     * @throws \Exception Is thrown if the configuration can not be loaded from the configuration files
      */
     public function parse(array $directories);
 }

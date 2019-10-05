@@ -37,34 +37,37 @@ class JsonParser implements ConfigurationParserInterface
     /**
      * Parsing the configuration and merge it recursively.
      *
-     * @param array  $directories An array with diretories to parse
-     * @param string $format      The format of the configuration data, either one of json, yaml or xml
+     * @param array $directories An array with diretories to parse
      *
      * @return void
+     * @throws \Exception Is thrown if the configuration can not be loaded from the configuration files
      */
     public function parse(array $directories)
     {
 
+        // initialize the array that'll contain the configuration structure
         $main = array();
 
+        // iterate over the found directories to parse them for configuration files
         foreach ($directories as $directory) {
-
+            // create an iterator to recursively parse through the directories
             $directory = new \RecursiveDirectoryIterator($directory);
             $iterator = new \RecursiveIteratorIterator($directory);
             $regex = new \RegexIterator($iterator, '/^.+\.json$/i', \RecursiveRegexIterator::GET_MATCH);
 
-            $filenames = array_keys(iterator_to_array($regex));
-
-            foreach ($filenames as $filename) {
-
-                if ($content = json_decode(file_get_contents($filename), true)) {
-                    $main = array_merge_recursive($main, $content);
-                } else {
-                    error_log(sprintf('Can\'t load content of file %s', $filename));
+            // load the content of each found configuration file and merge it
+            foreach ($regex as $filenames) {
+                foreach ($filenames as $filename) {
+                    if ($content = json_decode(file_get_contents($filename), true)) {
+                        $main = array_merge_recursive($main, $content);
+                    } else {
+                        throw new \Exception(sprintf('Can\'t load content of file %s', $filename));
+                    }
                 }
             }
         }
 
+        // return the JSON encoded configuration
         return json_encode($main, JSON_PRETTY_PRINT);
     }
 }

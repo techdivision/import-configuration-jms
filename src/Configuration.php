@@ -27,7 +27,6 @@ use JMS\Serializer\Annotation\Exclude;
 use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\PostDeserialize;
 use JMS\Serializer\Annotation\ExclusionPolicy;
-use TechDivision\Import\Utils\OperationKeys;
 use TechDivision\Import\ConfigurationInterface;
 use TechDivision\Import\Configuration\DatabaseConfigurationInterface;
 use TechDivision\Import\Configuration\Jms\Configuration\ParamsTrait;
@@ -35,8 +34,6 @@ use TechDivision\Import\Configuration\Jms\Configuration\CsvTrait;
 use TechDivision\Import\Configuration\Jms\Configuration\ListenersTrait;
 use TechDivision\Import\Configuration\ListenerAwareConfigurationInterface;
 use TechDivision\Import\Configuration\OperationConfigurationInterface;
-use TechDivision\Import\Configuration\Jms\Configuration\ExecutionContext;
-use TechDivision;
 
 /**
  * A simple JMS based configuration implementation.
@@ -92,6 +89,14 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
     );
 
     /**
+     * The operation names to be executed.
+     *
+     * @var array
+     * @Exclude
+     */
+    protected $operationNames = array();
+
+    /**
      * Mapping for boolean values passed on the console.
      *
      * @var array
@@ -107,27 +112,36 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
     );
 
     /**
-     * Mapping for entity type to edition mapping (for configuration purposes only).
-     *
-     * @var array
-     * @Exclude
-     */
-    protected $entityTypeToEditionMapping = array(/*
-        'eav_attribute'                 => 'general',
-        'eav_attribte_set'              => 'general',
-        'catalog_product_inventory_msi' => 'general',
-        'catalog_product_tier_price'    => 'general',
-        'customer_address'              => 'general',
-        'customer'                      => 'general'
-    */);
-
-    /**
      * The serial that will be passed as commandline option (can not be specified in configuration file).
      *
      * @var string
      * @Exclude
      */
     protected $serial;
+
+    /**
+     * The shortcut that maps the operation names that has to be executed.
+     *
+     * @var string
+     * @Exclude
+     */
+    protected $shortcut;
+
+    /**
+     * The flag to signal that the files should be move from the source to the target directory or not.
+     *
+     * @var boolean
+     * @Exclude
+     */
+    protected $moveFiles = false;
+
+    /**
+     * The prefix for the move files subject.
+     *
+     * @var string
+     * @Exclude
+     */
+    protected $moveFilesPrefix;
 
     /**
      * The application's unique DI identifier.
@@ -146,15 +160,6 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
      * @SerializedName("system-name")
      */
     protected $systemName;
-
-    /**
-     * The operation names to be executed.
-     *
-     * @var array
-     * @Type("array<string>")
-     * @SerializedName("operation-names")
-     */
-    protected $operationNames = array();
 
     /**
      * The entity type code to use.
@@ -386,24 +391,6 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
     protected $caches;
 
     /**
-     * The flag to signal that the files should be move from the source to the target directory or not.
-     *
-     * @var boolean
-     * @Type("boolean")
-     * @SerializedName("move-files")
-     */
-    protected $moveFiles = true;
-
-    /**
-     * The prefix for the move files subject.
-     *
-     * @var string
-     * @Type("string")
-     * @SerializedName("move-files-prefix")
-     */
-    protected $moveFilesPrefix;
-
-    /**
      * The flag to signal that the configuration files have to be loaded, merged and compiled.
      *
      * @var boolean
@@ -422,118 +409,38 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
     protected $shortcuts = array();
 
     /**
-     * Return's an array with the configurations of the operations that has to be executed.
+     * Lifecycle callback that will be invoked after deserialization.
      *
-     * @return \TechDivision\Import\Configuration\OperationConfigurationInterface[] The operations
+     * @return void
+     * @PostDeserialize
      */
-    public function getOperationsToExecute()
+    public function postDeserialize()
     {
 
-        // prepend the operation to move the files from the source to the target directory
-        if ($this->shouldMoveFiles()) {
-            $this->addOperationName(OperationKeys::MOVE_FILES, true);
+        // create an empty collection if no loggers has been specified
+        if ($this->loggers === null) {
+            $this->loggers = new ArrayCollection();
         }
 
-        // initialize the array for the operations that has to be executed
-        $operations = array();
-
-        // load the mapped Magento Edition
-        $magentoEdition = $this->mapEntityTypeToMagentoEdition($entityTypeCode = $this->getEntityTypeCode());
-
-        // load the operation names from the shorcuts
-        foreach ($this->shortcuts[$magentoEdition][$entityTypeCode] as $operationName => $ops) {
-            // query whether or not the operation has to be executed or nt
-            if (in_array($operationName, $this->operationNames)) {
-                // if yes, extract the operation data from the shortcut
-                foreach ($ops as $op) {
-                    // explode the shortcut to get Magento Edition, Entity Type Code and Operation Name
-                    list($edition, $type, $name) = explode('/', $op);
-                    // initialize the execution context with the Magento Edition + Entity Type Code
-                    $executionContext = new ExecutionContext($edition, $type);
-                    // load the operations we want to execute
-                    foreach ($this->operations[$edition][$type] as $operation) {
-                        // query whether or not the operation is in the array of operation that has to be executed
-                        if ($operation->getName() === $name) {
-                            // pass the execution context to the operation configuration
-                            $operation->setExecutionContext($executionContext);
-                            // finally add the operation to the array
-                            $operations[] = $operation;
-                        }
-                    }
-                }
-            }
+        // create an empty collection if no operations has been specified
+        if ($this->operations === null) {
+            $this->operations = new ArrayCollection();
         }
 
-        // return the array with the operations
-        return $operations;
-    }
-
-    /**
-     * Return's the array with the plugins of the operation to use.
-     *
-     * @return \Doctrine\Common\Collections\ArrayCollection The ArrayCollection with the plugins
-     * @throws \Exception Is thrown, if no plugins are available for the actual operation
-     */
-    public function getPlugins()
-    {
-
-        // initialize the array with the plugins that have to be executed
-        $plugins = array();
-
-        // load the operations that has to be executed
-        $operations = $this->getOperationsToExecute();
-
-        // initialize the plugin configurations of the selected operations
-        foreach ($operations as $operation) {
-            // iterate over the operation's plugins and initialize their configuration
-            /** @var \TechDivision\Import\Configuration\PluginConfigurationInterface $plugin */
-            foreach ($operation->getPlugins() as $plugin) {
-                // pass the operation configuration instance to the plugin configuration
-                $plugin->setOperationConfiguration($operation);
-                // if NO prefix for the move files subject has been set, we use the prefix from the first plugin's subject
-                if ($this->getMoveFilesPrefix() === null) {
-                    // use the prefix of the first subject
-                    /** @var \TechDivision\Import\Configuration\SubjectConfigurationInterface $subject */
-                    foreach ($plugin->getSubjects() as $subject) {
-                        $this->setMoveFilesPrefix($subject->getFileResolver()->getPrefix());
-                        break;
-                    }
-                }
-
-                // finally append the plugin
-                $plugins[] = $plugin;
-            }
+        // create an empty collection if no additional venor directories has been specified
+        if ($this->additionalVendorDirs === null) {
+            $this->additionalVendorDirs = new ArrayCollection();
         }
 
-        // query whether or not we've at least ONE plugin to be executed
-        if (sizeof($plugins) > 0) {
-            return $plugins;
+        // create an empty collection if no caches has been specified
+        if ($this->caches === null) {
+            $this->caches = new ArrayCollection();
         }
 
-        // throw an exception if no plugins are available
-        throw new \Exception(sprintf('Can\'t find any plugins for operation(s) %s', implode(' > ', $this->getOperationNames())));
-    }
-
-    /**
-     * Return's the Entity Type to the configuration specific Magento Edition.
-     *
-     * @param string $entityType The Entity Type fot map
-     *
-     * @return string The mapped configuration specific Magento Edition
-     */
-    protected function mapEntityTypeToMagentoEdition($entityType)
-    {
-
-        // load the actual Magento Edition
-        $magentoEdition = strtolower($this->getMagentoEdition());
-
-        // map the Entity Type to the configuration specific Magento Edition
-        if (isset($this->entityTypeToEditionMapping[$entityType])) {
-            $magentoEdition = $this->entityTypeToEditionMapping[$entityType];
+        // create an empty collection if no aliases has been specified
+        if ($this->aliases === null) {
+            $this->aliases = new ArrayCollection();
         }
-
-        // return the Magento Edition
-        return $magentoEdition;
     }
 
     /**
@@ -924,6 +831,16 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
     }
 
     /**
+     * Return's the ArrayCollection with the configured shortcuts.
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection The ArrayCollection with the shortcuts
+     */
+    public function getShortcuts()
+    {
+        return $this->shortcuts;
+    }
+
+    /**
      * Return's the ArrayCollection with the configured loggers.
      *
      * @return \Doctrine\Common\Collections\ArrayCollection The ArrayCollection with the loggers
@@ -1117,47 +1034,6 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
     public function getAdditionalVendorDirs()
     {
         return $this->additionalVendorDirs;
-    }
-
-    /**
-     * Lifecycle callback that will be invoked after deserialization.
-     *
-     * @return void
-     * @PostDeserialize
-     */
-    public function postDeserialize()
-    {
-
-        // create an empty collection if no loggers has been specified
-        if ($this->loggers === null) {
-            $this->loggers = new ArrayCollection();
-        }
-
-        // create an empty collection if no operations has been specified
-        if ($this->operations === null) {
-            $this->operations = new ArrayCollection();
-        }
-
-        // create an empty collection if no additional venor directories has been specified
-        if ($this->additionalVendorDirs === null) {
-            $this->additionalVendorDirs = new ArrayCollection();
-        }
-
-        // create an empty collection if no caches has been specified
-        if ($this->caches === null) {
-            $this->caches = new ArrayCollection();
-        }
-
-        // create an empty collection if no aliases has been specified
-        if ($this->aliases === null) {
-            $this->aliases = new ArrayCollection();
-        }
-
-        foreach ($this->shortcuts as $edition => $shortcuts) {
-            foreach (array_keys($shortcuts) as $entityType) {
-                $this->entityTypeToEditionMapping[$entityType] = $edition;
-            }
-        }
     }
 
     /**
@@ -1381,5 +1257,25 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
     public function shouldCompile()
     {
         return $this->compile;
+    }
+
+    /**
+     * Set's the shortcut that maps the operation names that has to be executed.
+     *
+     * @param string $shortcut The shortcut
+     */
+    public function setShortcut($shortcut)
+    {
+        $this->shortcut = $shortcut;
+    }
+
+    /**
+     * Return's the shortcut that maps the operation names that has to be executed.
+     *
+     * @return string The shortcut
+     */
+    public function getShortcut()
+    {
+        return $this->shortcut;
     }
 }
