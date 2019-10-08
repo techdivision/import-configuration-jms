@@ -134,7 +134,7 @@ class ConfigurationFactory implements ConfigurationFactoryInterface
 
         // merge the params, if specified with the --params option
         if ($params) {
-            $this->mergeParams(
+            $this->replaceParams(
                 $data,
                 $this->toArray(
                     $params,
@@ -146,7 +146,7 @@ class ConfigurationFactory implements ConfigurationFactoryInterface
 
         // merge the param loaded from the file, if specified with the --params-file option
         if ($paramsFile && is_file($paramsFile)) {
-            $this->mergeParams(
+            $this->replaceParams(
                 $data,
                 $this->toArray(
                     file_get_contents($paramsFile),
@@ -193,27 +193,15 @@ class ConfigurationFactory implements ConfigurationFactoryInterface
     }
 
     /**
-     * Merge the additional params in the passed configuration data.
+     * Merge the additional params in the passed configuration data and replaces existing ones with the same name.
      *
      * @param array $data   The array with configuration data
      * @param array $params The array with additional params to merge
      *
      * @return void
      */
-    protected function mergeParams(&$data, $params)
+    protected function replaceParams(&$data, $params)
     {
-
-        // merge the passed params into the configuration data
-        foreach ($params as $paramName => $paramValue) {
-            if (is_array($paramValue)) {
-                foreach ($paramValue as $key => $value) {
-                    foreach ($value as $name => $x) {
-                        $data[$paramName][$key][$name] = $x;
-                    }
-                }
-            } else {
-                $data[$paramName] = $paramValue;
-            }
-        }
+        $data = array_replace_recursive($data, $params);
     }
 }

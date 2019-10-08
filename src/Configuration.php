@@ -128,14 +128,6 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
     protected $shortcut;
 
     /**
-     * The flag to signal that the files should be move from the source to the target directory or not.
-     *
-     * @var boolean
-     * @Exclude
-     */
-    protected $moveFiles = false;
-
-    /**
      * The prefix for the move files subject.
      *
      * @var string
@@ -389,15 +381,6 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
      * @Type("ArrayCollection<TechDivision\Import\Configuration\Jms\Configuration\Cache>")
      */
     protected $caches;
-
-    /**
-     * The flag to signal that the configuration files have to be loaded, merged and compiled.
-     *
-     * @var boolean
-     * @Type("boolean")
-     * @SerializedName("compile")
-     */
-    protected $compile = true;
 
     /**
      * The array with the shortcuts.
@@ -1213,50 +1196,6 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
     public function getMoveFilesPrefix()
     {
         return $this->moveFilesPrefix;
-    }
-
-    /**
-     * Set's the flag that whether the files have to be moved from the source to the target directory or not.
-     *
-     * @param boolean $moveFiles TRUE if the files should be moved, else FALSE
-     *
-     * return void
-     */
-    public function setMoveFiles($moveFiles)
-    {
-        $this->moveFiles = $moveFiles;
-    }
-
-    /**
-     * Whether or not the files should be moved from the source to the target directory.
-     *
-     * @return TRUE if the files should be moved, FALSE otherwise
-     */
-    public function shouldMoveFiles()
-    {
-        return $this->moveFiles;
-    }
-
-    /**
-     * Set's the flag that whether the configuration files have to be compiled or not.
-     *
-     * @param boolean $compile TRUE if the configuration files have to be compiled, else FALSE
-     *
-     * return void
-     */
-    public function setCompile($compile)
-    {
-        $this->compile = $compile;
-    }
-
-    /**
-     * Whether or not the configuration files have to be compiled or not.
-     *
-     * @return TRUE if the configuration files have to be compiled, FALSE otherwise
-     */
-    public function shouldCompile()
-    {
-        return $this->compile;
     }
 
     /**

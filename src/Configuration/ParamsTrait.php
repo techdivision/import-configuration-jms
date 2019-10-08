@@ -74,10 +74,8 @@ trait ParamsTrait
         $params = array();
 
         // prepare the params, e. g. explode them into an array
-        if ($paramsAvailable = reset($this->params)) {
-            foreach (array_keys($paramsAvailable) as $paramKey) {
-                $params[$paramKey] = $this->getParam($paramKey);
-            }
+        foreach (array_keys($this->params) as $paramKey) {
+            $params[$paramKey] = $this->getParam($paramKey);
         }
 
         // return the params
@@ -108,13 +106,10 @@ trait ParamsTrait
     public function getParam($name, $defaultValue = null)
     {
 
-        // load the params
-        $params = reset($this->params);
-
         // query whether or not, the param with the passed name is set
-        if (is_array($params) && isset($params[$name])) {
+        if (isset($this->params[$name])) {
             // load the value from the array
-            $value = $params[$name];
+            $value = $this->params[$name];
             // query whether or not, the value contains a comma => if yes, we explode it into an array
             if (is_string($value) && stripos($value, $delimiter = $this->getParamDelimiter())) {
                 $value = explode($delimiter, $value);
