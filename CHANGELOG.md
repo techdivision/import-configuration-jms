@@ -1,4 +1,4 @@
-# Version 14.0.1
+# Version 14.1.0
 
 ## Bugfixes
 
@@ -6,7 +6,8 @@
 
 ## Features
 
-* Lower dependency for jms/serializer for compatility with Magento 2.3.3
+* Lower dependency for jms/serializer to ^0.16.0 for compatility with Magento 2.3.3
+* Add  custom implementations for SerializerBuilder and Serializer to provide forward compatibility
 
 # Version 14.0.0
 
