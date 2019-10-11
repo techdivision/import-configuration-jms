@@ -1,3 +1,13 @@
+# Version 14.0.1
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Lower dependency for jms/serializer for compatility with Magento 2.3.3
+
 # Version 14.0.0
 
 ## Bugfixes
