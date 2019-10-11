@@ -10,6 +10,17 @@
 * Add techdivision/import-configuration-jms#25
 * Switch to latest techdivision/import 15.* version as dependency
 
+# Version 14.1.0
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Lower dependency for jms/serializer to ^0.16.0 for compatility with Magento 2.3.3
+* Add  custom implementations for SerializerBuilder and Serializer to provide forward compatibility
+
 # Version 14.0.0
 
 ## Bugfixes
