@@ -20,6 +20,8 @@
 
 namespace TechDivision\Import\Configuration\Jms\Parsers;
 
+use TechDivision\Import\Adapter\PhpFilesystemAdapterInterface;
+use TechDivision\Import\Configuration\Jms\Utils\ArrayUtilInterface;
 use TechDivision\Import\Configuration\Jms\ConfigurationParserInterface;
 
 /**
@@ -33,6 +35,23 @@ use TechDivision\Import\Configuration\Jms\ConfigurationParserInterface;
  */
 class JsonParser implements ConfigurationParserInterface
 {
+
+    /**
+     * The utility class that provides array handling functionality.
+     *
+     * @var \TechDivision\Import\Configuration\Jms\Utils\ArrayUtilInterface
+     */
+    protected $arrayUtil;
+
+    /**
+     * Initializes the parser with the array utility instance.
+     *
+     * @param \TechDivision\Import\Configuration\Jms\Utils\ArrayUtilInterface $arrayUtil The utility instance
+     */
+    public function __construct(ArrayUtilInterface $arrayUtil)
+    {
+        $this->arrayUtil = $arrayUtil;
+    }
 
     /**
      * Parsing the configuration and merge it recursively.
@@ -50,24 +69,69 @@ class JsonParser implements ConfigurationParserInterface
 
         // iterate over the found directories to parse them for configuration files
         foreach ($directories as $directory) {
-            // create an iterator to recursively parse through the directories
-            $directory = new \RecursiveDirectoryIterator($directory);
-            $iterator = new \RecursiveIteratorIterator($directory);
-            $regex = new \RegexIterator($iterator, '/^.+\.json$/i', \RecursiveRegexIterator::GET_MATCH);
+            // load the configuration filenames
+            $filenames = $this->listContents($directory, '*.json');
 
             // load the content of each found configuration file and merge it
-            foreach ($regex as $filenames) {
-                foreach ($filenames as $filename) {
-                    if ($content = json_decode(file_get_contents($filename), true)) {
-                        $main = array_merge_recursive($main, $content);
-                    } else {
-                        throw new \Exception(sprintf('Can\'t load content of file %s', $filename));
-                    }
+            foreach ($filenames as $filename) {
+                if (is_file($filename) && $content = json_decode(file_get_contents($filename), true)) {
+                    $main = $this->replace($main, $content);
+                } else {
+                    throw new \Exception(sprintf('Can\'t load content of file %s', $filename));
                 }
             }
         }
 
         // return the JSON encoded configuration
         return json_encode($main, JSON_PRETTY_PRINT);
+    }
+
+    /**
+     * Return's the array utility instance.
+     *
+     * @return \TechDivision\Import\Configuration\Jms\Utils\ArrayUtilInterface The utility instance
+     */
+    protected function getArrayUtil()
+    {
+        return $this->arrayUtil;
+    }
+
+    /**
+     * Replaces the values of the first array with the ones from the arrays
+     * that has been passed as additional arguments.
+     *
+     * @param array ...$arrays The arrays with the values that has to be replaced
+     *
+     * @return array The array with the replaced values
+     */
+    protected function replace(...$arrays)
+    {
+        return $this->getArrayUtil()->replace(...$arrays);
+    }
+
+    /**
+     * List the filenames of a directory.
+     *
+     * @param string  $directory The directory to list
+     * @param boolean $recursive Whether to list recursively
+     *
+     * @return array A list of filenames
+     */
+    protected function listContents($directory = '', $suffix = '*')
+    {
+
+        // parse the directory
+        $files = glob($pattern = sprintf('%s/%s', $directory, $suffix), 0);
+
+        // parse the subdirectories also
+        $dirs = glob($directory. DIRECTORY_SEPARATOR . '*', GLOB_ONLYDIR|GLOB_NOSORT|GLOB_BRACE);
+
+        // iterate over the subdirectories for its files
+        foreach ($dirs as $dir) {
+            $files = array_merge($files, $this->listContents($dir, $suffix));
+        }
+
+        // return the array with the files matching the glob pattern
+        return $files;
     }
 }
