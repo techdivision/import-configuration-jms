@@ -136,6 +136,14 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
     protected $moveFilesPrefix;
 
     /**
+     * The name of the command that has been invoked.
+     *
+     * @var string
+     * @Exclude
+     */
+    protected $commandName;
+
+    /**
      * The application's unique DI identifier.
      *
      * @var string
@@ -390,6 +398,14 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
      * @SerializedName("shortcuts")
      */
     protected $shortcuts = array();
+
+    /**
+     * The username to save the import history with.
+     *
+     * @var string
+     * @Type("string")
+     */
+    protected $username;
 
     /**
      * Lifecycle callback that will be invoked after deserialization.
@@ -1216,5 +1232,45 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
     public function getShortcut()
     {
         return $this->shortcut;
+    }
+
+    /**
+     * Set's the name of the command that has been invoked.
+     *
+     * @param string $commandName The command name
+     */
+    public function setCommandName($commandName)
+    {
+        $this->commandName = $commandName;
+    }
+
+    /**
+     * Return's the name of the command that has been invoked.
+     *
+     * @return string The command name
+     */
+    public function getCommandName()
+    {
+        return $this->commandName;
+    }
+
+    /**
+     * Set's the username to save the import history with.
+     *
+     * @param string $username The username
+     */
+    public function setUsername($username)
+    {
+        $this->username = $username;
+    }
+
+    /**
+     * Return's the username to save the import history with.
+     *
+     * @return string The username
+     */
+    public function getUsername()
+    {
+        return $this->username;
     }
 }
