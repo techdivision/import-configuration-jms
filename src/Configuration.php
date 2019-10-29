@@ -342,8 +342,8 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
      * The array with the custom header mappings.
      *
      * @var array
-     * @Type("array")
      * @SerializedName("header-mappings")
+     * @Type("array<string, array<string, string>>")
      */
     protected $headerMappings = array();
 
@@ -1042,17 +1042,7 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
      */
     public function getHeaderMappings()
     {
-
-        // initialize the array for the custom header mappings
-        $headerMappings = array();
-
-        // try to load the configured header mappings
-        if ($headerMappingsAvailable = reset($this->headerMappings)) {
-            $headerMappings = $headerMappingsAvailable;
-        }
-
-        // return the custom header mappings
-        return $headerMappings;
+        return $this->headerMappings;
     }
 
     /**
@@ -1062,17 +1052,7 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
      */
     public function getImageTypes()
     {
-
-        // initialize the array for the custom image types
-        $imageTypes = array();
-
-        // try to load the configured image types
-        if ($imageTypesAvailable = reset($this->imageTypes)) {
-            $imageTypes = $imageTypesAvailable;
-        }
-
-        // return the custom image types
-        return $imageTypes;
+        return $this->imageTypes;
     }
 
     /**
