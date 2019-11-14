@@ -24,6 +24,7 @@ use Psr\Log\LogLevel;
 use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation\Type;
 use JMS\Serializer\Annotation\Exclude;
+use JMS\Serializer\Annotation\Accessor;
 use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\PostDeserialize;
 use JMS\Serializer\Annotation\ExclusionPolicy;
@@ -116,6 +117,7 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
      *
      * @var string
      * @Exclude
+     * @Accessor(setter="setSerial", getter="getSerial")
      */
     protected $serial;
 
@@ -132,6 +134,8 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
      *
      * @var string
      * @Exclude
+     * @SerializedName("move-files-prefix")
+     * @Accessor(setter="setMoveFilesPrefix", getter="getMoveFilesPrefix")
      */
     protected $moveFilesPrefix;
 
@@ -158,6 +162,7 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
      * @var string
      * @Type("string")
      * @SerializedName("system-name")
+     * @Accessor(setter="setSystemName", getter="getSystemName")
      */
     protected $systemName;
 
@@ -176,6 +181,7 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
      * @var string
      * @Type("string")
      * @SerializedName("installation-dir")
+     * @Accessor(setter="setInstallationDir", getter="getInstallationDir")
      */
     protected $installationDir;
 
@@ -185,6 +191,7 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
      * @var string
      * @Type("string")
      * @SerializedName("source-dir")
+     * @Accessor(setter="setSourceDir", getter="getSourceDir")
      */
     protected $sourceDir;
 
@@ -194,6 +201,7 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
      * @var string
      * @Type("string")
      * @SerializedName("target-dir")
+     * @Accessor(setter="setTargetDir", getter="getTargetDir")
      */
     protected $targetDir;
 
@@ -203,6 +211,7 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
      * @var string
      * @Type("string")
      * @SerializedName("magento-edition")
+     * @Accessor(setter="setMagentoEdition", getter="getMagentoEdition")
      */
     protected $magentoEdition = 'CE';
 
@@ -212,6 +221,7 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
      * @var string
      * @Type("string")
      * @SerializedName("magento-version")
+     * @Accessor(setter="setMagentoVersion", getter="getMagentoVersion")
      */
     protected $magentoVersion = '2.2.0';
 
@@ -272,6 +282,7 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
      * @var boolean
      * @Type("boolean")
      * @SerializedName("archive-artefacts")
+     * @Accessor(setter="setArchiveArtefacts", getter="haveArchiveArtefacts")
      */
     protected $archiveArtefacts;
 
@@ -281,6 +292,7 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
      * @var string
      * @Type("string")
      * @SerializedName("archive-dir")
+     * @Accessor(setter="setArchiveDir", getter="getArchiveDir")
      */
     protected $archiveDir;
 
@@ -290,6 +302,7 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
      * @var boolean
      * @Type("boolean")
      * @SerializedName("debug-mode")
+     * @Accessor(setter="setDebugMode", getter="isDebugMode")
      */
     protected $debugMode = false;
 
@@ -299,6 +312,7 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
      * @var string
      * @Type("string")
      * @SerializedName("log-level")
+     * @Accessor(setter="setLogLevel", getter="getLogLevel")
      */
     protected $logLevel = LogLevel::INFO;
 
@@ -317,6 +331,7 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
      * @var string
      * @Type("string")
      * @SerializedName("pid-filename")
+     * @Accessor(setter="setPidFilename", getter="getPidFilename")
      */
     protected $pidFilename;
 
@@ -362,6 +377,7 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
      * @var boolean
      * @Type("boolean")
      * @SerializedName("single-transaction")
+     * @Accessor(setter="setSingleTransaction", getter="isSingleTransaction")
      */
     protected $singleTransaction = false;
 
@@ -371,6 +387,7 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
      * @var boolean
      * @Type("boolean")
      * @SerializedName("cache-enabled")
+     * @Accessor(setter="setCacheEnabled", getter="isCacheEnabled")
      */
     protected $cacheEnabled = true;
 
@@ -406,6 +423,16 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
      * @Type("string")
      */
     protected $username;
+
+    /**
+     * The array with the finder mappings.
+     *
+     * @var array
+     * @SerializedName("finder-mappings")
+     * @Type("array<string, string>")
+     * @Accessor(setter="setFinderMappings", getter="getFinderMappings")
+     */
+    protected $finderMappings = array();
 
     /**
      * Lifecycle callback that will be invoked after deserialization.
@@ -452,6 +479,11 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
      */
     public function mapBoolean($value)
     {
+
+        // do nothing, because passed value is already a boolean
+        if (is_bool($value)) {
+            return $value;
+        }
 
         // try to map the passed value to a boolean
         if (isset($this->booleanMapping[$val = strtolower($value)])) {
@@ -852,13 +884,13 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
     /**
      * Set's the flag that import artefacts have to be archived or not.
      *
-     * @param boolean $archiveArtefacts TRUE if artefacts have to be archived, else FALSE
+     * @param mixed $archiveArtefacts TRUE if artefacts have to be archived, else FALSE
      *
      * @return void
      */
     public function setArchiveArtefacts($archiveArtefacts)
     {
-        $this->archiveArtefacts = $archiveArtefacts;
+        $this->archiveArtefacts = $this->mapBoolean($archiveArtefacts);
     }
 
     /**
@@ -896,13 +928,13 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
     /**
      * Set's the debug mode.
      *
-     * @param boolean $debugMode TRUE if debug mode is enabled, else FALSE
+     * @param mixed $debugMode TRUE if debug mode is enabled, else FALSE
      *
      * @return void
      */
     public function setDebugMode($debugMode)
     {
-        $this->debugMode = $debugMode;
+        $this->debugMode = $this->mapBoolean($debugMode);
     }
 
     /**
@@ -1058,13 +1090,13 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
     /**
      * Set's the flag that decides whether or not the import should be wrapped within a single transaction.
      *
-     * @param boolean $singleTransaction TRUE if the import should be wrapped in a single transation, else FALSE
+     * @param mixed $singleTransaction TRUE if the import should be wrapped in a single transation, else FALSE
      *
      * @return void
      */
     public function setSingleTransaction($singleTransaction)
     {
-        $this->singleTransaction = $singleTransaction;
+        $this->singleTransaction = $this->mapBoolean($singleTransaction);
     }
 
     /**
@@ -1080,13 +1112,13 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
     /**
      * Set's the flag that decides whether or not the the cache has been enabled.
      *
-     * @param boolean $cacheEnabled TRUE if the cache has been enabled, else FALSE
+     * @param mixed $cacheEnabled TRUE if the cache has been enabled, else FALSE
      *
      * @return void
      */
     public function setCacheEnabled($cacheEnabled)
     {
-        $this->cacheEnabled = $cacheEnabled;
+        $this->cacheEnabled = $this->mapBoolean($cacheEnabled);
     }
 
     /**
@@ -1252,5 +1284,51 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
     public function getUsername()
     {
         return $this->username;
+    }
+
+    /**
+     * Set's the array with the finder mappings.
+     *
+     * @param array $finderMappings The finder mappings
+     *
+     * @return void
+     */
+    public function setFinderMappings(array $finderMappings)
+    {
+
+        // convert the finder mappings keys, which are constants, to their values
+        foreach ($finderMappings as $key => $value) {
+            $this->finderMappings[defined($key) ? constant($key) : $key] = $value;
+        }
+    }
+
+    /**
+     * Return's the array with the finder mappings.
+     *
+     * @return array The finder mappings
+     */
+    public function getFinderMappings()
+    {
+        return $this->finderMappings;
+    }
+
+    /**
+     * Return's the mapped finder for the passed key.
+     *
+     * @param string $key The key of the finder to map
+     *
+     * @return string The mapped finder name
+     * @throws \InvalidArgumentException Is thrown if the mapping with passed key can not be resolved
+     */
+    public function getFinderMappingByKey($key)
+    {
+
+        // try to resolve the mapping for the finder with the passed key
+        if (isset($this->finderMappings[$key])) {
+            return $this->finderMappings[$key];
+        }
+
+        // throw an exception otherwise
+        throw new \InvalidArgumentException(sprintf('Can\'t load mapping for finder with key "%s"', $key));
     }
 }

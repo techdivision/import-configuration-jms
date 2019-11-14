@@ -45,13 +45,22 @@ class ConfigurationFactory implements ConfigurationFactoryInterface
     protected $configurationParserFactory;
 
     /**
+     * The configuration class name to use.
+     *
+     * @var string
+     */
+    protected $configurationClassName;
+
+    /**
      * Initializes the instance with the configuration parser factory instance.
      *
      * @param \TechDivision\Import\Configuration\Jms\ConfigurationParserFactoryInterface $configurationParserFactory The configuration parser factory instance
+     * @param string                                                                     $configurationClass         The configuration class name to use
      */
-    public function __construct(ConfigurationParserFactoryInterface $configurationParserFactory)
+    public function __construct(ConfigurationParserFactoryInterface $configurationParserFactory, $configurationClassName = Configuration::class)
     {
         $this->configurationParserFactory = $configurationParserFactory;
+        $this->configurationClassName = $configurationClassName;
     }
 
     /**
@@ -62,6 +71,16 @@ class ConfigurationFactory implements ConfigurationFactoryInterface
     protected function getConfigurationParserFactory()
     {
         return $this->configurationParserFactory;
+    }
+
+    /**
+     * Return's the configuration class name to use.
+     *
+     * @return string The configuration class name
+     */
+    protected function getConfigurationClassName()
+    {
+        return $this->configurationClassName;
     }
 
     /**
@@ -130,7 +149,7 @@ class ConfigurationFactory implements ConfigurationFactoryInterface
     {
 
         // initialize the JMS serializer, load and return the configuration
-        $data = $this->toArray($data, Configuration::class, $format);
+        $data = $this->toArray($data, $this->getConfigurationClassName(), $format);
 
         // merge the params, if specified with the --params option
         if ($params) {
@@ -157,7 +176,7 @@ class ConfigurationFactory implements ConfigurationFactoryInterface
         }
 
         // finally, create and return the configuration from the merge data
-        return SerializerBuilder::create()->build()->fromArray($data, Configuration::class);
+        return SerializerBuilder::create()->build()->fromArray($data, $this->getConfigurationClassName());
     }
 
     /**

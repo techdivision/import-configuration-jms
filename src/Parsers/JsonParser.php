@@ -20,7 +20,6 @@
 
 namespace TechDivision\Import\Configuration\Jms\Parsers;
 
-use TechDivision\Import\Adapter\PhpFilesystemAdapterInterface;
 use TechDivision\Import\Configuration\Jms\Utils\ArrayUtilInterface;
 use TechDivision\Import\Configuration\Jms\ConfigurationParserInterface;
 
@@ -121,7 +120,7 @@ class JsonParser implements ConfigurationParserInterface
     {
 
         // parse the directory
-        $files = glob($pattern = sprintf('%s/%s', $directory, $suffix), 0);
+        $files = glob(sprintf('%s/%s', $directory, $suffix), 0);
 
         // parse the subdirectories also
         $dirs = glob($directory. DIRECTORY_SEPARATOR . '*', GLOB_ONLYDIR|GLOB_NOSORT|GLOB_BRACE);
