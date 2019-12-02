@@ -71,7 +71,10 @@ class ConsoleOptionLoader implements ConsoleOptionLoaderInterface
     /**
      * Initializes the console options loader.
      *
-     * @param array $overrideIfEmpty The input options to parse
+     * @param \Symfony\Component\Console\Input\InputInterface     $input           The input interface
+     * @param \TechDivision\Import\Utils\InputOptionKeysInterface $inputOptionKeys The interface for the input option keys
+     * @param array                                               $overrideIfEmpty The input options to parse
+     * @param array                                               $blacklist       The array with the blacklisted options
      */
     public function __construct(
         InputInterface $input,
@@ -90,7 +93,7 @@ class ConsoleOptionLoader implements ConsoleOptionLoaderInterface
      *
      * @param \TechDivision\Import\ConfigurationInterface $instance The configuration instance to load the values for
      *
-     * @returnf void
+     * @return void
      */
     public function load(ConfigurationInterface $instance)
     {

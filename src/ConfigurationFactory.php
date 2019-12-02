@@ -55,7 +55,7 @@ class ConfigurationFactory implements ConfigurationFactoryInterface
      * Initializes the instance with the configuration parser factory instance.
      *
      * @param \TechDivision\Import\Configuration\Jms\ConfigurationParserFactoryInterface $configurationParserFactory The configuration parser factory instance
-     * @param string                                                                     $configurationClass         The configuration class name to use
+     * @param string                                                                     $configurationClassName     The configuration class name to use
      */
     public function __construct(ConfigurationParserFactoryInterface $configurationParserFactory, $configurationClassName = Configuration::class)
     {

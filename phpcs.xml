@@ -12,6 +12,7 @@
     <exclude-pattern>*/tests/*</exclude-pattern>
     <exclude-pattern>*/target/*</exclude-pattern>
     <exclude-pattern>*/vendor/*</exclude-pattern>
+    <exclude-pattern>*/src/Serializer/*</exclude-pattern>
 
     <!-- Mainly use PSR2 coding standard -->
     <rule ref="PSR2"/>

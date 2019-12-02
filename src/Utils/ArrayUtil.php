@@ -36,7 +36,7 @@ class ArrayUtil implements ArrayUtilInterface
      * Replaces the values of the first array with the ones from the arrays
      * that has been passed as additional arguments.
      *
-     * @param array ...$arrays The arrays with the values that replace the first one
+     * @param array... $arrays The arrays with the values that replace the first one
      *
      * @return array The array with the replaced values
      */

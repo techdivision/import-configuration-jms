@@ -435,6 +435,16 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
     protected $finderMappings = array();
 
     /**
+     * The array with the default values.
+     *
+     * @var array
+     * @SerializedName("default-values")
+     * @Type("array<string, array<string, string>>")
+     * @Accessor(setter="setDefaultValues", getter="getDefaultValues")
+     */
+    protected $defaultValues = array();
+
+    /**
      * Lifecycle callback that will be invoked after deserialization.
      *
      * @return void
@@ -1218,8 +1228,6 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
      * Return's the prefix for the move files subject.
      *
      * @return string The prefix for the move files subject
-     *
-     * @return string The prefix for the move files subject
      */
     public function getMoveFilesPrefix()
     {
@@ -1230,6 +1238,8 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
      * Set's the shortcut that maps the operation names that has to be executed.
      *
      * @param string $shortcut The shortcut
+     *
+     * @return void
      */
     public function setShortcut($shortcut)
     {
@@ -1250,6 +1260,8 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
      * Set's the name of the command that has been invoked.
      *
      * @param string $commandName The command name
+     *
+     * @return void
      */
     public function setCommandName($commandName)
     {
@@ -1270,6 +1282,8 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
      * Set's the username to save the import history with.
      *
      * @param string $username The username
+     *
+     * @return void
      */
     public function setUsername($username)
     {
@@ -1330,5 +1344,27 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
 
         // throw an exception otherwise
         throw new \InvalidArgumentException(sprintf('Can\'t load mapping for finder with key "%s"', $key));
+    }
+
+    /**
+     * Sets the default values from the configuration.
+     *
+     * @param array $defaultValues The array with the default values
+     *
+     * @return void
+     */
+    public function setDefaultValues(array $defaultValues)
+    {
+        $this->defaultValues = $defaultValues;
+    }
+
+    /**
+     * Load the default values from the configuration.
+     *
+     * @return array The array with the default values
+     */
+    public function getDefaultValues()
+    {
+        return $this->defaultValues;
     }
 }

@@ -59,12 +59,12 @@ class Serializer implements SerializerInterface
     /**
      * Constructor.
      *
-     * @param \Metadata\MetadataFactoryInterface $factory
-     * @param \JMS\Serializer\Handler\HandlerRegistryInterface $handlerRegistry
-     * @param \JMS\Serializer\Construction\ObjectConstructorInterface  $objectConstructor
-     * @param \PhpCollection\MapInterface<VisitorInterface> $serializationVisitors
-     * @param \PhpCollection\MapInterface<VisitorInterface> $deserializationVisitors
-     * @param \JMS\Serializer\EventDispatcher\EventDispatcherInterface $dispatcher
+     * @param \Metadata\MetadataFactoryInterface                       $factory                 The metadata factory
+     * @param \JMS\Serializer\Handler\HandlerRegistryInterface         $handlerRegistry         The handler registry
+     * @param \JMS\Serializer\Construction\ObjectConstructorInterface  $objectConstructor       The object constructor information
+     * @param \PhpCollection\MapInterface<VisitorInterface>            $serializationVisitors   The serializer visitor instance
+     * @param \PhpCollection\MapInterface<VisitorInterface>            $deserializationVisitors The deserializer visitor instance
+     * @param \JMS\Serializer\EventDispatcher\EventDispatcherInterface $dispatcher              The dispatcher instance
      * @param \JMS\Serializer\TypeParser $typeParser
      */
     public function __construct(
@@ -76,6 +76,7 @@ class Serializer implements SerializerInterface
         EventDispatcherInterface $dispatcher = null,
         TypeParser $typeParser = null
     ) {
+        // set the passed instances
         $this->factory = $factory;
         $this->handlerRegistry = $handlerRegistry;
         $this->objectConstructor = $objectConstructor;
@@ -84,9 +85,14 @@ class Serializer implements SerializerInterface
         $this->serializationVisitors = $serializationVisitors;
         $this->deserializationVisitors = $deserializationVisitors;
 
+        // initialize the navigator instance
         $this->navigator = new GraphNavigator($this->factory, $this->handlerRegistry, $this->objectConstructor, $this->dispatcher);
     }
 
+    /**
+     * {@inheritDoc}
+     * @see \JMS\Serializer\SerializerInterface::serialize()
+     */
     public function serialize($data, $format, SerializationContext $context = null)
     {
         if ( ! $this->serializationVisitors->containsKey($format)) {
@@ -110,6 +116,10 @@ class Serializer implements SerializerInterface
         return $visitor->getResult();
     }
 
+    /**
+     * {@inheritDoc}
+     * @see \JMS\Serializer\SerializerInterface::deserialize()
+     */
     public function deserialize($data, $type, $format, DeserializationContext $context = null)
     {
         if ( ! $this->deserializationVisitors->containsKey($format)) {

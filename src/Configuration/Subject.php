@@ -604,4 +604,14 @@ class Subject implements SubjectConfigurationInterface, ListenerAwareConfigurati
     {
         return $this->getPluginConfiguration()->getExecutionContext();
     }
+
+    /**
+     * Load the default values from the configuration.
+     *
+     * @return array The array with the default values
+     */
+    public function getDefaultValues()
+    {
+        return $this->getConfiguration()->getDefaultValues();
+    }
 }

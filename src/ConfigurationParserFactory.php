@@ -73,7 +73,7 @@ class ConfigurationParserFactory implements ConfigurationParserFactoryInterface
 
         // query whether or not a configuration parser mapping is available
         if (isset($this->parserMappings[$format])) {
-            return $this->container->get( $this->parserMappings[$format]);
+            return $this->container->get($this->parserMappings[$format]);
         }
 
         // throw an exception, if NO mapping for the passed format has been available
