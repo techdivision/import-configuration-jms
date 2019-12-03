@@ -44,20 +44,20 @@ class Formatter implements FormatterConfigurationInterface
     use ParamsTrait;
 
     /**
-     * The formatter's type to use.
+     * The formatter's DI ID to use.
      *
      * @var string
      * @Type("string")
      */
-    protected $type;
+    protected $id;
 
     /**
-     * Return's the formatter's type to use.
+     * Return's the formatter's DI ID to use.
      *
      * @return string The type
      */
-    public function getType()
+    public function getId()
     {
-        return $this->type;
+        return $this->id;
     }
 }

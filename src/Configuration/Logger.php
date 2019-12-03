@@ -71,12 +71,12 @@ class Logger implements LoggerConfigurationInterface
     protected $type;
 
     /**
-     * The factory used to create the logger instance.
+     * The DI name of the factory used to create the logger instance.
      *
      * @var string
      * @Type("string")
      */
-    protected $factory = 'TechDivision\Import\Utils\LoggerFactory';
+    protected $id = 'import.logger.factory';
 
     /**
      * ArrayCollection with the information of the configured processors.
@@ -135,13 +135,13 @@ class Logger implements LoggerConfigurationInterface
     }
 
     /**
-     * Return's the factory used to create the logger instance.
+     * Return's the DI name of the factory used to create the logger instance.
      *
-     * @return string The factory to use
+     * @return string The DI name of the factory to use
      */
-    public function getFactory()
+    public function getId()
     {
-        return $this->factory;
+        return $this->id;
     }
 
     /**

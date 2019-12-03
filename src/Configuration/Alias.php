@@ -40,7 +40,7 @@ class Alias implements AliasConfigurationInterface
      * The alias's unique DI identifier.
      *
      * @var string
-     * @Type("string")
+     * @Type()("string")
      * @SerializedName("id")
      */
     protected $id;

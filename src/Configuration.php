@@ -237,7 +237,7 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
      * ArrayCollection with the information of the configured loggers.
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
-     * @Type("ArrayCollection<TechDivision\Import\Configuration\Jms\Configuration\Logger>")
+     * @Type("ArrayCollection<string, TechDivision\Import\Configuration\Jms\Configuration\Logger>")
      */
     protected $loggers;
 

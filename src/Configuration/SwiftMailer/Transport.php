@@ -20,8 +20,6 @@
 
 namespace TechDivision\Import\Configuration\Jms\Configuration\SwiftMailer;
 
-use JMS\Serializer\Annotation\Type;
-use JMS\Serializer\Annotation\SerializedName;
 use TechDivision\Import\Configuration\Jms\Configuration\ParamsTrait;
 use TechDivision\Import\Configuration\SwiftMailer\TransportConfigurationInterface;
 
@@ -43,23 +41,4 @@ class Transport implements TransportConfigurationInterface
      * @var \TechDivision\Import\Configuration\Jms\Configuration\ParamsTrait
      */
     use ParamsTrait;
-
-    /**
-     * The swift mailer transport factory used to create the instance.
-     *
-     * @var string
-     * @Type("string")
-     * @SerializedName("transport-factory")
-     */
-    protected $transportFactory;
-
-    /**
-     * Return's the swift mailer transport factory used to create he instance.
-     *
-     * @return string The swift mailer transport factory
-     */
-    public function getTransportFactory()
-    {
-        return $this->transportFactory;
-    }
 }

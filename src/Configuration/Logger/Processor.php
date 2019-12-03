@@ -44,20 +44,20 @@ class Processor implements ProcessorConfigurationInterface
     use ParamsTrait;
 
     /**
-     * The processor's type to use.
+     * The processor's DI ID to use.
      *
      * @var string
      * @Type("string")
      */
-    protected $type;
+    protected $id;
 
     /**
-     * Return's the processor's type to use.
+     * Return's the processor's DI ID to use.
      *
-     * @return string The type
+     * @return string The DI ID
      */
-    public function getType()
+    public function getId()
     {
-        return $this->type;
+        return $this->id;
     }
 }
