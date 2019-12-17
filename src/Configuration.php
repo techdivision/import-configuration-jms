@@ -1362,4 +1362,41 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
     {
         return $this->defaultValues;
     }
+
+    /**
+     * Return's an unique array with the prefixes of all configured subjects.
+     *
+     * @param array $ignore An array with prefixes that has to be ignored
+     *
+     * @return array An array with the available prefixes
+     */
+    public function getPrefixes($ignore = array('.*'))
+    {
+
+        // initialize the array for the prefixes
+        $prefixes = array();
+
+        foreach ($this->getOperations() as $operation) {
+            foreach ($operation as $entityTypes) {
+                foreach ($entityTypes as $operationConfiguration) {
+                    foreach ($operationConfiguration->getPlugins() as $plugin) {
+                        foreach ($plugin->getSubjects() as $subject) {
+                            // ignore the prefix, if it has already been added or it has to be ignored
+                            if (in_array($prefix = $subject->getPrefix(), $prefixes, true) ||
+                                in_array($prefix, $ignore, true)
+                            ) {
+                                continue;
+                            }
+
+                            // add the prefix to the list
+                            $prefixes[] = $prefix;
+                        }
+                    }
+                }
+            }
+        }
+
+        // return the array with the unique prefixes
+        return $prefixes;
+    }
 }
