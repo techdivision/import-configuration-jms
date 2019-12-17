@@ -242,14 +242,6 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
     protected $loggers;
 
     /**
-     * ArrayCollection with the information of the configured operations.
-     *
-     * @var \Doctrine\Common\Collections\ArrayCollection
-     * @Type("array<string, array<string, ArrayCollection<TechDivision\Import\Configuration\Jms\Configuration\Operation>>>")
-     */
-    protected $operations;
-
-    /**
      * The subject's multiple field delimiter character for fields with multiple values, defaults to (,).
      *
      * @var string
@@ -343,6 +335,14 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
      * @SerializedName("additional-vendor-dirs")
      */
     protected $additionalVendorDirs;
+
+    /**
+     * ArrayCollection with the information of the configured operations.
+     *
+     * @var array
+     * @Type("array<string, array<string, ArrayCollection<string, TechDivision\Import\Configuration\Jms\Configuration\Operation>>>")
+     */
+    protected $operations = array();
 
     /**
      * The array with the Magento Edition specific extension libraries.
@@ -456,11 +456,6 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
         // create an empty collection if no loggers has been specified
         if ($this->loggers === null) {
             $this->loggers = new ArrayCollection();
-        }
-
-        // create an empty collection if no operations has been specified
-        if ($this->operations === null) {
-            $this->operations = new ArrayCollection();
         }
 
         // create an empty collection if no additional venor directories has been specified
@@ -862,9 +857,9 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
     }
 
     /**
-     * Return's the ArrayCollection with the configured operations.
+     * Return's the array with the configured operations.
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection The ArrayCollection with the operations
+     * @return array The array with the operations
      */
     public function getOperations()
     {

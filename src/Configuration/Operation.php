@@ -21,6 +21,7 @@
 namespace TechDivision\Import\Configuration\Jms\Configuration;
 
 use JMS\Serializer\Annotation\Type;
+use JMS\Serializer\Annotation\Exclude;
 use JMS\Serializer\Annotation\PostDeserialize;
 use Doctrine\Common\Collections\ArrayCollection;
 use TechDivision\Import\ExecutionContextInterface;
@@ -57,7 +58,7 @@ class Operation implements OperationConfigurationInterface, ListenerAwareConfigu
      * The operation's name.
      *
      * @var string
-     * @Type("string")
+     * @Exclude()
      */
     protected $name;
 
@@ -109,9 +110,21 @@ class Operation implements OperationConfigurationInterface, ListenerAwareConfigu
     }
 
     /**
+     * Set's the operation's name.
+     *
+     * @param string $name The operation's name
+     *
+     * @return void
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+    /**
      * Return's the operation's name.
      *
-     * @return string The operation's class name
+     * @return string The operation's name
      */
     public function getName()
     {
@@ -158,5 +171,24 @@ class Operation implements OperationConfigurationInterface, ListenerAwareConfigu
     public function __toString()
     {
         return $this->getName();
+    }
+
+    /**
+     * Return's the full opration name, which consists of the Magento edition, the entity type code and the operation name.
+     *
+     * @param string $separator The separator used to seperate the elements
+     *
+     * @return string The full operation name
+     */
+    public function getFullName($separator = '/')
+    {
+        return implode(
+            $separator,
+            array(
+                $this->getExecutionContext()->getMagentoEdition(),
+                $this->getExecutionContext()->getEntityTypeCode(),
+                $this->getName()
+            )
+        );
     }
 }
