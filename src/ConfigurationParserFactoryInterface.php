@@ -40,5 +40,5 @@ interface ConfigurationParserFactoryInterface
      * @return \TechDivision\Import\Configuration\Jms\ConfigurationParserInterface The configuration parser instance
      * @throws \Exception Is thrown if NO configuration parser mapping for the passed format has been specified
      */
-     public function factory($format = 'json');
+    public function factory($format = 'json');
 }

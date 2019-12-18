@@ -99,7 +99,7 @@ class JsonParser implements ConfigurationParserInterface
      * Replaces the values of the first array with the ones from the arrays
      * that has been passed as additional arguments.
      *
-     * @param array... $arrays The arrays with the values that has to be replaced
+     * @param array ...$arrays The arrays with the values that has to be replaced
      *
      * @return array The array with the replaced values
      */
