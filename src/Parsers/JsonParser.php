@@ -20,6 +20,8 @@
 
 namespace TechDivision\Import\Configuration\Jms\Parsers;
 
+use TechDivision\Import\Configuration\Jms\Iterators\DirnameFilter;
+use TechDivision\Import\Configuration\Jms\Iterators\FilenameFilter;
 use TechDivision\Import\Configuration\Jms\Utils\ArrayUtilInterface;
 use TechDivision\Import\Configuration\Jms\ConfigurationParserInterface;
 
@@ -69,7 +71,7 @@ class JsonParser implements ConfigurationParserInterface
         // iterate over the found directories to parse them for configuration files
         foreach ($directories as $directory) {
             // load the configuration filenames
-            $filenames = $this->listContents($directory, '*.json');
+            $filenames = $this->listContents($directory, 'json');
 
             // load the content of each found configuration file and merge it
             foreach ($filenames as $filename) {
@@ -116,21 +118,26 @@ class JsonParser implements ConfigurationParserInterface
      *
      * @return array A list of filenames
      */
-    protected function listContents($directory = '', $suffix = '*')
+    protected function listContents($directory = '', $suffix = '.*')
     {
 
-        // parse the directory
-        $files = glob(sprintf('%s/%s', $directory, $suffix), 0);
+        // initialize the recursive directory iterator
+        $directory = new \RecursiveDirectoryIterator($directory);
+        $directory->setFlags(\RecursiveDirectoryIterator::SKIP_DOTS);
 
-        // parse the subdirectories also
-        $dirs = glob($directory. DIRECTORY_SEPARATOR . '*', GLOB_ONLYDIR|GLOB_NOSORT|GLOB_BRACE);
+        // initialize the filters for file- and dirname
+        $filter = new DirnameFilter($directory, '/^(?!\.Trash)/');
+        $filter = new FilenameFilter($directory, sprintf('/\.(?:%s)$/', $suffix));
 
-        // iterate over the subdirectories for its files
-        foreach ($dirs as $dir) {
-            $files = array_merge($files, $this->listContents($dir, $suffix));
+        // initialize the array for the files
+        $files = array();
+
+        // load the files
+        foreach(new \RecursiveIteratorIterator($filter) as $file) {
+            array_unshift($files, $file);
         }
 
-        // return the array with the files matching the glob pattern
+        // return the array with the files
         return $files;
     }
 }

@@ -458,11 +458,6 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
             $this->loggers = new ArrayCollection();
         }
 
-        // create an empty collection if no additional venor directories has been specified
-        if ($this->additionalVendorDirs === null) {
-            $this->additionalVendorDirs = new ArrayCollection();
-        }
-
         // create an empty collection if no caches has been specified
         if ($this->caches === null) {
             $this->caches = new ArrayCollection();
@@ -471,6 +466,16 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
         // create an empty collection if no aliases has been specified
         if ($this->aliases === null) {
             $this->aliases = new ArrayCollection();
+        }
+
+        // create an empty collection if no databases has been specified
+        if ($this->databases === null) {
+            $this->databases = new ArrayCollection();
+        }
+
+        // create an empty collection if no additional venor directories has been specified
+        if ($this->additionalVendorDirs === null) {
+            $this->additionalVendorDirs = new ArrayCollection();
         }
     }
 
