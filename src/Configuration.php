@@ -776,7 +776,7 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
     {
 
         // iterate over the configured databases and return the one with the passed ID
-        /** @var TechDivision\Import\Configuration\DatabaseInterface  $database */
+        /** @var \TechDivision\Import\Configuration\DatabaseConfigurationInterface $database */
         foreach ($this->databases as $database) {
             if ($database->getId() === $id && $this->isValidDatabaseType($database)) {
                 return $database;
@@ -801,7 +801,7 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
         $databases = new ArrayCollection();
 
         // iterate over the configured databases and return the one with the passed ID
-        /** @var TechDivision\Import\Configuration\DatabaseInterface  $database */
+        /** @var \TechDivision\Import\Configuration\DatabaseConfigurationInterface  $database */
         foreach ($this->databases as $database) {
             if ($database->getType() === $type && $this->isValidDatabaseType($database)) {
                 $databases->add($database);
@@ -845,7 +845,7 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
         }
 
         // iterate over the configured databases and try return the default database
-        /** @var TechDivision\Import\Configuration\DatabaseInterface  $database */
+        /** @var \TechDivision\Import\Configuration\DatabaseConfigurationInterface  $database */
         foreach ($this->databases as $database) {
             if ($database->isDefault() && $this->isValidDatabaseType($database)) {
                 return $database;
