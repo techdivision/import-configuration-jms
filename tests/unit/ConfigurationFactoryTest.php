@@ -20,6 +20,8 @@
 
 namespace TechDivision\Import\Configuration\Jms;
 
+use PHPUnit\Framework\TestCase;
+
 /**
  * Test class for the JMS configuration factory.
  *
@@ -29,7 +31,7 @@ namespace TechDivision\Import\Configuration\Jms;
  * @link      https://github.com/techdivision/import-configuration-jms
  * @link      http://www.techdivision.com
  */
-class ConfigurationFactoryTest extends \PHPUnit_Framework_TestCase
+class ConfigurationFactoryTest extends TestCase
 {
 
     /**
@@ -42,7 +44,7 @@ class ConfigurationFactoryTest extends \PHPUnit_Framework_TestCase
     /**
      *
      * {@inheritDoc}
-     * @see \PHPUnit_Framework_TestCase::setUp()
+     * @see \PHPUnit\Framework\TestCase::setUp()
      */
     protected function setUp()
     {

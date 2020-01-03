@@ -20,6 +20,8 @@
 
 namespace TechDivision\Import\Configuration\Jms\Utils;
 
+use PHPUnit\Framework\TestCase;
+
 /**
  * Test class for the JMS configuration factory.
  *
@@ -29,7 +31,7 @@ namespace TechDivision\Import\Configuration\Jms\Utils;
  * @link      https://github.com/techdivision/import-configuration-jms
  * @link      http://www.techdivision.com
  */
-class ArrayUtilTest extends \PHPUnit_Framework_TestCase
+class ArrayUtilTest extends TestCase
 {
 
     /**
@@ -44,7 +46,7 @@ class ArrayUtilTest extends \PHPUnit_Framework_TestCase
      * This method is called before a test is executed.
      *
      * @return void
-     * @see \PHPUnit_Framework_TestCase::setUp()
+     * @see \PHPUnit\Framework\TestCase::setUp()
      */
     protected function setUp()
     {

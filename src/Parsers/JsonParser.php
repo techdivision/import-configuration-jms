@@ -133,7 +133,7 @@ class JsonParser implements ConfigurationParserInterface
         $files = array();
 
         // load the files
-        foreach(new \RecursiveIteratorIterator($filter) as $file) {
+        foreach (new \RecursiveIteratorIterator($filter) as $file) {
             array_unshift($files, $file);
         }
 
