@@ -1,3 +1,13 @@
+# Version 15.0.1
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Switch to jms/serializer ^1.0 and remove unnecessary Serializer implementation
+
 # Version 15.0.0
 
 ## Bugfixes
