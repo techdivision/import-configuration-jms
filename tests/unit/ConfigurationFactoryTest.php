@@ -21,6 +21,7 @@
 namespace TechDivision\Import\Configuration\Jms;
 
 use PHPUnit\Framework\TestCase;
+use JMS\Serializer\SerializerBuilder;
 
 /**
  * Test class for the JMS configuration factory.
@@ -72,10 +73,16 @@ class ConfigurationFactoryTest extends TestCase
             $annotationDirectory
         );
 
-        $mockConfigurationParserFactory = $this->getMockBuilder('TechDivision\Import\Configuration\Jms\ConfigurationParserFactory')->disableOriginalConstructor()->getMock();
+        // create a mock configuration parser factory
+        $mockConfigurationParserFactory = $this->getMockBuilder('TechDivision\Import\Configuration\Jms\ConfigurationParserFactory')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        // create a new serializer builder instance
+        $configurationBuilder = new SerializerBuilder();
 
         // initialize the configuration factory instance we want to test
-        $this->configurationFactory = new ConfigurationFactory($mockConfigurationParserFactory);
+        $this->configurationFactory = new ConfigurationFactory($mockConfigurationParserFactory, $configurationBuilder);
     }
 
     /**
