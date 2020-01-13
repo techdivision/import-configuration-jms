@@ -20,9 +20,9 @@
 
 namespace TechDivision\Import\Configuration\Jms;
 
+use JMS\Serializer\SerializerBuilder;
 use TechDivision\Import\ConfigurationFactoryInterface;
 use TechDivision\Import\Configuration\Jms\Configuration\Params;
-use TechDivision\Import\Configuration\Jms\Serializer\SerializerBuilder;
 
 /**
  * The configuration factory implementation.
@@ -52,15 +52,27 @@ class ConfigurationFactory implements ConfigurationFactoryInterface
     protected $configurationClassName;
 
     /**
+     * The serializer builder instance.
+     *
+     * @var \JMS\Serializer\SerializerBuilder
+     */
+    protected $serializerBuilder;
+
+    /**
      * Initializes the instance with the configuration parser factory instance.
      *
      * @param \TechDivision\Import\Configuration\Jms\ConfigurationParserFactoryInterface $configurationParserFactory The configuration parser factory instance
+     * @param \JMS\Serializer\SerializerBuilder                                          $serializerBuilder          The serializer builder instance to use
      * @param string                                                                     $configurationClassName     The configuration class name to use
      */
-    public function __construct(ConfigurationParserFactoryInterface $configurationParserFactory, $configurationClassName = Configuration::class)
-    {
-        $this->configurationParserFactory = $configurationParserFactory;
+    public function __construct(
+        ConfigurationParserFactoryInterface $configurationParserFactory,
+        SerializerBuilder $serializerBuilder,
+        $configurationClassName = Configuration::class
+    ) {
+        $this->serializerBuilder = $serializerBuilder;
         $this->configurationClassName = $configurationClassName;
+        $this->configurationParserFactory = $configurationParserFactory;
     }
 
     /**
@@ -81,6 +93,16 @@ class ConfigurationFactory implements ConfigurationFactoryInterface
     protected function getConfigurationClassName()
     {
         return $this->configurationClassName;
+    }
+
+    /**
+     * Return's the serializer builder instance to use.
+     *
+     * @return \JMS\Serializer\SerializerBuilder The serializer builder instance
+     */
+    protected function getSerializerBuilder()
+    {
+        return $this->serializerBuilder;
     }
 
     /**
@@ -176,7 +198,7 @@ class ConfigurationFactory implements ConfigurationFactoryInterface
         }
 
         // finally, create and return the configuration from the merge data
-        return SerializerBuilder::create()->build()->fromArray($data, $this->getConfigurationClassName());
+        return $this->getSerializerBuilder()->build()->fromArray($data, $this->getConfigurationClassName());
     }
 
     /**
@@ -189,7 +211,7 @@ class ConfigurationFactory implements ConfigurationFactoryInterface
      */
     protected function fromArray(array $data, $type)
     {
-        return SerializerBuilder::create()->build()->fromArray($data, $type);
+        return $this->getSerializerBuilder()->build()->fromArray($data, $type);
     }
 
     /**
@@ -205,7 +227,7 @@ class ConfigurationFactory implements ConfigurationFactoryInterface
     {
 
         // load the serializer builde
-        $serializer = SerializerBuilder::create()->build();
+        $serializer = $this->getSerializerBuilder()->build();
 
         // deserialize the data, convert it into an array and return it
         return $serializer->toArray($serializer->deserialize($data, $type, $format));

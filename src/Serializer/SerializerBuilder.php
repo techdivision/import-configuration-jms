@@ -55,7 +55,7 @@ use JMS\Serializer\VisitorInterface;
  *
  * @author Johannes M. Schmitt <schmittjoh@gmail.com>
  */
-class SerializerBuilder
+class SerializerBuilder extends \JMS\Serializer\SerializerBuilder
 {
 
     private $metadataDirs = array();
