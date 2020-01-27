@@ -27,7 +27,13 @@
     "autoload": {
         "psr-4": {
             "TechDivision\\Import\\Configuration\\Jms\\": [
-                "src/",
+                "src/"
+            ]
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "TechDivision\\Import\\Configuration\\Jms\\": [
                 "tests/unit"
             ]
         }
