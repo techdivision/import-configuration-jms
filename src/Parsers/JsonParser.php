@@ -137,6 +137,11 @@ class JsonParser implements ConfigurationParserInterface
             array_unshift($files, $file);
         }
 
+        // sort the files ascending
+        usort($files, function ($a, $b) {
+            return strcmp($a, $b);
+        });
+
         // return the array with the files
         return $files;
     }

@@ -1,3 +1,13 @@
+# Version 15.0.3
+
+## Bugfixes
+
+* Fixed techdivision/import-configuration-jms#33
+
+## Features
+
+* None
+
 # Version 15.0.2
 
 ## Bugfixes
