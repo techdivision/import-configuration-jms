@@ -1,3 +1,13 @@
+# Version 15.0.4
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Replace composer dependency doctrine/dbal with doctrine/collections
+
 # Version 15.0.3
 
 ## Bugfixes
