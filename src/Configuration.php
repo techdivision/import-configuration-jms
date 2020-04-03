@@ -1404,4 +1404,41 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
         // return the array with the unique prefixes
         return $prefixes;
     }
+
+    /**
+     * Return's an array with the subjects which prefix is NOT in the passed
+     * array of blacklisted prefixes and that matches the filters.
+
+     * @param array $ignore  An array with prefixes that has to be ignored
+     *
+     * @return array An array with the matching subjects
+     */
+    public function getSubjects(array $filters = array())
+    {
+
+        // initialize the array for the prefixes
+        $subjects = array();
+
+        // iterate over all configured subjects
+        foreach ($this->getOperations() as $operation) {
+            foreach ($operation as $entityTypes) {
+                foreach ($entityTypes as $operationConfiguration) {
+                    foreach ($operationConfiguration->getPlugins() as $plugin) {
+                        /** @var \TechDivision\Import\Configuration\SubjectConfigurationInterface $subject */
+                        foreach ($plugin->getSubjects() as $subject) {
+                            $subjects[] = $subject;
+                        }
+                    }
+                }
+            }
+        }
+
+        // filter the subjects
+        foreach ($filters as $filter) {
+            $subjects = array_filter($subjects, $filter);
+        }
+
+        // return the array with the filtered subjects
+        return $subjects;
+    }
 }

@@ -33,6 +33,7 @@ use TechDivision\Import\Configuration\Jms\Configuration\Subject\ExportAdapter;
 use TechDivision\Import\Configuration\Jms\Configuration\Subject\DateConverter;
 use TechDivision\Import\Configuration\Jms\Configuration\Subject\NumberConverter;
 use TechDivision\Import\Configuration\Jms\Configuration\Subject\FilesystemAdapter;
+use TechDivision\Import\Configuration\Jms\Configuration\Subject\FileWriter;
 
 /**
  * The subject configuration implementation.
@@ -158,6 +159,15 @@ class Subject implements SubjectConfigurationInterface, ListenerAwareConfigurati
     protected $fileResolver;
 
     /**
+     * The file writer configuration instance.
+     *
+     * @var \TechDivision\Import\Configuration\Subject\FileWriterConfigurationInterface
+     * @Type("TechDivision\Import\Configuration\Jms\Configuration\Subject\FileWriter")
+     * @SerializedName("file-writer")
+     */
+    protected $fileWriter;
+
+    /**
      * The number converter configuration instance.
      *
      * @var \TechDivision\Import\Configuration\Subject\NumberConverterConfigurationInterface
@@ -234,6 +244,11 @@ class Subject implements SubjectConfigurationInterface, ListenerAwareConfigurati
         // set a default file resolver if none has been configured
         if ($this->fileResolver === null) {
             $this->fileResolver = new FileResolver();
+        }
+
+        // set a default file writer if none has been configured
+        if ($this->fileWriter === null) {
+            $this->fileWriter = new FileWriter();
         }
 
         // set a default number converter if none has been configured
@@ -553,6 +568,16 @@ class Subject implements SubjectConfigurationInterface, ListenerAwareConfigurati
     public function getFileResolver()
     {
         return $this->fileResolver;
+    }
+
+    /**
+     * Return's the file writer configuration instance.
+     *
+     * @return \TechDivision\Import\Configuration\Subject\FileWriterConfigurationInterface The file writer configuration instance
+     */
+    public function getFileWriter()
+    {
+        return $this->fileWriter;
     }
 
     /**
