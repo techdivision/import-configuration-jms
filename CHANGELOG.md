@@ -7,6 +7,7 @@
 ## Features
 
 * Switch to latest techdivision/import 16.* version as dependency
+* Add new method FileResolver::hasPrefix() to query whethr or not the file resolver has the default prefix
 
 # Version 15.0.4
 

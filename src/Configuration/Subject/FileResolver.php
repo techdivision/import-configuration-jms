@@ -142,6 +142,19 @@ class FileResolver implements FileResolverConfigurationInterface
     }
 
     /**
+     * Query's whether or not a custom prefix has been configured for the
+     * file resolver.
+     *
+     * @param string $defaultPrefix The default prefix to match against
+     *
+     * @return boolean TRUE if the file resolver has a custom prefix, else FALSE
+     */
+    public function hasPrefix($defaultPrefix = '.*')
+    {
+        return strcmp($this->getPrefix(), $defaultPrefix) <> 0;
+    }
+
+    /**
      * Return's the prefix/meta sequence for the import files.
      *
      * @return string The prefix

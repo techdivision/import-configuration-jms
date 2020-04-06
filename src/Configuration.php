@@ -1408,8 +1408,8 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
     /**
      * Return's an array with the subjects which prefix is NOT in the passed
      * array of blacklisted prefixes and that matches the filters.
-
-     * @param array $ignore  An array with prefixes that has to be ignored
+     *
+     * @param callable[] $filters An array with filters to filter the subjects that has to be returned
      *
      * @return array An array with the matching subjects
      */
