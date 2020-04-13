@@ -389,7 +389,7 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
      * @SerializedName("cache-enabled")
      * @Accessor(setter="setCacheEnabled", getter="isCacheEnabled")
      */
-    protected $cacheEnabled = true;
+    protected $cacheEnabled = false;
 
     /**
      * ArrayCollection with the information of the configured aliases.
