@@ -165,7 +165,7 @@ class ConfigurationFactory implements ConfigurationFactoryInterface
      * @param string $params     A serialized string with additional params that'll be passed to the configuration
      * @param string $paramsFile A filename that contains serialized data with additional params that'll be passed to the configuration
      *
-     * @return \TechDivision\Import\ConfigurationInterface The configuration instance
+     * @return \TechDivision\Import\Configuration\ConfigurationInterface The configuration instance
      */
     public function factoryFromString($data, $format = 'json', $params = null, $paramsFile = null)
     {

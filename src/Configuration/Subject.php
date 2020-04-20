@@ -23,7 +23,7 @@ namespace TechDivision\Import\Configuration\Jms\Configuration;
 use JMS\Serializer\Annotation\Type;
 use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\PostDeserialize;
-use TechDivision\Import\ConfigurationInterface;
+use TechDivision\Import\Configuration\ConfigurationInterface;
 use TechDivision\Import\Configuration\PluginConfigurationInterface;
 use TechDivision\Import\Configuration\SubjectConfigurationInterface;
 use TechDivision\Import\Configuration\ListenerAwareConfigurationInterface;
@@ -206,7 +206,7 @@ class Subject implements SubjectConfigurationInterface, ListenerAwareConfigurati
     /**
      * A reference to the parent configuration instance.
      *
-     * @var \TechDivision\Import\ConfigurationInterface
+     * @var \TechDivision\Import\Configuration\ConfigurationInterface
      */
     protected $configuration;
 
@@ -416,7 +416,7 @@ class Subject implements SubjectConfigurationInterface, ListenerAwareConfigurati
     /**
      * Set's the reference to the configuration instance.
      *
-     * @param \TechDivision\Import\ConfigurationInterface $configuration The configuration instance
+     * @param \TechDivision\Import\Configuration\ConfigurationInterface $configuration The configuration instance
      *
      * @return void
      */
@@ -428,7 +428,7 @@ class Subject implements SubjectConfigurationInterface, ListenerAwareConfigurati
     /**
      * Return's the reference to the configuration instance.
      *
-     * @return \TechDivision\Import\ConfigurationInterface The configuration instance
+     * @return \TechDivision\Import\Configuration\ConfigurationInterface The configuration instance
      */
     public function getConfiguration()
     {

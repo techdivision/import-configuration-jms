@@ -28,7 +28,7 @@ use JMS\Serializer\Annotation\Accessor;
 use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\PostDeserialize;
 use JMS\Serializer\Annotation\ExclusionPolicy;
-use TechDivision\Import\ConfigurationInterface;
+use TechDivision\Import\Configuration\ConfigurationInterface;
 use TechDivision\Import\Configuration\DatabaseConfigurationInterface;
 use TechDivision\Import\Configuration\Jms\Configuration\ParamsTrait;
 use TechDivision\Import\Configuration\Jms\Configuration\CsvTrait;

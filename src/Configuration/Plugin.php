@@ -24,7 +24,7 @@ use JMS\Serializer\Annotation\Type;
 use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\PostDeserialize;
 use Doctrine\Common\Collections\ArrayCollection;
-use TechDivision\Import\ConfigurationInterface;
+use TechDivision\Import\Configuration\ConfigurationInterface;
 use TechDivision\Import\Configuration\PluginConfigurationInterface;
 use TechDivision\Import\Configuration\OperationConfigurationInterface;
 use TechDivision\Import\Configuration\ListenerAwareConfigurationInterface;
@@ -152,7 +152,7 @@ class Plugin implements PluginConfigurationInterface, ListenerAwareConfiguration
     /**
      * Set's the reference to the configuration instance.
      *
-     * @param \TechDivision\Import\ConfigurationInterface $configuration The configuration instance
+     * @param \TechDivision\Import\Configuration\ConfigurationInterface $configuration The configuration instance
      *
      * @return void
      */
@@ -164,7 +164,7 @@ class Plugin implements PluginConfigurationInterface, ListenerAwareConfiguration
     /**
      * Return's the reference to the configuration instance.
      *
-     * @return \TechDivision\Import\ConfigurationInterface The configuration instance
+     * @return \TechDivision\Import\Configuration\ConfigurationInterface The configuration instance
      */
     public function getConfiguration()
     {

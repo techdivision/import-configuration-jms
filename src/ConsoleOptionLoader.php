@@ -22,7 +22,7 @@ namespace TechDivision\Import\Configuration\Jms;
 
 use JMS\Serializer\Annotation\Accessor;
 use JMS\Serializer\Annotation\SerializedName;
-use TechDivision\Import\ConfigurationInterface;
+use TechDivision\Import\Configuration\ConfigurationInterface;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Symfony\Component\Console\Input\InputInterface;
 use TechDivision\Import\ConsoleOptionLoaderInterface;
@@ -91,7 +91,7 @@ class ConsoleOptionLoader implements ConsoleOptionLoaderInterface
     /**
      * Load's the input options ans try's to initialize the configuration with the values found.
      *
-     * @param \TechDivision\Import\ConfigurationInterface $instance The configuration instance to load the values for
+     * @param \TechDivision\Import\Configuration\ConfigurationInterface $instance The configuration instance to load the values for
      *
      * @return void
      */

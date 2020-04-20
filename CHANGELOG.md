@@ -6,6 +6,7 @@
 
 ## Features
 
+* Add #PAC-85
 * Switch to latest techdivision/import 16.* version as dependency
 * Add new method FileResolver::hasPrefix() to query whethr or not the file resolver has the default prefix
 

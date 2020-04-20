@@ -99,7 +99,7 @@ class ConfigurationFactoryTest extends TestCase
         );
 
         // query whether or not the configuration instance has the expected type
-        $this->assertInstanceOf('TechDivision\Import\ConfigurationInterface', $configuration);
+        $this->assertInstanceOf('TechDivision\Import\Configuration\ConfigurationInterface', $configuration);
     }
 
     /**
@@ -118,7 +118,7 @@ class ConfigurationFactoryTest extends TestCase
         );
 
         // query whether or not the configuration instance has the expected type
-        $this->assertInstanceOf('TechDivision\Import\ConfigurationInterface', $configuration);
+        $this->assertInstanceOf('TechDivision\Import\Configuration\ConfigurationInterface', $configuration);
         $this->assertSame('test-01', $configuration->getParam('test'));
     }
 
@@ -138,7 +138,7 @@ class ConfigurationFactoryTest extends TestCase
         );
 
         // query whether or not the configuration instance has the expected type
-        $this->assertInstanceOf('TechDivision\Import\ConfigurationInterface', $configuration);
+        $this->assertInstanceOf('TechDivision\Import\Configuration\ConfigurationInterface', $configuration);
         $this->assertSame(array('test-01', 'test-02'), $configuration->getParam('test'));
     }
 
@@ -158,7 +158,7 @@ class ConfigurationFactoryTest extends TestCase
             );
 
         // query whether or not the configuration instance has the expected type
-        $this->assertInstanceOf('TechDivision\Import\ConfigurationInterface', $configuration);
+        $this->assertInstanceOf('TechDivision\Import\Configuration\ConfigurationInterface', $configuration);
         $this->assertSame(array('test-01', 'test-02'), $configuration->getParam('test-array'));
     }
 }
