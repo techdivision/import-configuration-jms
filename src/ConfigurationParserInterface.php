@@ -35,10 +35,11 @@ interface ConfigurationParserInterface
     /**
      * Parsing the configuration and merge it recursively.
      *
-     * @param array $directories An array with diretories to parse
+     * @param string $installationDir         The assumed Magento installation directory
+     * @param string $defaultConfigurationDir The default configuration directory
+     * @param array  $directories             An array with diretories to parse
      *
-     * @return void
-     * @throws \Exception Is thrown if the configuration can not be loaded from the configuration files
+     * @return string The parsed configuration as string
      */
-    public function parse(array $directories);
+    public function parse(string $installationDir, string $defaultConfigurationDir, array $directories) : string;
 }

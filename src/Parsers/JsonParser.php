@@ -38,6 +38,34 @@ class JsonParser implements ConfigurationParserInterface
 {
 
     /**
+     * The key for the configuration snippet that contains the additional vendor directory configuration.
+     *
+     * @var string
+     */
+    const ADDITIONAL_VENDOR_DIRS = 'additional-vendor-dirs';
+
+    /**
+     * The key with the libraries of the additional vendor directory.
+     *
+     * @var string
+     */
+    const LIBRARIES = 'libraries';
+
+    /**
+     * The key with the absolut/relative path to the vendor directory.
+     *
+     * @var string
+     */
+    const VENDOR_DIR = 'vendor-dir';
+
+    /**
+     * The key for the flag to decide whether or not the vendor is relative to the installation directory.
+     *
+     * @var string
+     */
+    const RELATIVE = 'relative';
+
+    /**
      * The utility class that provides array handling functionality.
      *
      * @var \TechDivision\Import\Configuration\Jms\Utils\ArrayUtilInterface
@@ -57,12 +85,13 @@ class JsonParser implements ConfigurationParserInterface
     /**
      * Parsing the configuration and merge it recursively.
      *
-     * @param array $directories An array with diretories to parse
+     * @param string $installationDir         The assumed Magento installation directory
+     * @param string $defaultConfigurationDir The default configuration directory
+     * @param array  $directories             An array with diretories to parse
      *
-     * @return void
-     * @throws \Exception Is thrown if the configuration can not be loaded from the configuration files
+     * @return string The parsed configuration as string
      */
-    public function parse(array $directories)
+    public function parse(string $installationDir, string $defaultConfigurationDir, array $directories) : string
     {
 
         // initialize the array that'll contain the configuration structure
@@ -70,21 +99,87 @@ class JsonParser implements ConfigurationParserInterface
 
         // iterate over the found directories to parse them for configuration files
         foreach ($directories as $directory) {
-            // load the configuration filenames
-            $filenames = $this->listContents($directory, 'json');
-
-            // load the content of each found configuration file and merge it
-            foreach ($filenames as $filename) {
-                if (is_file($filename) && $content = json_decode(file_get_contents($filename), true)) {
-                    $main = $this->replace($main, $content);
-                } else {
-                    throw new \Exception(sprintf('Can\'t load content of file %s', $filename));
-                }
-            }
+            $this->process($main, $directory);
         }
+
+        // process the additional vendor directories, if available
+        $this->processAdditionalVendorDirs($main, $installationDir, $defaultConfigurationDir);
 
         // return the JSON encoded configuration
         return json_encode($main, JSON_PRETTY_PRINT);
+    }
+
+    /**
+     * Process the passed directory and merges/replaces the found
+     * configurations into the passed main configuration.
+     *
+     * @param array  $main      The main configuration to merge/replace the found configurations into
+     * @param string $directory The directory to be parsed for addtional configuration files
+     *
+     * @return void
+     * @throws \Exception Is thrown if the configuration can not be loaded from the configuration files
+     */
+    protected function process(array &$main, string $directory) : void
+    {
+
+        // load the configuration filenames
+        $filenames = $this->listContents($directory, 'json');
+
+        // load the content of each found configuration file and merge it
+        foreach ($filenames as $filename) {
+            if (is_file($filename) && $content = json_decode(file_get_contents($filename), true)) {
+                $main = $this->replace($main, $content);
+            } else {
+                throw new \Exception(sprintf('Can\'t load content of file %s', $filename));
+            }
+        }
+    }
+
+    /**
+     * Process the configuration files found in the additional vendor directories
+     * and merge/replace its content in the also passed main configuration file.
+     *
+     * @param array  $main                    The main configuration to merge/replace the additional configuration files to
+     * @param string $installationDir         The assumed Magento installation directory
+     * @param string $defaultConfigurationDir The default configuration directory
+     *
+     * @return void
+     */
+    protected function processAdditionalVendorDirs(array &$main, string $installationDir, string $defaultConfigurationDir) : void
+    {
+
+        // query whether or not additional vendor directories has been registered in the configuration
+        if (isset($main[JsonParser::ADDITIONAL_VENDOR_DIRS]) && is_array($main[JsonParser::ADDITIONAL_VENDOR_DIRS])) {
+            // iterate over the additional vendor directory configurations
+            foreach ($main[JsonParser::ADDITIONAL_VENDOR_DIRS] as $additionalVendorDir) {
+                // make sure the vendor directory has been set
+                if (isset($additionalVendorDir[JsonParser::VENDOR_DIR])) {
+                    // extract the relative path to the additional vendor directory
+                    $vendorDir = $additionalVendorDir[JsonParser::VENDOR_DIR];
+                    // extract the flag if the additional vendor directory is relative to the installation directory
+                    $isRelative = isset($additionalVendorDir[JsonParser::RELATIVE]) ?? true;
+                    // query whether or not libraries have been configured
+                    if (isset($additionalVendorDir[JsonParser::LIBRARIES]) && is_array($additionalVendorDir[JsonParser::LIBRARIES])) {
+                        // process the configuration found in the library directories
+                        foreach ($additionalVendorDir[JsonParser::LIBRARIES] as $library) {
+                            // concatenate the directory for the library
+                            $libDir = sprintf('%s/%s/%s', $vendorDir, $library, $defaultConfigurationDir);
+                            // prepend the installation directory, if the vendor is relative to it
+                            if ($isRelative) {
+                                $libDir = sprintf('%s/%s', $installationDir, $libDir);
+                            }
+
+                            // create the canonicalized absolute pathname and try to load the configuration
+                            if (is_dir($libraryDir = realpath($libDir))) {
+                                $this->process($main, $libraryDir);
+                            } else {
+                                throw new \Exception(sprintf('Can\'t find find library directory "%s"', $libDir));
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -92,7 +187,7 @@ class JsonParser implements ConfigurationParserInterface
      *
      * @return \TechDivision\Import\Configuration\Jms\Utils\ArrayUtilInterface The utility instance
      */
-    protected function getArrayUtil()
+    protected function getArrayUtil() : ArrayUtilInterface
     {
         return $this->arrayUtil;
     }
