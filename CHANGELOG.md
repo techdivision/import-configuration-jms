@@ -7,6 +7,7 @@
 ## Features
 
 * Add #PAC-85
+* Add techdivision/import-cli-simple#244
 * Switch to latest techdivision/import 16.* version as dependency
 * Add new method FileResolver::hasPrefix() to query whethr or not the file resolver has the default prefix
 * Add functionality to also parse configuration files that'll be available in configured additional vendor directory

@@ -276,7 +276,17 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
      * @SerializedName("archive-artefacts")
      * @Accessor(setter="setArchiveArtefacts", getter="haveArchiveArtefacts")
      */
-    protected $archiveArtefacts;
+    protected $archiveArtefacts = true;
+
+    /**
+     * The flag whether or not the import artefacts have to be cleared.
+     *
+     * @var boolean
+     * @Type("boolean")
+     * @SerializedName("clear-artefacts")
+     * @Accessor(setter="setClearArtefacts", getter="haveClearArtefacts")
+     */
+    protected $clearArtefacts = true;
 
     /**
      * The directory where the archives will be stored.
@@ -911,6 +921,28 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
     public function haveArchiveArtefacts()
     {
         return $this->archiveArtefacts;
+    }
+
+    /**
+     * Set's the flag that import artefacts have to be cleared or not.
+     *
+     * @param mixed $clearArtefacts TRUE if artefacts have to be cleared, else FALSE
+     *
+     * @return void
+     */
+    public function setClearArtefacts($clearArtefacts)
+    {
+        $this->clearArtefacts = $this->mapBoolean($clearArtefacts);
+    }
+
+    /**
+     * Return's the TRUE if the import artefacts have to be cleared after the import process.
+     *
+     * @return boolean TRUE if the import artefacts have to be cleared
+     */
+    public function haveClearArtefacts()
+    {
+        return $this->clearArtefacts;
     }
 
     /**
