@@ -1,6 +1,6 @@
 {
     "name": "techdivision/import-configuration-jms",
-    "description": "Library providing a JMS based configuration implementation for the M2IF",
+    "description": "Library providing a JMS based configuration implementation for Pacemaker",
     "license": "OSL-3.0",
     "require": {
         "php": ">=7.1.0",

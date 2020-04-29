@@ -21,8 +21,8 @@
 namespace TechDivision\Import\Configuration\Jms;
 
 use JMS\Serializer\SerializerBuilder;
-use TechDivision\Import\ConfigurationFactoryInterface;
 use TechDivision\Import\Configuration\Jms\Configuration\Params;
+use TechDivision\Import\Configuration\ConfigurationFactoryInterface;
 
 /**
  * The configuration factory implementation.
