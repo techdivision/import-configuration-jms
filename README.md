@@ -7,5 +7,4 @@
  [![Scrutinizer Code Quality](https://img.shields.io/scrutinizer/g/techdivision/import-configuration-jms/master.svg?style=flat-square)](https://scrutinizer-ci.com/g/techdivision/import-configuration-jms/?branch=master)
  [![Code Coverage](https://img.shields.io/scrutinizer/coverage/g/techdivision/import-configuration-jms/master.svg?style=flat-square)](https://scrutinizer-ci.com/g/techdivision/import-configuration-jms/?branch=master)
 
-This library provides a [JMS](https://github.com/schmittjoh/serializer) based configuration 
-implementation for the M2IF.
+Please visit the M2IF [website](https://m2if.com) for documentation and additional information
