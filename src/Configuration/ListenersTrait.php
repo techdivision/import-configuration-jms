@@ -1,7 +1,7 @@
 <?php
 
 /**
- * TechDivision\Import\Configuration\Jms\Configuration\SwiftMailer\Transport
+ * TechDivision\Import\Configuration\Jms\Configuration\ListenersTrait
  *
  * NOTICE OF LICENSE
  *
@@ -12,33 +12,43 @@
  * PHP version 5
  *
  * @author    Tim Wagner <t.wagner@techdivision.com>
- * @copyright 2016 TechDivision GmbH <info@techdivision.com>
+ * @copyright 2019 TechDivision GmbH <info@techdivision.com>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      https://github.com/techdivision/import-configuration-jms
  * @link      http://www.techdivision.com
  */
 
-namespace TechDivision\Import\Configuration\Jms\Configuration\SwiftMailer;
+namespace TechDivision\Import\Configuration\Jms\Configuration;
 
-use TechDivision\Import\Configuration\Jms\Configuration\ParamsTrait;
-use TechDivision\Import\Configuration\SwiftMailer\TransportConfigurationInterface;
+use JMS\Serializer\Annotation\Type;
 
 /**
- * The swift mailer transport configuration.
+ * A trait implementation that provides listener handling.
  *
  * @author    Tim Wagner <t.wagner@techdivision.com>
- * @copyright 2016 TechDivision GmbH <info@techdivision.com>
+ * @copyright 2019 TechDivision GmbH <info@techdivision.com>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      https://github.com/techdivision/import-configuration-jms
  * @link      http://www.techdivision.com
  */
-class Transport implements TransportConfigurationInterface
+trait ListenersTrait
 {
 
     /**
-     * The trait that provides parameter handling functionality.
+     * ArrayCollection with the listeners.
      *
-     * @var \TechDivision\Import\Configuration\Jms\Configuration\ParamsTrait
+     * @var array
+     * @Type("array")
      */
-    use ParamsTrait;
+    protected $listeners = array();
+
+    /**
+     * Return's the array with the configured listeners.
+     *
+     * @return array The array with the listeners
+     */
+    public function getListeners()
+    {
+        return $this->listeners;
+    }
 }

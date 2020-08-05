@@ -1,7 +1,7 @@
 <?php
 
 /**
- * TechDivision\Import\Configuration\Jms\Configuration\SwiftMailer\Transport
+ * TechDivision\Import\Configuration\Jms\Iterators\DirnameFilter
  *
  * NOTICE OF LICENSE
  *
@@ -12,33 +12,34 @@
  * PHP version 5
  *
  * @author    Tim Wagner <t.wagner@techdivision.com>
- * @copyright 2016 TechDivision GmbH <info@techdivision.com>
+ * @copyright 2019 TechDivision GmbH <info@techdivision.com>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      https://github.com/techdivision/import-configuration-jms
  * @link      http://www.techdivision.com
  */
 
-namespace TechDivision\Import\Configuration\Jms\Configuration\SwiftMailer;
-
-use TechDivision\Import\Configuration\Jms\Configuration\ParamsTrait;
-use TechDivision\Import\Configuration\SwiftMailer\TransportConfigurationInterface;
+namespace TechDivision\Import\Configuration\Jms\Iterators;
 
 /**
- * The swift mailer transport configuration.
+ * A filter implementation that filters direcntory names based on the passed regex.
  *
  * @author    Tim Wagner <t.wagner@techdivision.com>
- * @copyright 2016 TechDivision GmbH <info@techdivision.com>
+ * @copyright 2019 TechDivision GmbH <info@techdivision.com>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      https://github.com/techdivision/import-configuration-jms
  * @link      http://www.techdivision.com
  */
-class Transport implements TransportConfigurationInterface
+class DirnameFilter extends AbstractFilesystemRegexFilter
 {
 
     /**
-     * The trait that provides parameter handling functionality.
+     * Filter directories against the regex.
      *
-     * @var \TechDivision\Import\Configuration\Jms\Configuration\ParamsTrait
+     * @return void
+     * @see \RecursiveRegexIterator::accept()
      */
-    use ParamsTrait;
+    public function accept()
+    {
+        return (!$this->isDir() || preg_match($this->regex, $this->getFilename()));
+    }
 }

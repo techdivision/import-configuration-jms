@@ -1,7 +1,7 @@
 <?php
 
 /**
- * TechDivision\Import\Configuration\Jms\Configuration\Logger\Formatter
+ * TechDivision\Import\Configuration\Jms\Configuration\Params
  *
  * NOTICE OF LICENSE
  *
@@ -18,46 +18,28 @@
  * @link      http://www.techdivision.com
  */
 
-namespace TechDivision\Import\Configuration\Jms\Configuration\Logger;
+namespace TechDivision\Import\Configuration\Jms\Configuration;
 
-use JMS\Serializer\Annotation\Type;
-use TechDivision\Import\Configuration\Jms\Configuration\ParamsTrait;
-use TechDivision\Import\Configuration\Logger\FormatterConfigurationInterface;
+use JMS\Serializer\Annotation\ExclusionPolicy;
 
 /**
- * The handler's formatter configuration.
+ * A simple JMS based params configuration implementation.
  *
  * @author    Tim Wagner <t.wagner@techdivision.com>
  * @copyright 2016 TechDivision GmbH <info@techdivision.com>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      https://github.com/techdivision/import-configuration-jms
  * @link      http://www.techdivision.com
+ *
+ * @ExclusionPolicy("none")
  */
-class Formatter implements FormatterConfigurationInterface
+class Params
 {
 
     /**
-     * The trait that provides parameter handling functionality.
+     * Trait that provides CSV configuration functionality.
      *
      * @var \TechDivision\Import\Configuration\Jms\Configuration\ParamsTrait
      */
     use ParamsTrait;
-
-    /**
-     * The formatter's DI ID to use.
-     *
-     * @var string
-     * @Type("string")
-     */
-    protected $id;
-
-    /**
-     * Return's the formatter's DI ID to use.
-     *
-     * @return string The type
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
 }

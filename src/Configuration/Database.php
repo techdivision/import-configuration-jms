@@ -55,6 +55,22 @@ class Database implements DatabaseConfigurationInterface
     protected $dsn;
 
     /**
+     * The database host to use.
+     *
+     * @var string
+     * @Type("string")
+     */
+    protected $host;
+
+    /**
+     * The database port to use.
+     *
+     * @var string
+     * @Type("integer")
+     */
+    protected $port;
+
+    /**
      * The DB username to use.
      *
      * @var string
@@ -78,6 +94,47 @@ class Database implements DatabaseConfigurationInterface
      * @SerializedName("default")
      */
     protected $default = false;
+
+    /**
+     * The DB timeout to use.
+     *
+     * @var integer
+     * @Type("integer")
+     */
+    protected $timeout;
+
+    /**
+     * The DB version to use.
+     *
+     * @var string
+     * @Type("string")
+     */
+    protected $version;
+
+    /**
+     * The DB name to use.
+     *
+     * @var string
+     * @Type("string")
+     */
+    protected $name;
+
+    /**
+     * The DB table prefix to use.
+     *
+     * @var string
+     * @Type("string")
+     * @SerializedName("table-prefix")
+     */
+    protected $tablePrefix;
+
+    /**
+     * The DB type to use.
+     *
+     * @var string
+     * @Type("string")
+     */
+    protected $type = DatabaseConfigurationInterface::TYPE_MYSQL;
 
     /**
      * Set's the database identifier for this database connection.
@@ -180,6 +237,18 @@ class Database implements DatabaseConfigurationInterface
     }
 
     /**
+     * Set's the DB table prefix to use.
+     *
+     * @param string $tablePrefix The DB table prefix
+     *
+     * @return void
+     */
+    public function setTablePrefix($tablePrefix)
+    {
+        $this->tablePrefix = $tablePrefix;
+    }
+
+    /**
      * Return's the flag to signal that this is the default datasource or not.
      *
      * @return boolean TRUE if this is the default datasource, else FALSE
@@ -187,5 +256,75 @@ class Database implements DatabaseConfigurationInterface
     public function isDefault()
     {
         return $this->default;
+    }
+
+    /**
+     * Return's the DB name to use.
+     *
+     * @return string The DB name
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Return's the DB timeout to use.
+     *
+     * @return integer The DB timeout
+     */
+    public function getTimeout()
+    {
+        return $this->timeout;
+    }
+
+    /**
+     * Return's the DB version to use.
+     *
+     * @return string The DB version
+     */
+    public function getVersion()
+    {
+        return $this->version;
+    }
+
+    /**
+     * Return's the DB host to use.
+     *
+     * @return string The DB host
+     */
+    public function getHost()
+    {
+        return $this->host;
+    }
+
+    /**
+     * Return's the DB port to use.
+     *
+     * @return integer The DB port
+     */
+    public function getPort()
+    {
+        return $this->port;
+    }
+
+    /**
+     * Return's the DB type to use.
+     *
+     * @return string The DB type
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * Return's the DB table prefix to use.
+     *
+     * @return string The DB table prefix
+     */
+    public function getTablePrefix()
+    {
+        return $this->tablePrefix;
     }
 }

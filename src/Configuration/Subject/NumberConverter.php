@@ -1,7 +1,7 @@
 <?php
 
 /**
- * TechDivision\Import\Configuration\Jms\Configuration\Logger\Formatter
+ * TechDivision\Import\Configuration\Jms\Configuration\NumberConverter
  *
  * NOTICE OF LICENSE
  *
@@ -18,14 +18,14 @@
  * @link      http://www.techdivision.com
  */
 
-namespace TechDivision\Import\Configuration\Jms\Configuration\Logger;
+namespace TechDivision\Import\Configuration\Jms\Configuration\Subject;
 
 use JMS\Serializer\Annotation\Type;
-use TechDivision\Import\Configuration\Jms\Configuration\ParamsTrait;
-use TechDivision\Import\Configuration\Logger\FormatterConfigurationInterface;
+use TechDivision\Import\Utils\DependencyInjectionKeys;
+use TechDivision\Import\Configuration\Subject\NumberConverterConfigurationInterface;
 
 /**
- * The handler's formatter configuration.
+ * A simple number configuration implementation.
  *
  * @author    Tim Wagner <t.wagner@techdivision.com>
  * @copyright 2016 TechDivision GmbH <info@techdivision.com>
@@ -33,31 +33,42 @@ use TechDivision\Import\Configuration\Logger\FormatterConfigurationInterface;
  * @link      https://github.com/techdivision/import-configuration-jms
  * @link      http://www.techdivision.com
  */
-class Formatter implements FormatterConfigurationInterface
+class NumberConverter implements NumberConverterConfigurationInterface
 {
 
     /**
-     * The trait that provides parameter handling functionality.
-     *
-     * @var \TechDivision\Import\Configuration\Jms\Configuration\ParamsTrait
-     */
-    use ParamsTrait;
-
-    /**
-     * The formatter's DI ID to use.
+     * The number converter's class name.
      *
      * @var string
      * @Type("string")
      */
-    protected $id;
+    protected $id = DependencyInjectionKeys::IMPORT_SUBJECT_NUMBER_CONVERTER_SIMPLE;
 
     /**
-     * Return's the formatter's DI ID to use.
+     * The locale to use.
      *
-     * @return string The type
+     * @var string
+     * @Type("string")
+     */
+    protected $locale = 'en_US';
+
+    /**
+     * Return's the number converter's unique DI identifier.
+     *
+     * @return string The number converter's unique DI identifier
      */
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Returns the locale to use.
+     *
+     * @return string The locale
+     */
+    public function getLocale()
+    {
+        return $this->locale;
     }
 }

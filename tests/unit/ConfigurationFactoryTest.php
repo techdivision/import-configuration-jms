@@ -20,7 +20,8 @@
 
 namespace TechDivision\Import\Configuration\Jms;
 
-use Doctrine\DBAL\Configuration;
+use PHPUnit\Framework\TestCase;
+use JMS\Serializer\SerializerBuilder;
 
 /**
  * Test class for the JMS configuration factory.
@@ -31,7 +32,7 @@ use Doctrine\DBAL\Configuration;
  * @link      https://github.com/techdivision/import-configuration-jms
  * @link      http://www.techdivision.com
  */
-class ConfigurationFactoryTest extends \PHPUnit_Framework_TestCase
+class ConfigurationFactoryTest extends TestCase
 {
 
     /**
@@ -44,7 +45,7 @@ class ConfigurationFactoryTest extends \PHPUnit_Framework_TestCase
     /**
      *
      * {@inheritDoc}
-     * @see PHPUnit_Framework_TestCase::setUp()
+     * @see \PHPUnit\Framework\TestCase::setUp()
      */
     protected function setUp()
     {
@@ -72,8 +73,16 @@ class ConfigurationFactoryTest extends \PHPUnit_Framework_TestCase
             $annotationDirectory
         );
 
+        // create a mock configuration parser factory
+        $mockConfigurationParserFactory = $this->getMockBuilder('TechDivision\Import\Configuration\Jms\ConfigurationParserFactory')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        // create a new serializer builder instance
+        $configurationBuilder = new SerializerBuilder();
+
         // initialize the configuration factory instance we want to test
-        $this->configurationFactory = new ConfigurationFactory();
+        $this->configurationFactory = new ConfigurationFactory($mockConfigurationParserFactory, $configurationBuilder);
     }
 
     /**
@@ -90,6 +99,66 @@ class ConfigurationFactoryTest extends \PHPUnit_Framework_TestCase
         );
 
         // query whether or not the configuration instance has the expected type
-        $this->assertInstanceOf('TechDivision\Import\ConfigurationInterface', $configuration);
+        $this->assertInstanceOf('TechDivision\Import\Configuration\ConfigurationInterface', $configuration);
+    }
+
+    /**
+     * Test's the factoryFromString() method with simple params.
+     *
+     * @return void
+     */
+    public function testFactoryFromStringWithSimpleParamsOption()
+    {
+
+        // load the configuration
+        $configuration = $this->configurationFactory->factoryFromString(
+            file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . '_files' . DIRECTORY_SEPARATOR . 'techdivision-import.json'),
+            'json',
+            '{"params":{"test":"test-01"}}'
+        );
+
+        // query whether or not the configuration instance has the expected type
+        $this->assertInstanceOf('TechDivision\Import\Configuration\ConfigurationInterface', $configuration);
+        $this->assertSame('test-01', $configuration->getParam('test'));
+    }
+
+    /**
+     * Test's the factoryFromString() method with complex params.
+     *
+     * @return void
+     */
+    public function testFactoryFromStringWithComplexParamsOption()
+    {
+
+        // load the configuration
+        $configuration = $this->configurationFactory->factoryFromString(
+            file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . '_files' . DIRECTORY_SEPARATOR . 'techdivision-import.json'),
+            'json',
+            '{"params":{"test":["test-01","test-02"]}}'
+        );
+
+        // query whether or not the configuration instance has the expected type
+        $this->assertInstanceOf('TechDivision\Import\Configuration\ConfigurationInterface', $configuration);
+        $this->assertSame(array('test-01', 'test-02'), $configuration->getParam('test'));
+    }
+
+    /**
+     * Test's the factoryFromString() method with merged complex params.
+     *
+     * @return void
+     */
+    public function testFactoryFromStringWithMergedComplexParamsOption()
+    {
+
+        // load the configuration
+        $configuration = $this->configurationFactory->factoryFromString(
+            file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . '_files' . DIRECTORY_SEPARATOR . 'techdivision-import.json'),
+            'json',
+            '{"params":{"test-array":["test-01","test-02"]}}'
+            );
+
+        // query whether or not the configuration instance has the expected type
+        $this->assertInstanceOf('TechDivision\Import\Configuration\ConfigurationInterface', $configuration);
+        $this->assertSame(array('test-01', 'test-02'), $configuration->getParam('test-array'));
     }
 }

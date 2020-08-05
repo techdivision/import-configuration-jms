@@ -45,12 +45,12 @@ class Handler implements HandlerConfigurationInterface
     use ParamsTrait;
 
     /**
-     * The handler's type to use.
+     * The handler's DI ID to use.
      *
      * @var string
      * @Type("string")
      */
-    protected $type;
+    protected $id;
 
     /**
      * The handler's formatter to use.
@@ -70,13 +70,13 @@ class Handler implements HandlerConfigurationInterface
     protected $swiftMailer;
 
     /**
-     * Return's the handler's type to use.
+     * Return's the handler's DI ID to use.
      *
-     * @return string The type
+     * @return string The DI ID
      */
-    public function getType()
+    public function getId()
     {
-        return $this->type;
+        return $this->id;
     }
 
     /**
@@ -92,7 +92,7 @@ class Handler implements HandlerConfigurationInterface
     /**
      * Return's the swift mailer configuration to use.
      *
-     * @return TechDivision\Import\Configuration\Jms\Configuration\SwiftMailer The swift mailer configuration to use
+     * @return \TechDivision\Import\Configuration\Jms\Configuration\SwiftMailer The swift mailer configuration to use
      */
     public function getSwiftMailer()
     {

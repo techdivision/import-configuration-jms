@@ -1,7 +1,7 @@
 <?php
 
 /**
- * TechDivision\Import\Configuration\Jms\Configuration\Listener
+ * TechDivision\Import\Configuration\Jms\Configuration\DateConverter
  *
  * NOTICE OF LICENSE
  *
@@ -18,14 +18,15 @@
  * @link      http://www.techdivision.com
  */
 
-namespace TechDivision\Import\Configuration\Jms\Configuration;
+namespace TechDivision\Import\Configuration\Jms\Configuration\Subject;
 
 use JMS\Serializer\Annotation\Type;
 use JMS\Serializer\Annotation\SerializedName;
-use TechDivision\Import\Configuration\ListenerConfigurationInterface;
+use TechDivision\Import\Utils\DependencyInjectionKeys;
+use TechDivision\Import\Configuration\Subject\DateConverterConfigurationInterface;
 
 /**
- * The listener configuration implementation.
+ * A simple date converter configuration implementation.
  *
  * @author    Tim Wagner <t.wagner@techdivision.com>
  * @copyright 2016 TechDivision GmbH <info@techdivision.com>
@@ -33,30 +34,30 @@ use TechDivision\Import\Configuration\ListenerConfigurationInterface;
  * @link      https://github.com/techdivision/import-configuration-jms
  * @link      http://www.techdivision.com
  */
-class Listener implements ListenerConfigurationInterface
+class DateConverter implements DateConverterConfigurationInterface
 {
 
     /**
-     * The listeners's unique DI identifier.
+     * The date converter's class name.
      *
      * @var string
      * @Type("string")
-     * @SerializedName("id")
      */
-    protected $id;
+    protected $id = DependencyInjectionKeys::IMPORT_SUBJECT_DATE_CONVERTER_SIMPLE;
 
     /**
-     * The event name the listener has to be registered.
+     * The source date format to use.
      *
-     * @var string
+     * @var string
      * @Type("string")
+     * @SerializedName("source-date-format")
      */
-    protected $event;
+    protected $sourceDateFormat = 'n/d/y, g:i A';
 
     /**
-     * Return's the listener's unique DI identifier
+     * Returns the date converter's unique DI identifier.
      *
-     * @return string The listener's unique DI identifier
+     * @return string The date converter's unique DI identifier
      */
     public function getId()
     {
@@ -64,12 +65,12 @@ class Listener implements ListenerConfigurationInterface
     }
 
     /**
-     * Return's the event name the listener has to be registered.
+     * Returns the source date format to use.
      *
-     * @return string The event name
+     * @return string The source date format
      */
-    public function getEvent()
+    public function getSourceDateFormat()
     {
-        return $this->event;
+        return $this->sourceDateFormat;
     }
 }

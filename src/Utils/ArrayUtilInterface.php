@@ -1,7 +1,7 @@
 <?php
 
 /**
- * TechDivision\Import\Configuration\Jms\Configuration\SwiftMailer\Transport
+ * TechDivision\Import\Configuration\Jms\Utils\ArrayUtilInterface
  *
  * NOTICE OF LICENSE
  *
@@ -12,33 +12,33 @@
  * PHP version 5
  *
  * @author    Tim Wagner <t.wagner@techdivision.com>
- * @copyright 2016 TechDivision GmbH <info@techdivision.com>
+ * @copyright 2019 TechDivision GmbH <info@techdivision.com>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      https://github.com/techdivision/import-configuration-jms
  * @link      http://www.techdivision.com
  */
 
-namespace TechDivision\Import\Configuration\Jms\Configuration\SwiftMailer;
-
-use TechDivision\Import\Configuration\Jms\Configuration\ParamsTrait;
-use TechDivision\Import\Configuration\SwiftMailer\TransportConfigurationInterface;
+namespace TechDivision\Import\Configuration\Jms\Utils;
 
 /**
- * The swift mailer transport configuration.
+ * Interface for utility implementations that provides custom array handling functionality.
  *
  * @author    Tim Wagner <t.wagner@techdivision.com>
- * @copyright 2016 TechDivision GmbH <info@techdivision.com>
+ * @copyright 2019 TechDivision GmbH <info@techdivision.com>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      https://github.com/techdivision/import-configuration-jms
  * @link      http://www.techdivision.com
  */
-class Transport implements TransportConfigurationInterface
+interface ArrayUtilInterface
 {
 
     /**
-     * The trait that provides parameter handling functionality.
+     * Replaces the values of the first array with the ones from the arrays
+     * that has been passed as additional arguments.
      *
-     * @var \TechDivision\Import\Configuration\Jms\Configuration\ParamsTrait
+     * @param array ...$arrays The arrays with the values that has to be replaced
+     *
+     * @return array The array with the replaced values
      */
-    use ParamsTrait;
+    public function replace(...$arrays);
 }

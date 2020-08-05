@@ -23,11 +23,17 @@ namespace TechDivision\Import\Configuration\Jms\Configuration;
 use JMS\Serializer\Annotation\Type;
 use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\PostDeserialize;
-use TechDivision\Import\ConfigurationInterface;
+use TechDivision\Import\Configuration\ConfigurationInterface;
+use TechDivision\Import\Configuration\PluginConfigurationInterface;
 use TechDivision\Import\Configuration\SubjectConfigurationInterface;
+use TechDivision\Import\Configuration\ListenerAwareConfigurationInterface;
+use TechDivision\Import\Configuration\Jms\Configuration\Subject\FileResolver;
 use TechDivision\Import\Configuration\Jms\Configuration\Subject\ImportAdapter;
 use TechDivision\Import\Configuration\Jms\Configuration\Subject\ExportAdapter;
+use TechDivision\Import\Configuration\Jms\Configuration\Subject\DateConverter;
+use TechDivision\Import\Configuration\Jms\Configuration\Subject\NumberConverter;
 use TechDivision\Import\Configuration\Jms\Configuration\Subject\FilesystemAdapter;
+use TechDivision\Import\Configuration\Jms\Configuration\Subject\FileWriter;
 
 /**
  * The subject configuration implementation.
@@ -38,7 +44,7 @@ use TechDivision\Import\Configuration\Jms\Configuration\Subject\FilesystemAdapte
  * @link      https://github.com/techdivision/import-configuration-jms
  * @link      http://www.techdivision.com
  */
-class Subject implements SubjectConfigurationInterface
+class Subject implements SubjectConfigurationInterface, ListenerAwareConfigurationInterface
 {
 
     /**
@@ -47,6 +53,13 @@ class Subject implements SubjectConfigurationInterface
      * @var \TechDivision\Import\Configuration\Jms\Configuration\ParamsTrait
      */
     use ParamsTrait;
+
+    /**
+     * Trait that provides CSV configuration functionality.
+     *
+     * @var \TechDivision\Import\Configuration\Jms\Configuration\ListenersTrait
+     */
+    use ListenersTrait;
 
     /**
      * The subject's unique DI identifier.
@@ -58,20 +71,13 @@ class Subject implements SubjectConfigurationInterface
     protected $id;
 
     /**
-     * The file prefix for import files.
+     * The subject's name.
      *
-     * @var string
+     * @var string
      * @Type("string")
+     * @SerializedName("name")
      */
-    protected $prefix = 'magento-import';
-
-    /**
-     * The file suffix for import files.
-     *
-     * @var string
-     * @Type("string")
-     */
-    protected $suffix = 'csv';
+    protected $name;
 
     /**
      * The array with the subject's observers.
@@ -99,13 +105,6 @@ class Subject implements SubjectConfigurationInterface
     protected $frontendInputCallbacks = array();
 
     /**
-     * A reference to the parent configuration instance.
-     *
-     * @var \TechDivision\Import\ConfigurationInterface
-     */
-    protected $configuration;
-
-    /**
      * The flag to signal that the subjects needs a OK file to be processed or not.
      *
      * @var boolean
@@ -113,6 +112,15 @@ class Subject implements SubjectConfigurationInterface
      * @SerializedName("ok-file-needed")
      */
     protected $okFileNeeded = false;
+
+    /**
+     *The flag to signal that the subject has to create a .imported flagfile or not.
+     *
+     * @var boolean
+     * @Type("boolean")
+     * @SerializedName("create-imported-file")
+     */
+    protected $createImportedFile = true;
 
     /**
      * The import adapter configuration instance.
@@ -142,6 +150,74 @@ class Subject implements SubjectConfigurationInterface
     protected $filesystemAdapter;
 
     /**
+     * The file resolver configuration instance.
+     *
+     * @var \TechDivision\Import\Configuration\Subject\FileResolverConfigurationInterface
+     * @Type("TechDivision\Import\Configuration\Jms\Configuration\Subject\FileResolver")
+     * @SerializedName("file-resolver")
+     */
+    protected $fileResolver;
+
+    /**
+     * The file writer configuration instance.
+     *
+     * @var \TechDivision\Import\Configuration\Subject\FileWriterConfigurationInterface
+     * @Type("TechDivision\Import\Configuration\Jms\Configuration\Subject\FileWriter")
+     * @SerializedName("file-writer")
+     */
+    protected $fileWriter;
+
+    /**
+     * The number converter configuration instance.
+     *
+     * @var \TechDivision\Import\Configuration\Subject\NumberConverterConfigurationInterface
+     * @Type("TechDivision\Import\Configuration\Jms\Configuration\Subject\NumberConverter")
+     * @SerializedName("number-converter")
+     */
+    protected $numberConverter;
+
+    /**
+     * The date converter configuration instance.
+     *
+     * @var \TechDivision\Import\Configuration\Subject\DateConverterConfigurationInterface
+     * @Type("TechDivision\Import\Configuration\Jms\Configuration\Subject\DateConverter")
+     * @SerializedName("date-converter")
+     */
+    protected $dateConverter;
+
+    /**
+     * The source directory that has to be watched for new files.
+     *
+     * @var string
+     * @Type("string")
+     * @SerializedName("source-dir")
+     */
+    protected $sourceDir;
+
+    /**
+     * The target directory with the files that has been imported.
+     *
+     * @var string
+     * @Type("string")
+     * @SerializedName("target-dir")
+     */
+    protected $targetDir;
+
+    /**
+     * A reference to the parent configuration instance.
+     *
+     * @var \TechDivision\Import\Configuration\ConfigurationInterface
+     */
+    protected $configuration;
+
+    /**
+     * The configuration of the parent plugin.
+     *
+     * @var \TechDivision\Import\Configuration\PluginConfigurationInterface
+     */
+    protected $pluginConfiguration;
+
+    /**
      * Lifecycle callback that will be invoked after deserialization.
      *
      * @return void
@@ -163,6 +239,26 @@ class Subject implements SubjectConfigurationInterface
         // set a default filesystem adatper if none has been configured
         if ($this->filesystemAdapter === null) {
             $this->filesystemAdapter = new FilesystemAdapter();
+        }
+
+        // set a default file resolver if none has been configured
+        if ($this->fileResolver === null) {
+            $this->fileResolver = new FileResolver();
+        }
+
+        // set a default file writer if none has been configured
+        if ($this->fileWriter === null) {
+            $this->fileWriter = new FileWriter();
+        }
+
+        // set a default number converter if none has been configured
+        if ($this->numberConverter === null) {
+            $this->numberConverter = new NumberConverter();
+        }
+
+        // set a default date converter if none has been configured
+        if ($this->dateConverter === null) {
+            $this->dateConverter = new DateConverter();
         }
     }
 
@@ -263,7 +359,7 @@ class Subject implements SubjectConfigurationInterface
      */
     public function getSourceDateFormat()
     {
-        return $this->getConfiguration()->getSourceDateFormat();
+        return $this->getDateConverter()->getSourceDateFormat();
     }
 
     /**
@@ -273,7 +369,7 @@ class Subject implements SubjectConfigurationInterface
      */
     public function getSourceDir()
     {
-        return $this->getConfiguration()->getSourceDir();
+        return $this->sourceDir ? $this->sourceDir : $this->getConfiguration()->getSourceDir();
     }
 
     /**
@@ -283,7 +379,7 @@ class Subject implements SubjectConfigurationInterface
      */
     public function getTargetDir()
     {
-        return $this->getConfiguration()->getTargetDir();
+        return $this->targetDir ? $this->targetDir : $this->getConfiguration()->getTargetDir();
     }
 
     /**
@@ -307,9 +403,20 @@ class Subject implements SubjectConfigurationInterface
     }
 
     /**
+     * Return's the subject's name or the ID, if the name is NOT set.
+     *
+     * @return string The subject's name
+     * @see \TechDivision\Import\Configuration\SubjectConfigurationInterface::getId()
+     */
+    public function getName()
+    {
+        return $this->name ? $this->name : $this->getId();
+    }
+
+    /**
      * Set's the reference to the configuration instance.
      *
-     * @param \TechDivision\Import\ConfigurationInterface $configuration The configuration instance
+     * @param \TechDivision\Import\Configuration\ConfigurationInterface $configuration The configuration instance
      *
      * @return void
      */
@@ -321,7 +428,7 @@ class Subject implements SubjectConfigurationInterface
     /**
      * Return's the reference to the configuration instance.
      *
-     * @return \TechDivision\Import\ConfigurationInterface The configuration instance
+     * @return \TechDivision\Import\Configuration\ConfigurationInterface The configuration instance
      */
     public function getConfiguration()
     {
@@ -329,15 +436,25 @@ class Subject implements SubjectConfigurationInterface
     }
 
     /**
-     * Set's the prefix for the import files.
+     * Set's the reference to the parent plugin configuration instance.
      *
-     * @param string $prefix The prefix
+     * @param \TechDivision\Import\Configuration\PluginConfigurationInterface $pluginConfiguration The parent plugin configuration instance
      *
      * @return void
      */
-    public function setPrefix($prefix)
+    public function setPluginConfiguration(PluginConfigurationInterface $pluginConfiguration)
     {
-        $this->prefix = $prefix;
+        $this->pluginConfiguration = $pluginConfiguration;
+    }
+
+    /**
+     * Return's the reference to the parent plugin configuration instance.
+     *
+     * @return \TechDivision\Import\Configuration\PluginConfigurationInterface The parent plugin configuration instance
+     */
+    public function getPluginConfiguration()
+    {
+        return $this->pluginConfiguration;
     }
 
     /**
@@ -347,29 +464,7 @@ class Subject implements SubjectConfigurationInterface
      */
     public function getPrefix()
     {
-        return $this->prefix;
-    }
-
-    /**
-     * Set's the suffix for the import files.
-     *
-     * @param string $suffix The suffix
-     *
-     * @return void
-     */
-    public function setSuffix($suffix)
-    {
-        $this->suffix = $suffix;
-    }
-
-    /**
-     * Return's the suffix for the import files.
-     *
-     * @return string The suffix
-     */
-    public function getSuffix()
-    {
-        return $this->suffix;
+        return $this->getFileResolver()->getPrefix();
     }
 
     /**
@@ -426,6 +521,16 @@ class Subject implements SubjectConfigurationInterface
     }
 
     /**
+     * Queries whether or not the subject should create a .imported flagfile
+     *
+     * @return boolean TRUE if subject has to create the .imported flagfile, else FALSE
+     */
+    public function isCreatingImportedFile()
+    {
+        return $this->createImportedFile;
+    }
+
+    /**
      * Return's the import adapter configuration instance.
      *
      * @return \TechDivision\Import\Configuration\Subject\ImportAdapterConfigurationInterface The import adapter configuration instance
@@ -456,6 +561,46 @@ class Subject implements SubjectConfigurationInterface
     }
 
     /**
+     * Return's the file resolver configuration instance.
+     *
+     * @return \TechDivision\Import\Configuration\Subject\FileResolverConfigurationInterface The file resolver configuration instance
+     */
+    public function getFileResolver()
+    {
+        return $this->fileResolver;
+    }
+
+    /**
+     * Return's the file writer configuration instance.
+     *
+     * @return \TechDivision\Import\Configuration\Subject\FileWriterConfigurationInterface The file writer configuration instance
+     */
+    public function getFileWriter()
+    {
+        return $this->fileWriter;
+    }
+
+    /**
+     * Return's the number converter configuration instance.
+     *
+     * @return \TechDivision\Import\Configuration\Subject\NumberConverterConfigurationInterface The number converter configuration instance
+     */
+    public function getNumberConverter()
+    {
+        return $this->numberConverter;
+    }
+
+    /**
+     * Return's the date converter configuration instance.
+     *
+     * @return \TechDivision\Import\Configuration\Subject\DateConverterConfigurationInterface The date converter configuration instance
+     */
+    public function getDateConverter()
+    {
+        return $this->dateConverter;
+    }
+
+    /**
      * The array with the subject's custom header mappings.
      *
      * @return array The custom header mappings
@@ -473,5 +618,37 @@ class Subject implements SubjectConfigurationInterface
     public function getImageTypes()
     {
         return $this->getConfiguration()->getImageTypes();
+    }
+
+    /**
+     * Return's the execution context configuration for the actualy plugin configuration.
+     *
+     * @return \TechDivision\Import\ExecutionContextInterface The execution context to use
+     */
+    public function getExecutionContext()
+    {
+        return $this->getPluginConfiguration()->getExecutionContext();
+    }
+
+    /**
+     * Load the default values from the configuration.
+     *
+     * @return array The array with the default values
+     */
+    public function getDefaultValues()
+    {
+        return $this->getConfiguration()->getDefaultValues();
+    }
+
+    /**
+     * Return's the full opration name, which consists of the Magento edition, the entity type code and the operation name.
+     *
+     * @param string $separator The separator used to seperate the elements
+     *
+     * @return string The full operation name
+     */
+    public function getFullOperationName($separator = '/')
+    {
+        return $this->getPluginConfiguration()->getFullOperationName();
     }
 }

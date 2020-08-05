@@ -54,6 +54,14 @@ class VendorDir implements VendorDirConfigurationInterface
     protected $libraries = array();
 
     /**
+     * Whether or the vendor directory is relative to the installation directory.
+     *
+     * @var boolean
+     * @Type("boolean")
+     */
+    protected $relative = true;
+
+    /**
      * Return's the path to the additional vendor directory.
      *
      * @return string The path to the additional vendor directory
@@ -71,5 +79,15 @@ class VendorDir implements VendorDirConfigurationInterface
     public function getLibraries()
     {
         return $this->libraries;
+    }
+
+    /**
+     * Query's whether or not the vendor directory is relative to the installation directory.
+     *
+     * @return boolean TRUE if the vendor dir is relative to the installation directory, else FALSE
+     */
+    public function isRelative()
+    {
+        return $this->relative;
     }
 }

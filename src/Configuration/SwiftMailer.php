@@ -44,21 +44,12 @@ class SwiftMailer implements SwiftMailerConfigurationInterface
     use ParamsTrait;
 
     /**
-     * The factory used to create the swift mailer instance.
+     * The DI ID used to create the swift mailer instance.
      *
      * @var string
      * @Type("string")
      */
-    protected $factory;
-
-    /**
-     * The swift mailer factory used to create the instance.
-     *
-     * @var string
-     * @Type("string")
-     * @SerializedName("mailer-factory")
-     */
-    protected $mailerFactory;
+    protected $id;
 
     /**
      * The swift mailer transport configuration to use.
@@ -69,29 +60,19 @@ class SwiftMailer implements SwiftMailerConfigurationInterface
     protected $transport;
 
     /**
-     * Return's the factory used to create the swift mailer instance.
+     * Return's the DI ID used to create the swift mailer instance.
      *
-     * @return string The factory
+     * @return string The DI ID
      */
-    public function getFactory()
+    public function getId()
     {
-        return $this->factory;
-    }
-
-    /**
-     * Return's the swift mailer factory that creates the mailer instance.
-     *
-     * @return string The swift mailer factory
-     */
-    public function getMailerFactory()
-    {
-        return $this->mailerFactory;
+        return $this->id;
     }
 
     /**
      * Return's the swift mailer transport configuration to use.
      *
-     * @return TechDivision\Import\Configuration\Jms\Configuration\SwiftMailer\Transport The transport configuration to use
+     * @return \TechDivision\Import\Configuration\Jms\Configuration\SwiftMailer\Transport The transport configuration to use
      */
     public function getTransport()
     {

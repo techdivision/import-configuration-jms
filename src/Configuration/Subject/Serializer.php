@@ -1,7 +1,7 @@
 <?php
 
 /**
- * TechDivision\Import\Configuration\Jms\Configuration\Logger\Formatter
+ * TechDivision\Import\Configuration\Jms\Configuration\Subject\Serializer
  *
  * NOTICE OF LICENSE
  *
@@ -18,14 +18,14 @@
  * @link      http://www.techdivision.com
  */
 
-namespace TechDivision\Import\Configuration\Jms\Configuration\Logger;
+namespace TechDivision\Import\Configuration\Jms\Configuration\Subject;
 
 use JMS\Serializer\Annotation\Type;
-use TechDivision\Import\Configuration\Jms\Configuration\ParamsTrait;
-use TechDivision\Import\Configuration\Logger\FormatterConfigurationInterface;
+use TechDivision\Import\Utils\DependencyInjectionKeys;
+use TechDivision\Import\Configuration\Subject\SerializerConfigurationInterface;
 
 /**
- * The handler's formatter configuration.
+ * The import/export adapter's serializer configuration.
  *
  * @author    Tim Wagner <t.wagner@techdivision.com>
  * @copyright 2016 TechDivision GmbH <info@techdivision.com>
@@ -33,28 +33,21 @@ use TechDivision\Import\Configuration\Logger\FormatterConfigurationInterface;
  * @link      https://github.com/techdivision/import-configuration-jms
  * @link      http://www.techdivision.com
  */
-class Formatter implements FormatterConfigurationInterface
+class Serializer implements SerializerConfigurationInterface
 {
 
     /**
-     * The trait that provides parameter handling functionality.
-     *
-     * @var \TechDivision\Import\Configuration\Jms\Configuration\ParamsTrait
-     */
-    use ParamsTrait;
-
-    /**
-     * The formatter's DI ID to use.
+     * The serializer's factory class name.
      *
      * @var string
      * @Type("string")
      */
-    protected $id;
+    protected $id = DependencyInjectionKeys::IMPORT_SERIALIZER_FACTORY_CSV_ADDITIONAL_ATTRIBUTE;
 
     /**
-     * Return's the formatter's DI ID to use.
+     * Returns the serializer's factory unique DI identifier.
      *
-     * @return string The type
+     * @return string The unique DI identifier of the serializer factory
      */
     public function getId()
     {

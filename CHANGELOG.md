@@ -1,3 +1,249 @@
+# Version 16.0.1
+
+## Bugfixes
+
+* Fixed invald annotation on property Alias::$id
+
+## Features
+
+* None
+
+# Version 16.0.0
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Add #PAC-85
+* Add techdivision/import-cli-simple#244
+* Switch to latest techdivision/import 16.* version as dependency
+* Add new method FileResolver::hasPrefix() to query whethr or not the file resolver has the default prefix
+* Add functionality to also parse configuration files that'll be available in configured additional vendor directory
+
+# Version 15.0.4
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Replace composer dependency doctrine/dbal with doctrine/collections
+
+# Version 15.0.3
+
+## Bugfixes
+
+* Fixed techdivision/import-configuration-jms#33
+
+## Features
+
+* None
+
+# Version 15.0.2
+
+## Bugfixes
+
+* Fixed PHPUnit tests
+
+## Features
+
+* None
+
+# Version 15.0.1
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Switch to jms/serializer ^1.0 and remove unnecessary Serializer implementation
+
+# Version 15.0.0
+
+## Bugfixes
+
+* Fixed techdivision/import-cli-simple#224
+
+## Features
+
+* Add techdivision/import#163
+* Add techdivision/import-cli-simple#216
+* Add techdivision/import-configuration-jms#25
+* Switch to latest techdivision/import 15.* version as dependency
+
+# Version 14.1.0
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Lower dependency for jms/serializer to ^0.16.0 for compatility with Magento 2.3.3
+* Add  custom implementations for SerializerBuilder and Serializer to provide forward compatibility
+
+# Version 14.0.0
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Switch to latest techdivision/import 14.* version as dependency
+
+# Version 13.0.0
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Switch to latest techdivision/import 13.* version as dependency
+
+# Version 12.0.0
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Switch to latest techdivision/import 12.* version as dependency
+
+# Version 11.0.0
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Switch to latest techdivision/import 11.* version as dependency
+
+# Version 10.0.1
+
+## Bugfixes
+
+* Remove local repository registration
+
+## Features
+
+* None
+
+# Version 10.0.0
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Add cache configuration and alias mapping
+* Switch to latest techdivision/import 10.0.* version as dependency
+
+# Version 9.0.0
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Add --cache-enabled option
+* Refactoring for plugin and subject listeners
+* Switch to latest techdivision/import 9.0.* version as dependency
+
+# Version 8.0.0
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Switch to latest techdivision/import 8.0.* version as dependency
+
+# Version 7.0.0
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Extract listener configuration into an trait to make it reusable
+* Extend configuration for Redis specific database configuration
+* Switch to latest techdivision/import 7.0.* version as dependency
+
+# Version 6.0.0
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Switch to latest techdivision/import 6.0.* version as dependency
+
+# Version 5.0.0
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Switch to latest techdivision/import 5.0.* version as dependency
+
+# Version 4.0.0
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Add FileResolver configuration
+* Add ParamsTrait to Configuration also
+* Add DateConverter + Number Converter configuration
+* Move CSV configuration from subject to CsvTrait
+
+# Version 3.0.0
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Switch to techdivision/import version ~3.0
+
+# Version 2.0.1
+
+## Bugfixes
+
+* Fixed invalid JMS (un-)serialization name for Subject::$createImportedFile property
+
+## Features
+
+* None
+
+# Version 2.0.0
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Add SubjectConfiguration::isCreatingImportedFile() method to return create-imported-file configuration flag
+
 # Version 1.0.0
 
 ## Bugfixes
