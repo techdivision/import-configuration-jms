@@ -20,7 +20,6 @@
 
 namespace TechDivision\Import\Configuration\Jms;
 
-use Psr\Log\LogLevel;
 use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation\Type;
 use JMS\Serializer\Annotation\Exclude;
@@ -316,7 +315,7 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
      * @SerializedName("log-level")
      * @Accessor(setter="setLogLevel", getter="getLogLevel")
      */
-    protected $logLevel = LogLevel::INFO;
+    protected $logLevel;
 
     /**
      * The explicit DB ID to use.
@@ -439,7 +438,7 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
      *
      * @var array
      * @SerializedName("finder-mappings")
-     * @Type("array<string, string>")
+     * @Type("array<string, array<string, string>>")
      * @Accessor(setter="setFinderMappings", getter="getFinderMappings")
      */
     protected $finderMappings = array();
@@ -1343,8 +1342,10 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
     {
 
         // convert the finder mappings keys, which are constants, to their values
-        foreach ($finderMappings as $key => $value) {
-            $this->finderMappings[defined($key) ? constant($key) : $key] = $value;
+        foreach ($finderMappings as $entityTypeCode => $mappings) {
+            foreach ($mappings as $key => $value) {
+                $this->finderMappings[$entityTypeCode][defined($key) ? constant($key) : $key] = $value;
+            }
         }
     }
 
@@ -1361,21 +1362,27 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
     /**
      * Return's the mapped finder for the passed key.
      *
-     * @param string $key The key of the finder to map
+     * @param string      $key            The key of the finder to map
+     * @param string|null $entityTypeCode The entity type code to return the finder mappings for
      *
      * @return string The mapped finder name
      * @throws \InvalidArgumentException Is thrown if the mapping with passed key can not be resolved
      */
-    public function getFinderMappingByKey($key)
+    public function getFinderMappingByKey($key, $entityTypeCode = null)
     {
 
+        // load the entity type code
+        $entityTypeCode = $entityTypeCode ?? $this->getEntityTypeCode();
+
         // try to resolve the mapping for the finder with the passed key
-        if (isset($this->finderMappings[$key])) {
-            return $this->finderMappings[$key];
+        if (isset($this->finderMappings[$entityTypeCode][$key])) {
+            return $this->finderMappings[$entityTypeCode][$key];
         }
 
         // throw an exception otherwise
-        throw new \InvalidArgumentException(sprintf('Can\'t load mapping for finder with key "%s"', $key));
+        throw new \InvalidArgumentException(
+            sprintf('Can\'t load mapping for finder for entity type code "%s" with key "%s"', $entityTypeCode, $key)
+        );
     }
 
     /**
