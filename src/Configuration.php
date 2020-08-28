@@ -1362,26 +1362,27 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
     /**
      * Return's the mapped finder for the passed key.
      *
-     * @param string      $key            The key of the finder to map
-     * @param string|null $entityTypeCode The entity type code to return the finder mappings for
+     * @param string $key The key of the finder to map
      *
      * @return string The mapped finder name
      * @throws \InvalidArgumentException Is thrown if the mapping with passed key can not be resolved
      */
-    public function getFinderMappingByKey($key, $entityTypeCode = null)
+    public function getFinderMappingByKey($key)
     {
 
-        // load the entity type code
-        $entityTypeCode = $entityTypeCode ?? $this->getEntityTypeCode();
+        // flatten the array, because we don't handle the entity type code yet
+        $finderMappings = array_reduce($this->finderMappings, function ($carry, $item) {
+            return array_replace($carry, $item);
+        }, array());
 
         // try to resolve the mapping for the finder with the passed key
-        if (isset($this->finderMappings[$entityTypeCode][$key])) {
-            return $this->finderMappings[$entityTypeCode][$key];
+        if (isset($finderMappings[$key])) {
+            return $finderMappings[$key];
         }
 
         // throw an exception otherwise
         throw new \InvalidArgumentException(
-            sprintf('Can\'t load mapping for finder for entity type code "%s" with key "%s"', $entityTypeCode, $key)
+            sprintf('Can\'t load mapping for finder with key "%s"', $key)
         );
     }
 
