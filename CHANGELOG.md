@@ -1,3 +1,13 @@
+# Version 16.0.2
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Remove default log level initialization to `info` from configuration
+
 # Version 16.0.1
 
 ## Bugfixes

@@ -21,7 +21,6 @@
 namespace TechDivision\Import\Configuration\Jms\Configuration;
 
 use JMS\Serializer\Annotation\Type;
-use JMS\Serializer\Annotation\SerializedName;
 use TechDivision\Import\Configuration\SwiftMailerConfigurationInterface;
 
 /**

@@ -20,7 +20,6 @@
 
 namespace TechDivision\Import\Configuration\Jms;
 
-use Psr\Log\LogLevel;
 use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation\Type;
 use JMS\Serializer\Annotation\Exclude;
@@ -316,7 +315,7 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
      * @SerializedName("log-level")
      * @Accessor(setter="setLogLevel", getter="getLogLevel")
      */
-    protected $logLevel = LogLevel::INFO;
+    protected $logLevel;
 
     /**
      * The explicit DB ID to use.
