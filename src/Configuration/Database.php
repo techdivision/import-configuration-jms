@@ -20,6 +20,7 @@
 
 namespace TechDivision\Import\Configuration\Jms\Configuration;
 
+use JMS\Serializer\Annotation\Exclude;
 use JMS\Serializer\Annotation\Type;
 use JMS\Serializer\Annotation\SerializedName;
 use TechDivision\Import\Configuration\DatabaseConfigurationInterface;
@@ -83,6 +84,7 @@ class Database implements DatabaseConfigurationInterface
      *
      * @var string
      * @Type("string")
+     * @Exclude
      */
     protected $password;
 
