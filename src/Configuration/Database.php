@@ -84,7 +84,7 @@ class Database implements DatabaseConfigurationInterface
      *
      * @var string
      * @Type("string")
-     * @Exclude
+     * @Exclude(if="context.getDirection() === 1")
      */
     protected $password;
 

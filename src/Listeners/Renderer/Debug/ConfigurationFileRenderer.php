@@ -21,11 +21,13 @@
 
 namespace TechDivision\Import\Configuration\Jms\Listeners\Renderer\Debug;
 
+use JMS\Serializer\Expression\ExpressionEvaluator;
 use JMS\Serializer\SerializerBuilder;
 use JMS\Serializer\JsonSerializationVisitor;
 use JMS\Serializer\Naming\IdenticalPropertyNamingStrategy;
 use JMS\Serializer\Naming\SerializedNameAnnotationStrategy;
 use TechDivision\Import\Configuration\ConfigurationInterface;
+use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 /**
  * A customer renderer that renders the configuration to a file by using the JMS serializer.
@@ -52,6 +54,7 @@ class ConfigurationFileRenderer extends \TechDivision\Import\Listeners\Renderer\
         // initialize the serializer
         $builder = SerializerBuilder::create();
         $builder->addDefaultSerializationVisitors();
+        $builder->setExpressionEvaluator(new ExpressionEvaluator(new ExpressionLanguage()));
 
         // initialize the naming strategy
         $namingStrategy = new SerializedNameAnnotationStrategy(new IdenticalPropertyNamingStrategy());

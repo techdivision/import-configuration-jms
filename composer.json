@@ -6,7 +6,8 @@
         "php": ">=7.1.0",
         "doctrine/collections": "^1.6",
         "jms/serializer": "^1.0",
-        "techdivision/import": "dev-master"
+        "techdivision/import": "dev-master",
+        "symfony/expression-language": "4.*"
     },
     "require-dev": {
         "pdepend/pdepend": "2.5.2",
