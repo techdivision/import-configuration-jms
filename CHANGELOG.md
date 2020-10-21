@@ -1,3 +1,13 @@
+# Version 16.1.0
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Add functionality to also parse JSON configuration in extension libraries
+
 # Version 16.0.2
 
 ## Bugfixes
