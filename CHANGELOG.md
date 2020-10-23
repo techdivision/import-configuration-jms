@@ -8,6 +8,26 @@
 
 * Add #PAC-89: Add debug email command + DebugSendPlugin
 
+# Version 16.1.0
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Add functionality to also parse JSON configuration in extension libraries
+
+# Version 16.0.2
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Remove default log level initialization to `info` from configuration
+
 # Version 16.0.1
 
 ## Bugfixes

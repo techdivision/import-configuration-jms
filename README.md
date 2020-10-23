@@ -1,4 +1,4 @@
-# M2IF - JMS Import Configuration
+# Pacemaker - JMS Import Configuration
 
 [![Latest Stable Version](https://img.shields.io/packagist/v/techdivision/import-configuration-jms.svg?style=flat-square)](https://packagist.org/packages/techdivision/import-configuration-jms) 
  [![Total Downloads](https://img.shields.io/packagist/dt/techdivision/import-configuration-jms.svg?style=flat-square)](https://packagist.org/packages/techdivision/import-configuration-jms)
@@ -7,6 +7,6 @@
  [![Scrutinizer Code Quality](https://img.shields.io/scrutinizer/g/techdivision/import-configuration-jms/master.svg?style=flat-square)](https://scrutinizer-ci.com/g/techdivision/import-configuration-jms/?branch=master)
  [![Code Coverage](https://img.shields.io/scrutinizer/coverage/g/techdivision/import-configuration-jms/master.svg?style=flat-square)](https://scrutinizer-ci.com/g/techdivision/import-configuration-jms/?branch=master)
 
-This library provides a [JMS](https://github.com/schmittjoh/serializer) based configuration implementation for the M2IF.
+This library provides a [JMS](https://github.com/schmittjoh/serializer) based configuration implementation for Pacemaker.
 
-Please visit the M2IF [website](https://m2if.com) for documentation and additional information
+Please visit the Pacemaker [website](https://pacemaker.techdivision.com) or our [documentation](https://docs.met.tdintern.de/pacemaker/1.3/) for additional information
