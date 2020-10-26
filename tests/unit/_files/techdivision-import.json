@@ -11,6 +11,7 @@
   },
   "databases" : [
   ],
+  "empty-attribute-value-constant": "__EMPTY__VALUE__",
   "operations" : {
     "ce" : {
       "catalog_product": [

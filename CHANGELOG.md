@@ -7,6 +7,8 @@
 ## Features
 
 * Add #PAC-89: Add debug email command + DebugSendPlugin
+* Add #PAC-57: Deleting dedicated attribute values via import by setting a configurable value
+
 
 # Version 16.1.0
 
