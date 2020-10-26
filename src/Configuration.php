@@ -1496,10 +1496,18 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
      * Get the definition from an empty value
      *
      * @return string A string with constant for empty attribute value
+     * @throws \InvalidArgumentException Is thrown if default value ist overwritten with empty value
      */
     public function getEmptyAttributeValueConstant()
     {
-        return empty($this->emptyAttributeValueConstant) ? "__EMPTY__VALUE__" : $this->emptyAttributeValueConstant;
+        if ($this->emptyAttributeValueConstant !== null && $this->emptyAttributeValueConstant !== '') {
+            return $this->emptyAttributeValueConstant;
+        }
+
+        // throw an exception otherwise
+        throw new \InvalidArgumentException(
+            'Can\'t use empty value as definition for "empty-attribute-value-constant"'
+        );
     }
 
     /**
