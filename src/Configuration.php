@@ -454,6 +454,16 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
     protected $defaultValues = array();
 
     /**
+     * The value to define empty values for attributes
+     *
+     * @var string
+     * @Type("string")
+     * @SerializedName("empty-attribute-value-constant")
+     * @Accessor(setter="setEmptyAttributeValueConstant", getter="getEmptyAttributeValueConstant")
+     */
+    protected $emptyAttributeValueConstant = '';
+
+    /**
      * Lifecycle callback that will be invoked after deserialization.
      *
      * @return void
@@ -1480,5 +1490,27 @@ class Configuration implements ConfigurationInterface, ListenerAwareConfiguratio
 
         // return the array with the filtered subjects
         return $subjects;
+    }
+
+    /**
+     * Get the definition from an empty value
+     *
+     * @return string A string with constant for empty attribute value
+     */
+    public function getEmptyAttributeValueConstant()
+    {
+        return empty($this->emptyAttributeValueConstant) ? "__EMPTY__VALUE__" : $this->emptyAttributeValueConstant;
+    }
+
+    /**
+     * Set the definition from an empty value
+     *
+     * @param string $emptyAttributeValueConstant give the definition for an emppty value
+     *
+     * @return void
+     */
+    public function setEmptyAttributeValueConstant($emptyAttributeValueConstant)
+    {
+        $this->emptyAttributeValueConstant = $emptyAttributeValueConstant;
     }
 }
