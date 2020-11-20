@@ -1,3 +1,13 @@
+# Version 16.1.1
+
+## Bugfixes
+
+* Fixed #PAC-280: Extension library requires `etc` configuration directory
+
+## Features
+
+* None
+
 # Version 16.1.0
 
 ## Bugfixes

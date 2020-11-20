@@ -117,8 +117,6 @@ class ExtendedJsonParser extends JsonParser
                 // create the canonicalized absolute pathname and try to load the configuration
                 if (is_dir($libraryDir = realpath($libDir))) {
                     $this->process($main, $libraryDir);
-                } else {
-                    throw new \Exception(sprintf('Can\'t find find extension library directory "%s"', $libDir));
                 }
             }
         }
