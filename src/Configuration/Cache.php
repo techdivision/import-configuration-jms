@@ -35,7 +35,7 @@ use TechDivision\Import\Configuration\CacheConfigurationInterface;
  * @link      https://github.com/techdivision/import-configuration-jms
  * @link      http://www.techdivision.com
  */
-class Cache implements CacheConfigurationInterface
+class Cache implements CacheConfigurationInterface, \TechDivision\Import\Cache\Configuration\CacheConfigurationInterface
 {
 
     /**
