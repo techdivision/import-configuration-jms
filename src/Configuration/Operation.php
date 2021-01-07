@@ -24,7 +24,7 @@ use JMS\Serializer\Annotation\Type;
 use JMS\Serializer\Annotation\Exclude;
 use JMS\Serializer\Annotation\PostDeserialize;
 use Doctrine\Common\Collections\ArrayCollection;
-use TechDivision\Import\ExecutionContextInterface;
+use TechDivision\Import\Configuration\ExecutionContextInterface;
 use TechDivision\Import\Configuration\OperationConfigurationInterface;
 use TechDivision\Import\Configuration\ListenerAwareConfigurationInterface;
 
@@ -50,7 +50,7 @@ class Operation implements OperationConfigurationInterface, ListenerAwareConfigu
     /**
      * The execution context.
      *
-     * @var \TechDivision\Import\ExecutionContextInterface
+     * @var \TechDivision\Import\Configuration\ExecutionContextInterface
      */
     protected $executionContext;
 
@@ -144,7 +144,7 @@ class Operation implements OperationConfigurationInterface, ListenerAwareConfigu
     /**
      * Set's the execution context configuration for the actualy plugin configuration.
      *
-     * @param \TechDivision\Import\ExecutionContextInterface $executionContext The execution context to use
+     * @param \TechDivision\Import\Configuration\ExecutionContextInterface $executionContext The execution context to use
      *
      * @return void
      */
@@ -156,7 +156,7 @@ class Operation implements OperationConfigurationInterface, ListenerAwareConfigu
     /**
      * Return's the execution context configuration for the actualy plugin configuration.
      *
-     * @return \TechDivision\Import\ExecutionContextInterface The execution context to use
+     * @return \TechDivision\Import\Configuration\ExecutionContextInterface The execution context to use
      */
     public function getExecutionContext()
     {

@@ -34,7 +34,7 @@ use TechDivision\Import\Configuration\DatabaseConfigurationInterface;
  * @link      https://github.com/techdivision/import-configuration-jms
  * @link      http://www.techdivision.com
  */
-class Database implements DatabaseConfigurationInterface
+class Database implements DatabaseConfigurationInterface, \TechDivision\Import\Dbal\Configuration\DatabaseConfigurationInterface
 {
 
     /**
