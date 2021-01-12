@@ -50,7 +50,8 @@ class Configuration implements
     ConfigurationInterface,
     ListenerAwareConfigurationInterface,
     \TechDivision\Import\Cache\Configuration\ConfigurationInterface,
-    \TechDivision\Import\Dbal\Configuration\ConfigurationInterface
+    \TechDivision\Import\Dbal\Configuration\ConfigurationInterface,
+    \TechDivision\Import\Serializer\Configuration\ConfigurationInterface
 {
 
     /**
