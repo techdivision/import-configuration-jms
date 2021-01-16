@@ -22,7 +22,7 @@ namespace TechDivision\Import\Configuration\Jms\Configuration\Subject;
 
 use JMS\Serializer\Annotation\Type;
 use TechDivision\Import\Utils\DependencyInjectionKeys;
-use TechDivision\Import\Configuration\Subject\SerializerConfigurationInterface;
+use TechDivision\Import\Serializer\Configuration\SerializerConfigurationInterface;
 
 /**
  * The import/export adapter's serializer configuration.
@@ -33,7 +33,7 @@ use TechDivision\Import\Configuration\Subject\SerializerConfigurationInterface;
  * @link      https://github.com/techdivision/import-configuration-jms
  * @link      http://www.techdivision.com
  */
-class Serializer implements SerializerConfigurationInterface
+class Serializer implements SerializerConfigurationInterface, \TechDivision\Import\Configuration\Subject\SerializerConfigurationInterface
 {
 
     /**

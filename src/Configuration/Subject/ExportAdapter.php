@@ -26,6 +26,7 @@ use JMS\Serializer\Annotation\PostDeserialize;
 use TechDivision\Import\Utils\DependencyInjectionKeys;
 use TechDivision\Import\Configuration\Jms\Configuration\CsvTrait;
 use TechDivision\Import\Configuration\Subject\ExportAdapterConfigurationInterface;
+use TechDivision\Import\Serializer\Configuration\SerializerConfigurationInterface;
 
 /**
  * The export adapter's configuration.
@@ -36,7 +37,7 @@ use TechDivision\Import\Configuration\Subject\ExportAdapterConfigurationInterfac
  * @link      https://github.com/techdivision/import-configuration-jms
  * @link      http://www.techdivision.com
  */
-class ExportAdapter implements ExportAdapterConfigurationInterface
+class ExportAdapter implements ExportAdapterConfigurationInterface, SerializerConfigurationInterface
 {
 
     /**

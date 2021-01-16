@@ -22,9 +22,9 @@ namespace TechDivision\Import\Configuration\Jms\Configuration;
 
 use JMS\Serializer\Annotation\Type;
 use JMS\Serializer\Annotation\SerializedName;
-use TechDivision\Import\Utils\CacheTypes;
+use TechDivision\Import\Cache\Utils\CacheTypes;
 use TechDivision\Import\Configuration\ConfigurationInterface;
-use TechDivision\Import\Configuration\CacheConfigurationInterface;
+use TechDivision\Import\Cache\Configuration\CacheConfigurationInterface;
 
 /**
  * The cache configuration implementation.
@@ -35,7 +35,7 @@ use TechDivision\Import\Configuration\CacheConfigurationInterface;
  * @link      https://github.com/techdivision/import-configuration-jms
  * @link      http://www.techdivision.com
  */
-class Cache implements CacheConfigurationInterface
+class Cache implements CacheConfigurationInterface, \TechDivision\Import\Configuration\CacheConfigurationInterface
 {
 
     /**
