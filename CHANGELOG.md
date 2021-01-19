@@ -2,8 +2,10 @@
 
 ## Bugfixes
 
+* Fixed import-cli-simple#258
 * Fixed #PAC-280: Extension library requires `etc` configuration directory
 * Fixed #PAC-206: Prevent finder mappings of different libraries to be overwritten
+* Fixed #PAC-318: Serialization exception when using a custom database configuration
 
 ## Features
 

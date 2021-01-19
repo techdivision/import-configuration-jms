@@ -84,7 +84,7 @@ class Database implements DatabaseConfigurationInterface, \TechDivision\Import\D
      *
      * @var string
      * @Type("string")
-     * @Exclude(if="context.getDirection() === 1")
+     * @Exclude(if="context.hasAttribute('debug-dump') && context.getAttribute('debug-dump') === true")
      */
     protected $password;
 

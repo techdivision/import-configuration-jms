@@ -21,13 +21,15 @@
 
 namespace TechDivision\Import\Configuration\Jms\Listeners\Renderer\Debug;
 
-use JMS\Serializer\Expression\ExpressionEvaluator;
 use JMS\Serializer\SerializerBuilder;
+use JMS\Serializer\SerializationContext;
 use JMS\Serializer\JsonSerializationVisitor;
+use JMS\Serializer\Expression\ExpressionEvaluator;
 use JMS\Serializer\Naming\IdenticalPropertyNamingStrategy;
 use JMS\Serializer\Naming\SerializedNameAnnotationStrategy;
 use TechDivision\Import\Configuration\ConfigurationInterface;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
+use TechDivision\Import\Configuration\Jms\Utils\SerializerContextKeys;
 
 /**
  * A customer renderer that renders the configuration to a file by using the JMS serializer.
@@ -66,7 +68,12 @@ class ConfigurationFileRenderer extends \TechDivision\Import\Listeners\Renderer\
         // register the visitor in the builder instance
         $builder->setSerializationVisitor($format = 'json', $visitor);
 
+        // create a new serialization context, because we need to pass a flag to signal that
+        // this will be a debug dump and secret data, e. g. credentials has to be removed
+        $serializationContext = new SerializationContext();
+        $serializationContext->setAttribute(SerializerContextKeys::DEBUG_DUMP, true);
+
         // finally create the serializer instance and serialize configuration into a JSON string
-        return $builder->build()->serialize($configuration, $format);
+        return $builder->build()->serialize($configuration, $format, $serializationContext);
     }
 }
