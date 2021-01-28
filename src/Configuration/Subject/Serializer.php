@@ -42,7 +42,7 @@ class Serializer implements SerializerConfigurationInterface, \TechDivision\Impo
      * @var string
      * @Type("string")
      */
-    protected $id = DependencyInjectionKeys::IMPORT_SERIALIZER_FACTORY_CSV_ADDITIONAL_ATTRIBUTE;
+    protected $id = DependencyInjectionKeys::IMPORT_SERIALIZER_FACTORY_CSV_VALUE;
 
     /**
      * Returns the serializer's factory unique DI identifier.
