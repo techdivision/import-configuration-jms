@@ -265,6 +265,15 @@ class Configuration implements
     protected $multipleValueDelimiter = '|';
 
     /**
+     * The subject's delimiter character for categories, defaults to (/).
+     *
+     * @var string
+     * @Type("string")
+     * @SerializedName("category-delimiter")
+     */
+    protected $categoryDelimiter = '/';
+
+    /**
      * The flag to signal that the subject has to use the strict mode or not.
      *
      * @var boolean
@@ -745,6 +754,16 @@ class Configuration implements
     public function getMultipleValueDelimiter()
     {
         return $this->multipleValueDelimiter;
+    }
+
+    /**
+     * Return's the delimiter character for categories, default value is comma (/).
+     *
+     * @return string The delimiter character for categories
+     */
+    public function getCategoryDelimiter()
+    {
+        return $this->categoryDelimiter;
     }
 
     /**
