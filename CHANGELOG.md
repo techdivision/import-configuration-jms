@@ -1,3 +1,13 @@
+# Version 16.1.2
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Extend composer dependency for jms/serializer with v2.0 + v3.0
+
 # Version 16.1.1
 
 ## Bugfixes
