@@ -20,8 +20,12 @@
 
 namespace TechDivision\Import\Configuration\Jms;
 
+use Jean85\PrettyVersions;
 use PHPUnit\Framework\TestCase;
+use Composer\Autoload\ClassLoader;
 use JMS\Serializer\SerializerBuilder;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use TechDivision\Import\Utils\DependencyInjectionKeys;
 
 /**
  * Test class for the JMS configuration factory.
@@ -50,39 +54,24 @@ class ConfigurationFactoryTest extends TestCase
     protected function setUp()
     {
 
-        // intialize the vendor directory
-        $vendorDirectory = 'vendor';
-
-        // the path of the JMS serializer directory, relative to the vendor directory
-        $jmsDirectory = DIRECTORY_SEPARATOR . 'jms' . DIRECTORY_SEPARATOR . 'serializer' . DIRECTORY_SEPARATOR . 'src';
-
-        // try to find the path to the JMS Serializer annotations
-        if (!file_exists($annotationDirectory = $vendorDirectory . DIRECTORY_SEPARATOR . $jmsDirectory)) {
-            // stop processing, if the JMS annotations can't be found
-            throw new \Exception(
-                sprintf(
-                    'The jms/serializer libarary can not be found in %s',
-                    $vendorDirectory
-                )
-            );
-        }
-
-        // register the autoloader for the JMS serializer annotations
-        \Doctrine\Common\Annotations\AnnotationRegistry::registerAutoloadNamespace(
-            'JMS\Serializer\Annotation',
-            $annotationDirectory
-        );
-
         // create a mock configuration parser factory
-        $mockConfigurationParserFactory = $this->getMockBuilder('TechDivision\Import\Configuration\Jms\ConfigurationParserFactory')
+        $mockConfigurationParserFactory = $this->getMockBuilder(ConfigurationParserFactory::class)
             ->disableOriginalConstructor()
             ->getMock();
+
+        // mock the DI container
+        $mockContainer = $this->getMockBuilder(ContainerInterface::class)
+            ->getMock();
+        $mockContainer->expects($this->any())
+            ->method('getParameter')
+            ->with(DependencyInjectionKeys::CONFIGURATION_VENDOR_DIR)
+            ->willReturn($dirname = sprintf('%s/vendor', dirname(dirname(__DIR__))));
 
         // create a new serializer builder instance
         $configurationBuilder = new SerializerBuilder();
 
         // initialize the configuration factory instance we want to test
-        $this->configurationFactory = new ConfigurationFactory($mockConfigurationParserFactory, $configurationBuilder);
+        $this->configurationFactory = new ConfigurationFactory($mockContainer, $mockConfigurationParserFactory, $configurationBuilder);
     }
 
     /**

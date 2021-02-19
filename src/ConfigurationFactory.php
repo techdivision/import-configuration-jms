@@ -20,9 +20,14 @@
 
 namespace TechDivision\Import\Configuration\Jms;
 
+use Composer\Autoload\ClassLoader;
 use JMS\Serializer\SerializerBuilder;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use TechDivision\Import\Configuration\ConfigurationInterface;
 use TechDivision\Import\Configuration\Jms\Configuration\Params;
 use TechDivision\Import\Configuration\ConfigurationFactoryInterface;
+use Jean85\PrettyVersions;
+use TechDivision\Import\Utils\DependencyInjectionKeys;
 
 /**
  * The configuration factory implementation.
@@ -35,6 +40,13 @@ use TechDivision\Import\Configuration\ConfigurationFactoryInterface;
  */
 class ConfigurationFactory implements ConfigurationFactoryInterface
 {
+
+    /**
+     * The container instance.
+     *
+     * @var \Symfony\Component\DependencyInjection\ContainerInterface
+     */
+    protected $container;
 
     /**
      * The configuration parser factory instance used to create a parser that
@@ -61,18 +73,68 @@ class ConfigurationFactory implements ConfigurationFactoryInterface
     /**
      * Initializes the instance with the configuration parser factory instance.
      *
+     * @param \Symfony\Component\DependencyInjection\ContainerInterface                  $container                  The container instance
      * @param \TechDivision\Import\Configuration\Jms\ConfigurationParserFactoryInterface $configurationParserFactory The configuration parser factory instance
      * @param \JMS\Serializer\SerializerBuilder                                          $serializerBuilder          The serializer builder instance to use
      * @param string                                                                     $configurationClassName     The configuration class name to use
      */
     public function __construct(
+        ContainerInterface $container,
         ConfigurationParserFactoryInterface $configurationParserFactory,
         SerializerBuilder $serializerBuilder,
         $configurationClassName = Configuration::class
     ) {
+
+        // initialize the member variables with the passed instances
+        $this->container = $container;
         $this->serializerBuilder = $serializerBuilder;
         $this->configurationClassName = $configurationClassName;
         $this->configurationParserFactory = $configurationParserFactory;
+
+        // load the actual vendor directory and entity type code
+        $vendorDir = $this->getVendorDir();
+
+        // the path of the JMS serializer directory, relative to the vendor directory
+        $jmsDir = DIRECTORY_SEPARATOR . 'jms' . DIRECTORY_SEPARATOR . 'serializer' . DIRECTORY_SEPARATOR . 'src';
+
+        // try to find the path to the JMS Serializer annotations
+        if (!file_exists($annotationDir = $vendorDir . DIRECTORY_SEPARATOR . $jmsDir)) {
+            // stop processing, if the JMS annotations can't be found
+            throw new \Exception(
+                sprintf(
+                    'The jms/serializer libarary can not be found in one of "%s"',
+                    implode(', ', $vendorDir)
+                )
+            );
+        }
+
+        // try to load the JMS serializer
+        $version = PrettyVersions::getVersion('jms/serializer');
+
+        // query whether or not we're > than 1.14.1
+        if (version_compare($version->getPrettyVersion(), '2.0.0', '<')) {
+            // register the autoloader for the JMS serializer annotations
+            \Doctrine\Common\Annotations\AnnotationRegistry::registerAutoloadNamespace(
+                'JMS\Serializer\Annotation',
+                $annotationDir
+            );
+        } else {
+            // initialize the composer class loader
+            $classLoader = new ClassLoader();
+            $classLoader->addPsr4('JMS\\Serializer\\', array($annotationDir));
+            // register the class loader to load annotations
+            \Doctrine\Common\Annotations\AnnotationRegistry::registerLoader(array($classLoader, 'loadClass'));
+        }
+    }
+
+    /**
+     * Return's the DI container instance.
+     *
+     * @return \Symfony\Component\DependencyInjection\ContainerInterface The DI container instance
+     */
+    protected function getContainer() : ContainerInterface
+    {
+        return $this->container;
     }
 
     /**
@@ -80,7 +142,7 @@ class ConfigurationFactory implements ConfigurationFactoryInterface
      *
      * @return \TechDivision\Import\Configuration\Jms\ConfigurationParserFactoryInterface The configuration parser factory instance
      */
-    protected function getConfigurationParserFactory()
+    protected function getConfigurationParserFactory() : ConfigurationParserFactoryInterface
     {
         return $this->configurationParserFactory;
     }
@@ -90,7 +152,7 @@ class ConfigurationFactory implements ConfigurationFactoryInterface
      *
      * @return string The configuration class name
      */
-    protected function getConfigurationClassName()
+    protected function getConfigurationClassName() : string
     {
         return $this->configurationClassName;
     }
@@ -100,7 +162,7 @@ class ConfigurationFactory implements ConfigurationFactoryInterface
      *
      * @return \JMS\Serializer\SerializerBuilder The serializer builder instance
      */
-    protected function getSerializerBuilder()
+    protected function getSerializerBuilder() : SerializerBuilder
     {
         return $this->serializerBuilder;
     }
@@ -112,7 +174,7 @@ class ConfigurationFactory implements ConfigurationFactoryInterface
      *
      * @return \TechDivision\Import\Configuration\Jms\ConfigurationParserInterface The configuration parser instance
      */
-    protected function getConfigurationParser($format)
+    protected function getConfigurationParser($format) : ConfigurationParserInterface
     {
         return $this->getConfigurationParserFactory()->factory($format);
     }
@@ -128,7 +190,7 @@ class ConfigurationFactory implements ConfigurationFactoryInterface
      * @return \TechDivision\Import\Configuration\Jms\Configuration The configuration instance
      * @throws \Exception Is thrown, if the specified configuration file doesn't exist
      */
-    public function factory($filename, $format = 'json', $params = null, $paramsFile = null)
+    public function factory($filename, $format = 'json', $params = null, $paramsFile = null) : ConfigurationInterface
     {
 
         // try to load the JSON data
@@ -152,9 +214,9 @@ class ConfigurationFactory implements ConfigurationFactoryInterface
      * @param string $params                  A serialized string with additional params that'll be passed to the configuration
      * @param string $paramsFile              A filename that contains serialized data with additional params that'll be passed to the configuration
      *
-     * @return void
+     * @return \TechDivision\Import\Configuration\Jms\Configuration The configuration instance
      */
-    public function factoryFromDirectories($installationDir, $defaultConfigurationDir = 'etc', array $directories = array(), $format = 'json', $params = null, $paramsFile = null)
+    public function factoryFromDirectories($installationDir, $defaultConfigurationDir = 'etc', array $directories = array(), $format = 'json', $params = null, $paramsFile = null) : ConfigurationInterface
     {
         return $this->factoryFromString($this->getConfigurationParser($format)->parse($installationDir, $defaultConfigurationDir, $directories), $format, $params, $paramsFile);
     }
@@ -169,7 +231,7 @@ class ConfigurationFactory implements ConfigurationFactoryInterface
      *
      * @return \TechDivision\Import\Configuration\ConfigurationInterface The configuration instance
      */
-    public function factoryFromString($data, $format = 'json', $params = null, $paramsFile = null)
+    public function factoryFromString($data, $format = 'json', $params = null, $paramsFile = null) : ConfigurationInterface
     {
 
         // initialize the JMS serializer, load and return the configuration
@@ -225,7 +287,7 @@ class ConfigurationFactory implements ConfigurationFactoryInterface
      *
      * @return array The data as array
      */
-    protected function toArray($data, $type, $format)
+    protected function toArray($data, $type, $format) : array
     {
 
         // load the serializer builde
@@ -243,8 +305,19 @@ class ConfigurationFactory implements ConfigurationFactoryInterface
      *
      * @return void
      */
-    protected function replaceParams(&$data, $params)
+    protected function replaceParams(&$data, $params) : void
     {
         $data = array_replace_recursive($data, $params);
+    }
+
+    /**
+     * Return's the absolute path to the actual vendor directory.
+     *
+     * @return string The absolute path to the actual vendor directory
+     * @throws \Exception Is thrown, if none of the possible vendor directories can be found
+     */
+    protected function getVendorDir()
+    {
+        return $this->getContainer()->getParameter(DependencyInjectionKeys::CONFIGURATION_VENDOR_DIR);
     }
 }

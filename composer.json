@@ -4,8 +4,9 @@
     "license": "OSL-3.0",
     "require": {
         "php": ">=7.1.0",
-        "jms/serializer": "^1.0 | ^2.0 | ^3.0",
         "doctrine/collections": "^1.6",
+        "jms/serializer": "^1.0 | ^2.0 | ^3.0",
+        "jean85/pretty-package-versions": "~1.6",
         "symfony/expression-language": "4.*",
         "techdivision/import": "dev-master",
         "techdivision/import-dbal": "dev-master"
