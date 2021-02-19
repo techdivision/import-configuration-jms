@@ -20,9 +20,7 @@
 
 namespace TechDivision\Import\Configuration\Jms;
 
-use Jean85\PrettyVersions;
 use PHPUnit\Framework\TestCase;
-use Composer\Autoload\ClassLoader;
 use JMS\Serializer\SerializerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use TechDivision\Import\Utils\DependencyInjectionKeys;
