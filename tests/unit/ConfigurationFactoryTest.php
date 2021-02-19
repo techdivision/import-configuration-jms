@@ -20,7 +20,9 @@
 
 namespace TechDivision\Import\Configuration\Jms;
 
+use Jean85\PrettyVersions;
 use PHPUnit\Framework\TestCase;
+use Composer\Autoload\ClassLoader;
 use JMS\Serializer\SerializerBuilder;
 
 /**
@@ -57,7 +59,7 @@ class ConfigurationFactoryTest extends TestCase
         $jmsDirectory = DIRECTORY_SEPARATOR . 'jms' . DIRECTORY_SEPARATOR . 'serializer' . DIRECTORY_SEPARATOR . 'src';
 
         // try to find the path to the JMS Serializer annotations
-        if (!file_exists($annotationDirectory = $vendorDirectory . DIRECTORY_SEPARATOR . $jmsDirectory)) {
+        if (!file_exists($annotationDir = $vendorDirectory . DIRECTORY_SEPARATOR . $jmsDirectory)) {
             // stop processing, if the JMS annotations can't be found
             throw new \Exception(
                 sprintf(
@@ -67,11 +69,23 @@ class ConfigurationFactoryTest extends TestCase
             );
         }
 
-        // register the autoloader for the JMS serializer annotations
-        \Doctrine\Common\Annotations\AnnotationRegistry::registerAutoloadNamespace(
-            'JMS\Serializer\Annotation',
-            $annotationDirectory
-        );
+        // try to load the JMS serializer
+        $version = PrettyVersions::getVersion('jms/serializer');
+
+        // query whether or not we're > than 1.14.1
+        if (version_compare($version->getPrettyVersion(), '2.0.0', '<')) {
+            // register the autoloader for the JMS serializer annotations
+            \Doctrine\Common\Annotations\AnnotationRegistry::registerAutoloadNamespace(
+                'JMS\Serializer\Annotation',
+                $annotationDir
+            );
+        } else {
+            // initialize the composer class loader
+            $classLoader = new ClassLoader();
+            $classLoader->addPsr4('JMS\\Serializer\\', array($annotationDir));
+            // register the class loader to load annotations
+            \Doctrine\Common\Annotations\AnnotationRegistry::registerLoader(array($classLoader, 'loadClass'));
+        }
 
         // create a mock configuration parser factory
         $mockConfigurationParserFactory = $this->getMockBuilder('TechDivision\Import\Configuration\Jms\ConfigurationParserFactory')
