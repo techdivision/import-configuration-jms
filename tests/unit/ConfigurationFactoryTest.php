@@ -57,13 +57,23 @@ class ConfigurationFactoryTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
+
+        // initialize the vendor directory
+        if (file_exists('vendor/autoload.php')) {
+            $vendorDir = dirname('vendor/autoload.php');
+        } elseif (file_exists(__DIR__  . '/../../vendor/autoload.php')) {
+            $vendorDir = dirname(__DIR__ . '/../../vendor/autoload.php');
+        } else {
+            $this->fail('Can\'t find vendor directory to initialize annotation autoloader');
+        }
+
         // mock the DI container
         $mockContainer = $this->getMockBuilder(ContainerInterface::class)
             ->getMock();
         $mockContainer->expects($this->any())
             ->method('getParameter')
             ->with(DependencyInjectionKeys::CONFIGURATION_VENDOR_DIR)
-            ->willReturn($dirname = sprintf('%s/vendor', dirname(dirname(__DIR__))));
+            ->willReturn($vendorDir);
 
         // create a new serializer builder instance
         $configurationBuilder = new SerializerBuilder();
