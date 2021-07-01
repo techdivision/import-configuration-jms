@@ -349,6 +349,9 @@ class Subject implements SubjectConfigurationInterface, ListenerAwareConfigurati
      */
     public function isStrictMode()
     {
+        if ($this->isDebugMode()) {
+            return false;
+        }
         return $this->getConfiguration()->isStrictMode();
     }
 
