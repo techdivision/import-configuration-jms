@@ -276,11 +276,11 @@ class Configuration implements
     /**
      * The flag to signal that the subject has to use the strict mode or not.
      *
-     * @var boolean
      * @Type("boolean")
      * @SerializedName("strict-mode")
+     * @Accessor(setter="setStrictMode", getter="isStrictMode")
      */
-    protected $strictMode;
+    protected $strictMode = true;
 
     /**
      * The flag whether or not the import artefacts have to be archived.
@@ -764,6 +764,18 @@ class Configuration implements
     public function getCategoryDelimiter()
     {
         return $this->categoryDelimiter;
+    }
+
+    /**
+     * Set's the strict mode.
+     *
+     * @param mixed $strictMode TRUE if strict mode is enabled, else FALSE
+     *
+     * @return void
+     */
+    public function setStrictMode($strictMode)
+    {
+        $this->strictMode = $this->mapBoolean($strictMode);
     }
 
     /**
