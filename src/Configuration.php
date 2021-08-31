@@ -1566,7 +1566,7 @@ class Configuration implements
     }
 
     /**
-     * @param $logFile
+     * @param string $logFile The log file to use
      * @return void
      */
     public function setLogFile($logFile)
