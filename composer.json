@@ -1,9 +1,9 @@
 {
     "name": "techdivision/import-configuration-jms",
     "description": "Library providing a JMS based configuration implementation for Pacemaker",
-    "license": "OSL-3.0",
+    "license": "MIT",
     "require": {
-        "php": ">=7.1.0",
+        "php": ">=7.2.0",
         "doctrine/collections": "^1.6",
         "jms/serializer": "^1.0 | ^2.0 | ^3.0",
         "jean85/pretty-package-versions": "~1.6",
