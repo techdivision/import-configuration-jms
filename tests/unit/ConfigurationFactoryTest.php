@@ -43,7 +43,7 @@ class ConfigurationFactoryTest extends TestCase
      * {@inheritDoc}
      * @see \PHPUnit\Framework\TestCase::setUp()
      */
-    protected function setUp()
+    protected function setUp(): void
     {
 
         // create a mock configuration parser factory
