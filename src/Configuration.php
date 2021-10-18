@@ -34,6 +34,7 @@ use TechDivision\Import\Configuration\Jms\Configuration\CsvTrait;
 use TechDivision\Import\Configuration\Jms\Configuration\ListenersTrait;
 use TechDivision\Import\Configuration\ListenerAwareConfigurationInterface;
 use TechDivision\Import\Configuration\OperationConfigurationInterface;
+use TechDivision\Import\Configuration\SubjectConfigurationInterface;
 
 /**
  * A simple JMS based configuration implementation.
@@ -82,6 +83,14 @@ class Configuration implements
      * @var \TechDivision\Import\Configuration\Jms\Configuration\ListenersTrait
      */
     use ListenersTrait;
+
+    /**
+     * The subject configuration of the first prefixed subject.
+     *
+     * @var \TechDivision\Import\Configuration\SubjectConfigurationInterface
+     * @Exclude
+     */
+    protected $firstPrefixedSubject;
 
     /**
      * The array with the available database types.
@@ -477,6 +486,16 @@ class Configuration implements
      * @Accessor(setter="setEmptyAttributeValueConstant", getter="getEmptyAttributeValueConstant")
      */
     protected $emptyAttributeValueConstant = '';
+
+    /**
+     * The explicit filename that has to be imported.
+     *
+     * @var string
+     * @Exclude
+     * @SerializedName("filename")
+     * @Accessor(setter="setFilename", getter="getFilename")
+     */
+    protected $filename;
 
     /**
      * Lifecycle callback that will be invoked after deserialization.
@@ -1279,6 +1298,28 @@ class Configuration implements
     }
 
     /**
+     * Set's the first subject of the actual import with a prefix defined.
+     *
+     * @param \TechDivision\Import\Configuration\SubjectConfigurationInterface $firstPrefixedSubject The subject configuration
+     *
+     * @return void
+     */
+    public function setFirstPrefixedSubject(SubjectConfigurationInterface $firstPrefixedSubject)
+    {
+        $this->firstPrefixedSubject = $firstPrefixedSubject;
+    }
+
+    /**
+     * Return's the first subject of the actual import with a prefix defined.
+     *
+     * @return \TechDivision\Import\Configuration\SubjectConfigurationInterface|null The subject configuration
+     */
+    public function getFirstPrefixedSubject()
+    {
+        return $this->firstPrefixedSubject;
+    }
+
+    /**
      * Set's the prefix for the move files subject.
      *
      * @param string $moveFilesPrefix The prefix for the move files subject
@@ -1297,7 +1338,7 @@ class Configuration implements
      */
     public function getMoveFilesPrefix()
     {
-        return $this->moveFilesPrefix;
+        return $this->moveFilesPrefix ? $this->moveFilesPrefix : $this->getFirstPrefixedSubject()->getFileResolver()->getPrefix();
     }
 
     /**
@@ -1545,5 +1586,27 @@ class Configuration implements
     public function setEmptyAttributeValueConstant($emptyAttributeValueConstant)
     {
         $this->emptyAttributeValueConstant = $emptyAttributeValueConstant;
+    }
+
+    /**
+     * Sets the explict name of a file that has to be imported.
+     *
+     * @param string $filename The explicit filename
+     *
+     * @return void
+     */
+    public function setFilename($filename)
+    {
+        $this->filename = $filename;
+    }
+
+    /**
+     * Load the explicit name of the file that has to be imported.
+     *
+     * @return string The explicit filename
+     */
+    public function getFilename()
+    {
+        return $this->filename;
     }
 }

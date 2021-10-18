@@ -142,6 +142,16 @@ class FileResolver implements FileResolverConfigurationInterface
     }
 
     /**
+     * Return's the prefix/meta sequence for the import files.
+     *
+     * @return string The prefix
+     */
+    public function getPrefix()
+    {
+        return $this->prefix;
+    }
+
+    /**
      * Query's whether or not a custom prefix has been configured for the
      * file resolver.
      *
@@ -155,16 +165,6 @@ class FileResolver implements FileResolverConfigurationInterface
     }
 
     /**
-     * Return's the prefix/meta sequence for the import files.
-     *
-     * @return string The prefix
-     */
-    public function getPrefix()
-    {
-        return $this->prefix;
-    }
-
-    /**
      * Return's the filename/meta sequence of the import files.
      *
      * @return string The suffix
@@ -175,6 +175,19 @@ class FileResolver implements FileResolverConfigurationInterface
     }
 
     /**
+     * Query's whether or not a custom filename has been configured for the
+     * file resolver.
+     *
+     * @param string $defaultFilename The default filename to match against
+     *
+     * @return boolean TRUE if the file resolver has a custom filename, else FALSE
+     */
+    public function hasFilename($defaultFilename = '.*')
+    {
+        return strcmp($this->getFilename(), $defaultFilename) <> 0;
+    }
+
+    /**
      * Return's the counter/meta sequence of the import files.
      *
      * @return string The suffix
@@ -182,6 +195,19 @@ class FileResolver implements FileResolverConfigurationInterface
     public function getCounter()
     {
         return $this->counter;
+    }
+
+    /**
+     * Query's whether or not a custom counter has been configured for the
+     * file resolver.
+     *
+     * @param string $defaultCounter The default counter to match against
+     *
+     * @return boolean TRUE if the file resolver has a custom counter, else FALSE
+     */
+    public function hasCounter($defaultCounter = '\d+')
+    {
+        return strcmp($this->getCounter(), $defaultCounter) <> 0;
     }
 
     /**
@@ -212,6 +238,18 @@ class FileResolver implements FileResolverConfigurationInterface
     public function getElementSeparator()
     {
         return $this->elementSeparator;
+    }
+
+    /**
+     * Set's the the elements the filenames consists of.
+     *
+     * @param array $patternElements The array with the filename elements
+     *
+     * @return void
+     */
+    public function setPatternElements(array $patternElements) : void
+    {
+        $this->patternElements = $patternElements;
     }
 
     /**

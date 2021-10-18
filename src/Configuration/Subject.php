@@ -517,7 +517,21 @@ class Subject implements SubjectConfigurationInterface, ListenerAwareConfigurati
      */
     public function isOkFileNeeded()
     {
-        return $this->okFileNeeded;
+        // an OK file is ONLY needed, in case NO specific filename
+        // has been passed as second command line argument
+        if ($this->okFileNeeded) {
+            // query whether or not a specific file has been
+            // specified, if yes, we do NOT need an .OK file
+            if ($this->getConfiguration() instanceof ConfigurationInterface && empty($this->getConfiguration()->getFilename())) {
+                false;
+            } else {
+                true;
+            }
+        }
+
+        // return FALSE in case we generally
+        // have not configured a .OK file
+        return false;
     }
 
     /**
