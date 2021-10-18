@@ -3,17 +3,11 @@
 /**
  * TechDivision\Import\Configuration\Jms\Configuration\Subject\FilesystemAdapter
  *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
- *
- * PHP version 5
+ * PHP version 7
  *
  * @author    Tim Wagner <t.wagner@techdivision.com>
  * @copyright 2016 TechDivision GmbH <info@techdivision.com>
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/MIT
  * @link      https://github.com/techdivision/import-configuration-jms
  * @link      http://www.techdivision.com
  */
@@ -32,7 +26,7 @@ use TechDivision\Import\Configuration\Subject\FileResolverConfigurationInterface
  *
  * @author    Tim Wagner <t.wagner@techdivision.com>
  * @copyright 2016 TechDivision GmbH <info@techdivision.com>
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/MIT
  * @link      https://github.com/techdivision/import-configuration-jms
  * @link      http://www.techdivision.com
  */
@@ -53,7 +47,7 @@ class FileResolver implements FileResolverConfigurationInterface
      * @var string
      * @Type("string")
      */
-    protected $prefix = '.*';
+    protected $prefix = FileResolverConfigurationInterface::DEFAULT_PREFIX;
 
     /**
      * The filename/meta sequence of the import files.
@@ -61,7 +55,7 @@ class FileResolver implements FileResolverConfigurationInterface
      * @var string
      * @Type("string")
      */
-    protected $filename = '.*';
+    protected $filename = FileResolverConfigurationInterface::DEFAULT_FILENAME;
 
     /**
      * The counter/meta sequence of the import files.
@@ -69,7 +63,7 @@ class FileResolver implements FileResolverConfigurationInterface
      * @var string
      * @Type("string")
      */
-    protected $counter = '\d+';
+    protected $counter = FileResolverConfigurationInterface::DEFAULT_COUNTER;
 
     /**
      * The file suffix for import files.
@@ -77,7 +71,7 @@ class FileResolver implements FileResolverConfigurationInterface
      * @var string
      * @Type("string")
      */
-    protected $suffix = 'csv';
+    protected $suffix = FileResolverConfigurationInterface::DEFAULT_SUFFIX;
 
     /**
      * The file suffix for OK file.
@@ -86,7 +80,7 @@ class FileResolver implements FileResolverConfigurationInterface
      * @Type("string")
      * @SerializedName("ok-file-suffix")
      */
-    protected $okFileSuffix = 'ok';
+    protected $okFileSuffix = FileResolverConfigurationInterface::DEFAULT_OK_FILE_SUFFIX;
 
     /**
      * The separator char for the elements of the file.
@@ -95,7 +89,7 @@ class FileResolver implements FileResolverConfigurationInterface
      * @Type("string")
      * @SerializedName("element-separator")
      */
-    protected $elementSeparator = '_';
+    protected $elementSeparator = FileResolverConfigurationInterface::DEFAULT_ELEMENT_SEPARATOR;
 
     /**
      * The elements to create the regex pattern that is necessary decide a subject handles a file or not.
@@ -124,7 +118,7 @@ class FileResolver implements FileResolverConfigurationInterface
      *
      * @return string The file resolvers's unique DI identifier
      */
-    public function getId()
+    public function getId() : string
     {
         return $this->id;
     }
@@ -136,7 +130,7 @@ class FileResolver implements FileResolverConfigurationInterface
      *
      * @return void
      */
-    public function setPrefix($prefix)
+    public function setPrefix(string $prefix) : void
     {
         $this->prefix = $prefix;
     }
@@ -146,7 +140,7 @@ class FileResolver implements FileResolverConfigurationInterface
      *
      * @return string The prefix
      */
-    public function getPrefix()
+    public function getPrefix() : string
     {
         return $this->prefix;
     }
@@ -159,7 +153,7 @@ class FileResolver implements FileResolverConfigurationInterface
      *
      * @return boolean TRUE if the file resolver has a custom prefix, else FALSE
      */
-    public function hasPrefix($defaultPrefix = '.*')
+    public function hasPrefix($defaultPrefix = FileResolverConfigurationInterface::DEFAULT_PREFIX) : bool
     {
         return strcmp($this->getPrefix(), $defaultPrefix) <> 0;
     }
@@ -169,7 +163,7 @@ class FileResolver implements FileResolverConfigurationInterface
      *
      * @return string The suffix
      */
-    public function getFilename()
+    public function getFilename() : string
     {
         return $this->filename;
     }
@@ -182,7 +176,7 @@ class FileResolver implements FileResolverConfigurationInterface
      *
      * @return boolean TRUE if the file resolver has a custom filename, else FALSE
      */
-    public function hasFilename($defaultFilename = '.*')
+    public function hasFilename($defaultFilename = FileResolverConfigurationInterface::DEFAULT_FILENAME) : bool
     {
         return strcmp($this->getFilename(), $defaultFilename) <> 0;
     }
@@ -192,7 +186,7 @@ class FileResolver implements FileResolverConfigurationInterface
      *
      * @return string The suffix
      */
-    public function getCounter()
+    public function getCounter() : string
     {
         return $this->counter;
     }
@@ -205,7 +199,7 @@ class FileResolver implements FileResolverConfigurationInterface
      *
      * @return boolean TRUE if the file resolver has a custom counter, else FALSE
      */
-    public function hasCounter($defaultCounter = '\d+')
+    public function hasCounter($defaultCounter = FileResolverConfigurationInterface::DEFAULT_COUNTER) : bool
     {
         return strcmp($this->getCounter(), $defaultCounter) <> 0;
     }
@@ -215,7 +209,7 @@ class FileResolver implements FileResolverConfigurationInterface
      *
      * @return string The suffix
      */
-    public function getSuffix()
+    public function getSuffix() : string
     {
         return $this->suffix;
     }
@@ -225,7 +219,7 @@ class FileResolver implements FileResolverConfigurationInterface
      *
      * @return string The OK file suffix
      */
-    public function getOkFileSuffix()
+    public function getOkFileSuffix() : string
     {
         return $this->okFileSuffix;
     }
@@ -235,7 +229,7 @@ class FileResolver implements FileResolverConfigurationInterface
      *
      *  @return string The element separator char
      */
-    public function getElementSeparator()
+    public function getElementSeparator() : string
     {
         return $this->elementSeparator;
     }
@@ -257,7 +251,7 @@ class FileResolver implements FileResolverConfigurationInterface
      *
      * @return array The array with the filename elements
      */
-    public function getPatternElements()
+    public function getPatternElements() : array
     {
         return $this->patternElements;
     }
@@ -268,7 +262,7 @@ class FileResolver implements FileResolverConfigurationInterface
      * @return void
      * @PostDeserialize
      */
-    public function postDeserialize()
+    public function postDeserialize() : void
     {
 
         // set the default pattern elements
