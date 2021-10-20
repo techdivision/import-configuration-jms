@@ -517,9 +517,9 @@ class Subject implements SubjectConfigurationInterface, ListenerAwareConfigurati
             // query whether or not a specific file has been
             // specified, if yes, we do NOT need an .OK file
             if ($this->getConfiguration() instanceof ConfigurationInterface && empty($this->getConfiguration()->getFilename())) {
-                false;
+                return false;
             } else {
-                true;
+                return true;
             }
         }
 
