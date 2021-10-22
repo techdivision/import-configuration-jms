@@ -473,6 +473,16 @@ class Configuration implements
     protected $emptyAttributeValueConstant = '';
 
     /**
+     * The log file that has to be watched a import logging.
+     *
+     * @var string
+     * @Type("string")
+     * @SerializedName("log-file")
+     * @Accessor(setter="setLogFile", getter="getLogFile")
+     */
+    protected $logFile;
+
+    /**
      * Lifecycle callback that will be invoked after deserialization.
      *
      * @return void
@@ -1539,5 +1549,22 @@ class Configuration implements
     public function setEmptyAttributeValueConstant($emptyAttributeValueConstant)
     {
         $this->emptyAttributeValueConstant = $emptyAttributeValueConstant;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLogFile()
+    {
+        return $this->logFile;
+    }
+
+    /**
+     * @param string $logFile The log file to use
+     * @return void
+     */
+    public function setLogFile($logFile)
+    {
+        $this->logFile = $logFile;
     }
 }
