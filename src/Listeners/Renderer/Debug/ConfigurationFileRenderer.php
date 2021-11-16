@@ -15,12 +15,14 @@
 
 namespace TechDivision\Import\Configuration\Jms\Listeners\Renderer\Debug;
 
+use Jean85\PrettyVersions;
 use JMS\Serializer\SerializerBuilder;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\JsonSerializationVisitor;
 use JMS\Serializer\Expression\ExpressionEvaluator;
 use JMS\Serializer\Naming\IdenticalPropertyNamingStrategy;
 use JMS\Serializer\Naming\SerializedNameAnnotationStrategy;
+use JMS\Serializer\Visitor\Factory\JsonSerializationVisitorFactory;
 use TechDivision\Import\Configuration\ConfigurationInterface;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 use TechDivision\Import\Configuration\Jms\Utils\SerializerContextKeys;
@@ -52,12 +54,21 @@ class ConfigurationFileRenderer extends \TechDivision\Import\Listeners\Renderer\
         $builder->addDefaultSerializationVisitors();
         $builder->setExpressionEvaluator(new ExpressionEvaluator(new ExpressionLanguage()));
 
-        // initialize the naming strategy
-        $namingStrategy = new SerializedNameAnnotationStrategy(new IdenticalPropertyNamingStrategy());
+        // try to load the JMS serializer
+        $version = PrettyVersions::getVersion('jms/serializer');
 
-        // initialize the visitor because we want to set JSON options
-        $visitor = new JsonSerializationVisitor($namingStrategy);
-        $visitor->setOptions(JSON_PRETTY_PRINT);
+        // query whether or not we're > than 1.14.1
+        if (version_compare($version->getPrettyVersion(), '2.0.0', '<')) {
+            // initialize the naming strategy
+            $namingStrategy = new SerializedNameAnnotationStrategy(new IdenticalPropertyNamingStrategy());
+
+            // initialize the visitor because we want to set JSON options
+            $visitor = new JsonSerializationVisitor($namingStrategy);
+            $visitor->setOptions(JSON_PRETTY_PRINT);
+        } else {
+            // initialize the visitor because we want to set JSON options
+            $visitor = new JsonSerializationVisitorFactory();
+        }
 
         // register the visitor in the builder instance
         $builder->setSerializationVisitor($format = 'json', $visitor);
