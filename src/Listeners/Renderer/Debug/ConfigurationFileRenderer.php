@@ -57,7 +57,7 @@ class ConfigurationFileRenderer extends \TechDivision\Import\Listeners\Renderer\
         // try to load the JMS serializer
         $version = PrettyVersions::getVersion('jms/serializer');
 
-        // query whether or not we're > than 1.14.1
+        // query whether or not we're < than 2.0.0
         if (version_compare($version->getPrettyVersion(), '2.0.0', '<')) {
             // initialize the naming strategy
             $namingStrategy = new SerializedNameAnnotationStrategy(new IdenticalPropertyNamingStrategy());
@@ -66,7 +66,7 @@ class ConfigurationFileRenderer extends \TechDivision\Import\Listeners\Renderer\
             $visitor = new JsonSerializationVisitor($namingStrategy);
             $visitor->setOptions(JSON_PRETTY_PRINT);
         } else {
-            // initialize the visitor because we want to set JSON options
+            // initialize the json visitor factory because we want to set JSON options
             $visitor = new JsonSerializationVisitorFactory();
         }
 
