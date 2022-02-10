@@ -12,6 +12,7 @@
 * Add #PAC-89: Add debug email command + DebugSendPlugin
 * Add #PAC-57: Deleting dedicated attribute values via import by setting a configurable value
 * Add #PAC-349: Support for JMS serializer v2.0 + v3.0
+* Configuration for import explizit filename
 * Add #PAC-294: integration of the strict mode
 
 # Version 16.1.0

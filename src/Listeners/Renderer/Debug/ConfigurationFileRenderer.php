@@ -4,29 +4,25 @@
 /**
  * TechDivision\Import\Configuration\Jms\Listeners\Renderer\Debug\ConfigurationFileRenderer
  *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
- *
- * PHP version 5
+ * PHP version 7
  *
  * @author    Tim Wagner <t.wagner@techdivision.com>
  * @copyright 2020 TechDivision GmbH <info@techdivision.com>
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/MIT
  * @link      https://github.com/techdivision/import-configuration-jms
  * @link      http://www.techdivision.com
  */
 
 namespace TechDivision\Import\Configuration\Jms\Listeners\Renderer\Debug;
 
+use Jean85\PrettyVersions;
 use JMS\Serializer\SerializerBuilder;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\JsonSerializationVisitor;
 use JMS\Serializer\Expression\ExpressionEvaluator;
 use JMS\Serializer\Naming\IdenticalPropertyNamingStrategy;
 use JMS\Serializer\Naming\SerializedNameAnnotationStrategy;
+use JMS\Serializer\Visitor\Factory\JsonSerializationVisitorFactory;
 use TechDivision\Import\Configuration\ConfigurationInterface;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 use TechDivision\Import\Configuration\Jms\Utils\SerializerContextKeys;
@@ -36,7 +32,7 @@ use TechDivision\Import\Configuration\Jms\Utils\SerializerContextKeys;
  *
  * @author    Tim Wagner <t.wagner@techdivision.com>
  * @copyright 2020 TechDivision GmbH <info@techdivision.com>
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/MIT
  * @link      https://github.com/techdivision/import-configuration-jms
  * @link      http://www.techdivision.com
  */
@@ -58,12 +54,21 @@ class ConfigurationFileRenderer extends \TechDivision\Import\Listeners\Renderer\
         $builder->addDefaultSerializationVisitors();
         $builder->setExpressionEvaluator(new ExpressionEvaluator(new ExpressionLanguage()));
 
-        // initialize the naming strategy
-        $namingStrategy = new SerializedNameAnnotationStrategy(new IdenticalPropertyNamingStrategy());
+        // try to load the JMS serializer
+        $version = PrettyVersions::getVersion('jms/serializer');
 
-        // initialize the visitor because we want to set JSON options
-        $visitor = new JsonSerializationVisitor($namingStrategy);
-        $visitor->setOptions(JSON_PRETTY_PRINT);
+        // query whether or not we're < than 2.0.0
+        if (version_compare($version->getPrettyVersion(), '2.0.0', '<')) {
+            // initialize the naming strategy
+            $namingStrategy = new SerializedNameAnnotationStrategy(new IdenticalPropertyNamingStrategy());
+
+            // initialize the visitor because we want to set JSON options
+            $visitor = new JsonSerializationVisitor($namingStrategy);
+            $visitor->setOptions(JSON_PRETTY_PRINT);
+        } else {
+            // initialize the json visitor factory because we want to set JSON options
+            $visitor = new JsonSerializationVisitorFactory();
+        }
 
         // register the visitor in the builder instance
         $builder->setSerializationVisitor($format = 'json', $visitor);

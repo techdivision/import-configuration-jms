@@ -3,17 +3,11 @@
 /**
  * TechDivision\Import\Configuration\Jms\Configuration\Subject
  *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
- *
- * PHP version 5
+ * PHP version 7
  *
  * @author    Tim Wagner <t.wagner@techdivision.com>
  * @copyright 2016 TechDivision GmbH <info@techdivision.com>
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/MIT
  * @link      https://github.com/techdivision/import-configuration-jms
  * @link      http://www.techdivision.com
  */
@@ -40,7 +34,7 @@ use TechDivision\Import\Configuration\Jms\Configuration\Subject\FileWriter;
  *
  * @author    Tim Wagner <t.wagner@techdivision.com>
  * @copyright 2016 TechDivision GmbH <info@techdivision.com>
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/MIT
  * @link      https://github.com/techdivision/import-configuration-jms
  * @link      http://www.techdivision.com
  */
@@ -526,7 +520,21 @@ class Subject implements SubjectConfigurationInterface, ListenerAwareConfigurati
      */
     public function isOkFileNeeded()
     {
-        return $this->okFileNeeded;
+        // an OK file is ONLY needed, in case NO specific filename
+        // has been passed as second command line argument
+        if ($this->okFileNeeded) {
+            // query whether or not a specific file has been
+            // specified, if yes, we do NOT need an .OK file
+            if ($this->getConfiguration() instanceof ConfigurationInterface && !empty($this->getConfiguration()->getFilename())) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+
+        // return FALSE in case we generally
+        // have not configured a .OK file
+        return false;
     }
 
     /**

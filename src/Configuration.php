@@ -3,17 +3,11 @@
 /**
  * TechDivision\Import\Configuration\Jms\Configuration
  *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
- *
- * PHP version 5
+ * PHP version 7
  *
  * @author    Tim Wagner <t.wagner@techdivision.com>
  * @copyright 2016 TechDivision GmbH <info@techdivision.com>
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/MIT
  * @link      https://github.com/techdivision/import-configuration-jms
  * @link      http://www.techdivision.com
  */
@@ -34,13 +28,14 @@ use TechDivision\Import\Configuration\Jms\Configuration\CsvTrait;
 use TechDivision\Import\Configuration\Jms\Configuration\ListenersTrait;
 use TechDivision\Import\Configuration\ListenerAwareConfigurationInterface;
 use TechDivision\Import\Configuration\OperationConfigurationInterface;
+use TechDivision\Import\Configuration\SubjectConfigurationInterface;
 
 /**
  * A simple JMS based configuration implementation.
  *
  * @author    Tim Wagner <t.wagner@techdivision.com>
  * @copyright 2016 TechDivision GmbH <info@techdivision.com>
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/MIT
  * @link      https://github.com/techdivision/import-configuration-jms
  * @link      http://www.techdivision.com
  *
@@ -82,6 +77,14 @@ class Configuration implements
      * @var \TechDivision\Import\Configuration\Jms\Configuration\ListenersTrait
      */
     use ListenersTrait;
+
+    /**
+     * The subject configuration of the first prefixed subject.
+     *
+     * @var \TechDivision\Import\Configuration\SubjectConfigurationInterface
+     * @Exclude
+     */
+    protected $firstPrefixedSubject;
 
     /**
      * The array with the available database types.
@@ -477,6 +480,26 @@ class Configuration implements
      * @Accessor(setter="setEmptyAttributeValueConstant", getter="getEmptyAttributeValueConstant")
      */
     protected $emptyAttributeValueConstant = '';
+
+    /**
+     * The explicit filename that has to be imported.
+     *
+     * @var string
+     * @Exclude
+     * @SerializedName("filename")
+     * @Accessor(setter="setFilename", getter="getFilename")
+     */
+    protected $filename;
+
+    /**
+     * The log file that has to be watched a import logging.
+     *
+     * @var string
+     * @Type("string")
+     * @SerializedName("log-file")
+     * @Accessor(setter="setLogFile", getter="getLogFile")
+     */
+    protected $logFile;
 
     /**
      * Lifecycle callback that will be invoked after deserialization.
@@ -1291,6 +1314,28 @@ class Configuration implements
     }
 
     /**
+     * Set's the first subject of the actual import with a prefix defined.
+     *
+     * @param \TechDivision\Import\Configuration\SubjectConfigurationInterface $firstPrefixedSubject The subject configuration
+     *
+     * @return void
+     */
+    public function setFirstPrefixedSubject(SubjectConfigurationInterface $firstPrefixedSubject)
+    {
+        $this->firstPrefixedSubject = $firstPrefixedSubject;
+    }
+
+    /**
+     * Return's the first subject of the actual import with a prefix defined.
+     *
+     * @return \TechDivision\Import\Configuration\SubjectConfigurationInterface|null The subject configuration
+     */
+    public function getFirstPrefixedSubject()
+    {
+        return $this->firstPrefixedSubject;
+    }
+
+    /**
      * Set's the prefix for the move files subject.
      *
      * @param string $moveFilesPrefix The prefix for the move files subject
@@ -1309,7 +1354,7 @@ class Configuration implements
      */
     public function getMoveFilesPrefix()
     {
-        return $this->moveFilesPrefix;
+        return $this->moveFilesPrefix ? $this->moveFilesPrefix : $this->getFirstPrefixedSubject()->getFileResolver()->getPrefix();
     }
 
     /**
@@ -1557,5 +1602,44 @@ class Configuration implements
     public function setEmptyAttributeValueConstant($emptyAttributeValueConstant)
     {
         $this->emptyAttributeValueConstant = $emptyAttributeValueConstant;
+    }
+
+    /**
+     * Sets the explict name of a file that has to be imported.
+     *
+     * @param string $filename The explicit filename
+     *
+     * @return void
+     */
+    public function setFilename($filename)
+    {
+        $this->filename = $filename;
+    }
+
+    /**
+     * Load the explicit name of the file that has to be imported.
+     *
+     * @return string The explicit filename
+     */
+    public function getFilename()
+    {
+        return $this->filename;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLogFile()
+    {
+        return $this->logFile;
+    }
+
+    /**
+     * @param string $logFile The log file to use
+     * @return void
+     */
+    public function setLogFile($logFile)
+    {
+        $this->logFile = $logFile;
     }
 }
