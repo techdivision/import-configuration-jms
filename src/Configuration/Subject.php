@@ -337,12 +337,21 @@ class Subject implements SubjectConfigurationInterface, ListenerAwareConfigurati
     }
 
     /**
-     * Queries whether or not strict mode is enabled or not, default is TRUE.
+     * Queries whether or not strict mode is enabled or not, default is True.
+     *
+     * Backward compatibility
+     * debug = true strict = true -> isStrict == FALSE
+     * debug = true strict = false -> isStrict == FALSE
+     * debug = false strict = true -> isStrict == TRUE
+     * debug = false strict = false -> isStrict == FALSE
      *
      * @return boolean TRUE if strict mode is enabled, else FALSE
      */
     public function isStrictMode()
     {
+        if ($this->isDebugMode()) {
+            return false;
+        }
         return $this->getConfiguration()->isStrictMode();
     }
 
