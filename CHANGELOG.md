@@ -14,6 +14,8 @@
 * Add #PAC-349: Support for JMS serializer v2.0 + v3.0
 * Configuration for import explizit filename
 * Add #PAC-294: integration of the strict mode
+* PAC-541: Update composer with php Version ">=^7.3"
+  ** Fix return type for method accept()
 
 # Version 16.1.0
 

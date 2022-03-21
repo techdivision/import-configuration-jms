@@ -333,7 +333,7 @@ class Configuration implements
      * @SerializedName("log-level")
      * @Accessor(setter="setLogLevel", getter="getLogLevel")
      */
-    protected $logLevel;
+    protected $logLevel = 200;
 
     /**
      * The explicit DB ID to use.

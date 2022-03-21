@@ -29,10 +29,10 @@ class DirnameFilter extends AbstractFilesystemRegexFilter
     /**
      * Filter directories against the regex.
      *
-     * @return void
+     * @return bool
      * @see \RecursiveRegexIterator::accept()
      */
-    public function accept()
+    public function accept(): bool
     {
         return (!$this->isDir() || preg_match($this->regex, $this->getFilename()));
     }

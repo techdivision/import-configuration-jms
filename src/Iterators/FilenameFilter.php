@@ -29,10 +29,10 @@ class FilenameFilter extends AbstractFilesystemRegexFilter
     /**
      * Filter files against the regex.
      *
-     * @return void
+     * @return bool
      * @see \RecursiveRegexIterator::accept()
      */
-    public function accept()
+    public function accept(): bool
     {
         return (!$this->isFile() || preg_match($this->regex, $this->getFilename()));
     }
