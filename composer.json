@@ -8,8 +8,8 @@
         "jms/serializer": "^1.0 | ^2.0 | ^3.0",
         "jean85/pretty-package-versions": "~1.6",
         "symfony/expression-language": "4.*",
-        "techdivision/import": "dev-master",
-        "techdivision/import-dbal": "dev-master"
+        "techdivision/import": "^17.0.0",
+        "techdivision/import-dbal": "^1.0.0"
     },
     "require-dev": {
         "pdepend/pdepend": "2.5.2",
