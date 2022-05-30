@@ -1662,7 +1662,7 @@ class Configuration implements
      */
     public function setBlackListings(array $blackListings)
     {
-      $this->blackListings = $blackListings;
+        $this->blackListings = $blackListings;
     }
 
     /**
