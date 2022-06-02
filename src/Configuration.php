@@ -502,6 +502,16 @@ class Configuration implements
     protected $logFile;
 
     /**
+     * The array with the Black Listing
+     *
+     * @var array
+     * @SerializedName("black-listing")
+     * @Type("array<string, array<string, array>>")
+     * @Accessor(setter="setBlackListings", getter="getBlackListings")
+     */
+    protected $blackListings = array();
+    
+    /**
      * Lifecycle callback that will be invoked after deserialization.
      *
      * @return void
@@ -1641,5 +1651,27 @@ class Configuration implements
     public function setLogFile($logFile)
     {
         $this->logFile = $logFile;
+    }
+    
+    /**
+     * Set's the array with the black List.
+     *
+     * @param array $blackListings The Black Listing
+     *
+     * @return void
+     */
+    public function setBlackListings(array $blackListings)
+    {
+        $this->blackListings = $blackListings;
+    }
+
+    /**
+     * Return's the array with the black List.
+     *
+     * @return array The Black List
+     */
+    public function getBlackListings()
+    {
+        return $this->blackListings;
     }
 }
