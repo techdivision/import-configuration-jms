@@ -1676,7 +1676,7 @@ class Configuration implements
     }
 
     /**
-     * Set's the entity type code to be used.
+     * Set's the magento config to be used.
      *
      * @param array $config The entity type code
      *
@@ -1688,9 +1688,7 @@ class Configuration implements
     }
 
     /**
-     * Set's the entity type code to be used.
-     *
-     * @param array $config The entity type code
+     * get's the Magento config to be used.
      *
      * @return void
      */
