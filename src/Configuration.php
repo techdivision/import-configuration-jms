@@ -1674,4 +1674,28 @@ class Configuration implements
     {
         return $this->blackListings;
     }
+
+    /**
+     * Set's the entity type code to be used.
+     *
+     * @param array $config The entity type code
+     *
+     * @return void
+     */
+    public function setMagentoConfig($config)
+    {
+        $this->config = $config;
+    }
+
+    /**
+     * Set's the entity type code to be used.
+     *
+     * @param array $config The entity type code
+     *
+     * @return void
+     */
+    public function getMagentoConfig()
+    {
+        return $this->config;
+    }
 }
