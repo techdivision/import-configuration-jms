@@ -510,7 +510,39 @@ class Configuration implements
      * @Accessor(setter="setBlackListings", getter="getBlackListings")
      */
     protected $blackListings = array();
-    
+
+    /**
+     * The array with the api config
+     *
+     * @var array
+     * @SerializedName("api")
+     * @Type("array<string, string>>")
+     * @Accessor(setter="setApiData", getter="getApiData")
+     */
+    protected $apiData = array();
+
+    /**
+     * Get the api Data from Config
+     *
+     * @return array
+     */
+    public function getApiData()
+    {
+        return $this->apiData;
+    }
+
+    /**
+     * Set the api Data from Config
+     *
+     * @param array $apiData apidata
+     *
+     * @return void
+     */
+    public function setApiData($apiData)
+    {
+        $this->apiData = $apiData;
+    }
+
     /**
      * Lifecycle callback that will be invoked after deserialization.
      *
