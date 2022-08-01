@@ -522,6 +522,57 @@ class Configuration implements
     protected $apiData = array();
 
     /**
+     * The flag to signal that the configuration paths has been showing in the log
+     *
+     * @var boolean
+     * @Type("boolean")
+     * @SerializedName("config-output")
+     * @Accessor(setter="setConfigOutput", getter="isConfigOutput")
+     */
+    protected $configOutput;
+
+    /**
+     * @Type("boolean")
+     */
+    protected $configurationFiles = array();
+
+    /**
+     * @return bool
+     */
+    public function isConfigOutput()
+    {
+        return $this->configOutput;
+    }
+
+    /**
+     * @param bool $configOutput the configuration files
+     *
+     * @return void
+     */
+    public function setConfigOutput(bool $configOutput)
+    {
+        $this->configOutput = $this->mapBoolean($configOutput);
+    }
+
+    /**
+     * @param array $configurationFiles The configuration files
+     *
+     * @return void
+     */
+    public function setConfigurationFiles(array $configurationFiles)
+    {
+        $this->configurationFiles = $configurationFiles;
+    }
+
+    /**
+     * @return array
+     */
+    public function getConfigurationFiles()
+    {
+        return $this->configurationFiles;
+    }
+
+    /**
      * Get the api Data from Config
      *
      * @return array
