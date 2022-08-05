@@ -98,14 +98,7 @@ class ExtendedJsonParser extends JsonParser
      */
     public function getConfigurationFiles(array $directories): array
     {
-        $configurationFiles = [];
-        //iterate over the found files path
-        foreach ($directories as $directory) {
-            $configurationFiles[] = array_map(static function ($directoryFile) {
-                return $directoryFile->getPathname();
-            }, $this->listContents($directory, 'json'));
-        }
-        return $configurationFiles;
+        return parent::getConfigurationFiles($directories);
     }
 
     /**
