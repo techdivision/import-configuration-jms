@@ -510,7 +510,90 @@ class Configuration implements
      * @Accessor(setter="setBlackListings", getter="getBlackListings")
      */
     protected $blackListings = array();
-    
+
+    /**
+     * The array with the api config
+     *
+     * @var array
+     * @SerializedName("api")
+     * @Type("array<string, string>>")
+     * @Accessor(setter="setApiData", getter="getApiData")
+     */
+    protected $apiData = array();
+
+    /**
+     * The flag to signal that the configuration paths has been showing in the log
+     *
+     * @var boolean
+     * @Type("boolean")
+     * @SerializedName("config-output")
+     * @Accessor(setter="setConfigOutput", getter="isConfigOutput")
+     */
+    protected $configOutput;
+
+    /**
+     * @Type("boolean")
+     */
+    protected $configurationFiles = array();
+
+    /**
+     * @return bool
+     */
+    public function isConfigOutput()
+    {
+        return $this->configOutput;
+    }
+
+    /**
+     * @param bool $configOutput the configuration files
+     *
+     * @return void
+     */
+    public function setConfigOutput(bool $configOutput)
+    {
+        $this->configOutput = $this->mapBoolean($configOutput);
+    }
+
+    /**
+     * @param array $configurationFiles The configuration files
+     *
+     * @return void
+     */
+    public function setConfigurationFiles(array $configurationFiles)
+    {
+        $this->configurationFiles = $configurationFiles;
+    }
+
+    /**
+     * @return array
+     */
+    public function getConfigurationFiles()
+    {
+        return $this->configurationFiles;
+    }
+
+    /**
+     * Get the api Data from Config
+     *
+     * @return array
+     */
+    public function getApiData()
+    {
+        return $this->apiData;
+    }
+
+    /**
+     * Set the api Data from Config
+     *
+     * @param array $apiData apidata
+     *
+     * @return void
+     */
+    public function setApiData($apiData)
+    {
+        $this->apiData = $apiData;
+    }
+
     /**
      * Lifecycle callback that will be invoked after deserialization.
      *

@@ -36,4 +36,11 @@ interface ConfigurationParserInterface
      * @return string The parsed configuration as string
      */
     public function parse(string $installationDir, string $defaultConfigurationDir, array $directories) : string;
+
+    /**
+     * @param array $directories The etc directories
+     *
+     * @return array
+     */
+    public function getConfigurationFiles(array $directories) : array;
 }

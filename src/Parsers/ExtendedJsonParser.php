@@ -90,6 +90,18 @@ class ExtendedJsonParser extends JsonParser
     }
 
     /**
+     * iterate over the found configurations files path
+     *
+     * @param array $directories The etc directories
+     *
+     * @return array
+     */
+    public function getConfigurationFiles(array $directories): array
+    {
+        return parent::getConfigurationFiles($directories);
+    }
+
+    /**
      * Process the configuration files found in the extension libary directories
      * and merge/replace its content in the also passed main configuration file.
      *

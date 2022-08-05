@@ -66,6 +66,9 @@ class JsonParser implements ConfigurationParserInterface
      */
     protected $arrayUtil;
 
+    /** @var array  */
+    private $configFiles = [];
+
     /**
      * Initializes the parser with the array utility instance.
      *
@@ -121,6 +124,7 @@ class JsonParser implements ConfigurationParserInterface
 
         // load the content of each found configuration file and merge it
         foreach ($filenames as $filename) {
+            $this->configFiles[] = $filename;
             if (is_file($filename) && $content = json_decode(file_get_contents($filename), true)) {
                 $main = $this->replace($main, $content);
             } else {
@@ -233,5 +237,17 @@ class JsonParser implements ConfigurationParserInterface
 
         // return the array with the files
         return $files;
+    }
+
+    /**
+     * iterate over the found configurations files path
+     *
+     * @param array $directories The etc directories
+     *
+     * @return array
+     */
+    public function getConfigurationFiles(array $directories): array
+    {
+        return $this->configFiles;
     }
 }
