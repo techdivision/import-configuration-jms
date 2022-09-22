@@ -7,7 +7,7 @@
         "doctrine/collections": "^1.6",
         "jms/serializer": "^1.0 | ^2.0 | ^3.0",
         "jean85/pretty-package-versions": "~1.6",
-        "symfony/expression-language": "4.*",
+        "symfony/expression-language": "4.*|^5.0|^6.0",
         "techdivision/import": "^17.0.0",
         "techdivision/import-dbal": "^1.0.0"
     },

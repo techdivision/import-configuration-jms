@@ -1,3 +1,11 @@
+# Version 17.2.1
+
+## Bugfixes
+* update dependency to symfony/expression-language with ^5.0 and ^6.0 version
+
+## Features
+* none
+
 # Version 17.2.0
 
 ## Bugfixes
