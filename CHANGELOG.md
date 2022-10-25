@@ -1,3 +1,12 @@
+# Version 17.3.0
+
+## Bugfixes
+* Remove default definition from `CsvTrait` to set from configuration.json. 
+* see techdivison/import/CHANGELOG.md for more information
+
+## Features
+* none
+
 # Version 17.2.1
 
 ## Bugfixes

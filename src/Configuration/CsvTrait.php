@@ -34,24 +34,27 @@ trait CsvTrait
      *
      * @var string
      * @Type("string")
+     * @SerializedName("delimiter")
      */
-    protected $delimiter = ',';
+    protected $delimiter;
 
     /**
      * The subject's enclosure character for CSV files.
      *
      * @var string
      * @Type("string")
+     * @SerializedName("enclosure")
      */
-    protected $enclosure = '"';
+    protected $enclosure;
 
     /**
      * The subject's escape character for CSV files.
      *
      * @var string
      * @Type("string")
+     * @SerializedName("escape")
      */
-    protected $escape = '\\';
+    protected $escape;
 
     /**
      * The subject's source charset for the CSV file.
@@ -81,7 +84,7 @@ trait CsvTrait
     protected $fileMode;
 
     /**
-     * Return's the delimiter character to use, default value is comma (,).
+     * Return's the delimiter character to use, default value is comma (,) from configuration.json
      *
      * @return string The delimiter character
      */
@@ -91,7 +94,7 @@ trait CsvTrait
     }
 
     /**
-     * The enclosure character to use, default value is double quotation (").
+     * The enclosure character to use, default value is double quotation (") from configuration.json
      *
      * @return string The enclosure character
      */
@@ -101,7 +104,7 @@ trait CsvTrait
     }
 
     /**
-     * The escape character to use, default value is backslash (\).
+     * The escape character to use, default value is Unicode NULL (\u0000) from configuration.json
      *
      * @return string The escape character
      */
@@ -138,5 +141,70 @@ trait CsvTrait
     public function getFileMode()
     {
         return $this->fileMode;
+    }
+
+    /**
+     * Set the delimiter character to use
+     *
+     * @param string $delimiter Delimiter one character
+     * @return void
+     */
+    public function setDelimiter($delimiter)
+    {
+        $this->delimiter = $delimiter;
+    }
+
+    /**
+     * Set the enclosure character to use
+     *
+     * @param string $enclosure Encloser one character
+     * @return void
+     */
+    public function setEnclosure($enclosure)
+    {
+        $this->enclosure = $enclosure;
+    }
+
+    /**
+     * Set the escape character to use
+     *
+     * @param string $escape Escaper one character
+     * @return void
+     */
+    public function setEscape($escape)
+    {
+        $this->escape = $escape;
+    }
+
+    /**
+     * Set the file encoding of the CSV source file
+     *
+     * @param string $fromCharset Charset like UTF-8
+     * @return void
+     */
+    public function setFromCharset($fromCharset)
+    {
+        $this->fromCharset = $fromCharset;
+    }
+
+    /**
+     * Set the file encoding of the CSV targetfile
+     *
+     * @param string $toCharset Charset like UTF-8
+     * @return void
+     */
+    public function setToCharset($toCharset)
+    {
+        $this->toCharset = $toCharset;
+    }
+
+    /**
+     * Set the file mode of the CSV target file.
+     * @param string $fileMode Filemode like write ("w") or append ("a"), default is write.
+     * @return void
+     */
+    public function setFileMode($fileMode)
+    {
+        $this->fileMode = $fileMode;
     }
 }
