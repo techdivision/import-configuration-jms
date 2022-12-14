@@ -537,6 +537,16 @@ class Configuration implements
     protected $configurationFiles = array();
 
     /**
+     * The array with the ignore attribute value
+     *
+     * @var array
+     * @SerializedName("ignore-attribute-value-on-update")
+     * @Type("array<string, array>")
+     * @Accessor(setter="setIgnoreAttributeValue", getter="getIgnoreAttributeValue")
+     */
+    protected $ignoreAttributeValueOnUpdate;
+
+    /**
      * @return bool
      */
     public function isConfigOutput()
@@ -1756,5 +1766,27 @@ class Configuration implements
     public function getBlackListings()
     {
         return $this->blackListings;
+    }
+
+    /**
+     * Get the ignored attribute value from Config
+     *
+     * @return array
+     */
+    public function getIgnoreAttributeValue()
+    {
+        return $this->ignoreAttributeValueOnUpdate;
+    }
+
+    /**
+     * Set the ignored attribute value from Config
+     *
+     * @param array $apiData apidata
+     *
+     * @return void
+     */
+    public function setIgnoreAttributeValue($ignoreAttributeValueOnUpdate)
+    {
+        $this->ignoreAttributeValueOnUpdate = $ignoreAttributeValueOnUpdate;
     }
 }
