@@ -1781,7 +1781,7 @@ class Configuration implements
     /**
      * Set the ignored attribute value from Config
      *
-     * @param array $apiData apidata
+     * @param array $ignoreAttributeValueOnUpdate ignoreAttributeValueOnUpdate
      *
      * @return void
      */
