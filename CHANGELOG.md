@@ -1,3 +1,13 @@
+# Version 17.3.1
+
+## Bugfixes
+
+* none
+
+## Features
+* 
+* Define `ignore-attribute-value-on-update` configuration
+
 # Version 17.3.0
 
 ## Bugfixes
