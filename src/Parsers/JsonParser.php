@@ -155,7 +155,7 @@ class JsonParser implements ConfigurationParserInterface
                     // extract the relative path to the additional vendor directory
                     $vendorDir = $additionalVendorDir[JsonParser::VENDOR_DIR];
                     // extract the flag if the additional vendor directory is relative to the installation directory
-                    $isRelative = isset($additionalVendorDir[JsonParser::RELATIVE]) ?? true;
+                    $isRelative = $additionalVendorDir[JsonParser::RELATIVE] ?? true;
                     // query whether or not libraries have been configured
                     if (isset($additionalVendorDir[JsonParser::LIBRARIES]) && is_array($additionalVendorDir[JsonParser::LIBRARIES])) {
                         // process the configuration found in the library directories
