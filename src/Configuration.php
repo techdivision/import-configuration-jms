@@ -194,6 +194,16 @@ class Configuration implements
     protected $installationDir;
 
     /**
+     * The Magento configuration directory.
+     *
+     * @var string
+     * @Type("string")
+     * @SerializedName("config-dir")
+     * @Accessor(setter="setEtcDir", getter="getEtcDir")
+     */
+    protected $etcDir;
+
+    /**
      * The source directory that has to be watched for new files.
      *
      * @var string
@@ -743,6 +753,18 @@ class Configuration implements
     }
 
     /**
+     * Set's the Magento configuration directory.
+     *
+     * @param string $etcDir The Magento configuration directory
+     *
+     * @return void
+     */
+    public function setEtcDir($etcDir)
+    {
+        $this->etcDir = $etcDir;
+    }
+
+    /**
      * Return's the Magento installation directory.
      *
      * @return string The Magento installation directory
@@ -750,6 +772,16 @@ class Configuration implements
     public function getInstallationDir()
     {
         return $this->installationDir;
+    }
+
+    /**
+     * Return's the Magento configuration directory.
+     *
+     * @return string The Magento configuration directory
+     */
+    public function getEtcDir()
+    {
+        return $this->etcDir;
     }
 
     /**
@@ -1745,7 +1777,7 @@ class Configuration implements
     {
         $this->logFile = $logFile;
     }
-    
+
     /**
      * Set's the array with the black List.
      *
