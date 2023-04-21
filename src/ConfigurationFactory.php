@@ -102,6 +102,15 @@ class ConfigurationFactory implements ConfigurationFactoryInterface
             );
         }
 
+        // try to load the doctrine annotations
+        $versionAnnotations = PrettyVersions::getVersion('doctrine/annotations');
+
+        // query whether or not doctrine annotations 2 are used
+        if (version_compare($versionAnnotations->getPrettyVersion(), '2.0.0', '>=')) {
+            // doctrine/annotations 2 is used, so wir don't need to register the autoloader
+            return;
+        }
+
         // try to load the JMS serializer
         $version = PrettyVersions::getVersion('jms/serializer');
 

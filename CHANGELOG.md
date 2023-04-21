@@ -1,3 +1,13 @@
+# Version 17.4.1
+
+## Bugfixes
+
+* Fix doctrine annotations 2 for PHP >= 8.0
+
+## Features
+
+* none
+
 # Version 17.4.0
 
 ## Bugfixes
