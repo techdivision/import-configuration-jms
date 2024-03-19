@@ -5,6 +5,7 @@
     "require": {
         "php": ">=7.3.0",
         "doctrine/collections": "^1.6",
+        "doctrine/annotations": "^1.14 | ^2.0",
         "jms/serializer": "^1.0 | ^2.0 | ^3.0",
         "jean85/pretty-package-versions": "~1.6",
         "symfony/expression-language": "4.*|^5.0|^6.0",
