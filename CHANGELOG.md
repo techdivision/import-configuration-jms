@@ -1,3 +1,13 @@
+# Version 17.4.2
+
+## Bugfixes
+
+* Fix jms serializer dependency to doctrine/annotations (https://github.com/schmittjoh/serializer/issues/1537)
+
+## Features
+
+* none
+ 
 # Version 17.4.1
 
 ## Bugfixes
