@@ -92,13 +92,13 @@ class Plugin implements PluginConfigurationInterface, ListenerAwareConfiguration
     protected $subjects;
 
     /**
-     * The swift mailer configuration to use.
+     * The mailer configuration to use.
      *
-     * @var \TechDivision\Import\Configuration\Jms\Configuration\SwiftMailer
-     * @Type("TechDivision\Import\Configuration\Jms\Configuration\SwiftMailer")
-     * @SerializedName("swift-mailer")
+     * @var Mailer
+     * @Type("TechDivision\Import\Configuration\Jms\Configuration\Mailer")
+     * @SerializedName("mailer")
      */
-    protected $swiftMailer;
+    protected Mailer $mailer;
 
     /**
      * The import adapter configuration instance.
@@ -210,13 +210,13 @@ class Plugin implements PluginConfigurationInterface, ListenerAwareConfiguration
     }
 
     /**
-     * Return's the swift mailer configuration to use.
+     * Return's the mailer configuration to use.
      *
-     * @return \TechDivision\Import\Configuration\Jms\Configuration\SwiftMailer The swift mailer configuration to use
+     * @return Mailer The mailer configuration to use
      */
-    public function getSwiftMailer()
+    public function getMailer()
     {
-        return $this->swiftMailer;
+        return $this->mailer;
     }
 
     /**
