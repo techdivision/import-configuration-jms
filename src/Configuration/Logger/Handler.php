@@ -16,6 +16,7 @@ namespace TechDivision\Import\Configuration\Jms\Configuration\Logger;
 
 use JMS\Serializer\Annotation\Type;
 use JMS\Serializer\Annotation\SerializedName;
+use TechDivision\Import\Configuration\Jms\Configuration\Mailer;
 use TechDivision\Import\Configuration\Jms\Configuration\ParamsTrait;
 use TechDivision\Import\Configuration\Logger\HandlerConfigurationInterface;
 
@@ -55,13 +56,13 @@ class Handler implements HandlerConfigurationInterface
     protected $formatter;
 
     /**
-     * The swift mailer logger configuration to use.
+     * The mailer logger configuration to use.
      *
-     * @var \TechDivision\Import\Configuration\Jms\Configuration\SwiftMailer
-     * @Type("TechDivision\Import\Configuration\Jms\Configuration\SwiftMailer")
-     * @SerializedName("swift-mailer")
+     * @var Mailer
+     * @Type("TechDivision\Import\Configuration\Jms\Configuration\Mailer")
+     * @SerializedName("mailer")
      */
-    protected $swiftMailer;
+    protected Mailer $mailer;
 
     /**
      * Return's the handler's DI ID to use.
@@ -84,12 +85,12 @@ class Handler implements HandlerConfigurationInterface
     }
 
     /**
-     * Return's the swift mailer configuration to use.
+     * Return's the mailer configuration to use.
      *
-     * @return \TechDivision\Import\Configuration\Jms\Configuration\SwiftMailer The swift mailer configuration to use
+     * @return Mailer The mailer configuration to use
      */
-    public function getSwiftMailer()
+    public function getMailer()
     {
-        return $this->swiftMailer;
+        return $this->mailer;
     }
 }

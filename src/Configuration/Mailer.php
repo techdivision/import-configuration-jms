@@ -1,7 +1,7 @@
 <?php
 
 /**
- * TechDivision\Import\Configuration\Jms\Configuration\SwiftMailer
+ * TechDivision\Import\Configuration\Jms\Configuration\Mailer
  *
  * PHP version 7
  *
@@ -15,10 +15,11 @@
 namespace TechDivision\Import\Configuration\Jms\Configuration;
 
 use JMS\Serializer\Annotation\Type;
-use TechDivision\Import\Configuration\SwiftMailerConfigurationInterface;
+use TechDivision\Import\Configuration\Jms\Configuration\Mailer\Transport;
+use TechDivision\Import\Configuration\MailerConfigurationInterface;
 
 /**
- * The swift mailer configuration.
+ * The mailer configuration.
  *
  * @author    Tim Wagner <t.wagner@techdivision.com>
  * @copyright 2016 TechDivision GmbH <info@techdivision.com>
@@ -26,7 +27,7 @@ use TechDivision\Import\Configuration\SwiftMailerConfigurationInterface;
  * @link      https://github.com/techdivision/import-configuration-jms
  * @link      http://www.techdivision.com
  */
-class SwiftMailer implements SwiftMailerConfigurationInterface
+class Mailer implements MailerConfigurationInterface
 {
 
     /**
@@ -37,23 +38,23 @@ class SwiftMailer implements SwiftMailerConfigurationInterface
     use ParamsTrait;
 
     /**
-     * The DI ID used to create the swift mailer instance.
+     * The DI ID used to create the mailer instance.
      *
      * @var string
      * @Type("string")
      */
-    protected $id;
+    protected string $id;
 
     /**
-     * The swift mailer transport configuration to use.
+     * The mailer transport configuration to use.
      *
-     * @var \TechDivision\Import\Configuration\Jms\Configuration\SwiftMailer\Transport
-     * @Type("TechDivision\Import\Configuration\Jms\Configuration\SwiftMailer\Transport")
+     * @var Transport
+     * @Type("TechDivision\Import\Configuration\Jms\Configuration\Mailer\Transport")
      */
-    protected $transport;
+    protected Transport $transport;
 
     /**
-     * Return's the DI ID used to create the swift mailer instance.
+     * Return's the DI ID used to create the mailer instance.
      *
      * @return string The DI ID
      */
@@ -63,9 +64,9 @@ class SwiftMailer implements SwiftMailerConfigurationInterface
     }
 
     /**
-     * Return's the swift mailer transport configuration to use.
+     * Return's the mailer transport configuration to use.
      *
-     * @return \TechDivision\Import\Configuration\Jms\Configuration\SwiftMailer\Transport The transport configuration to use
+     * @return Transport The transport configuration to use
      */
     public function getTransport()
     {
