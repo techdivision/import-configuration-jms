@@ -3,7 +3,7 @@
     "description": "Library providing a JMS based configuration implementation for Pacemaker",
     "license": "MIT",
     "require": {
-        "php": "^8.1",
+        "php": "^8.3",
         "doctrine/collections": "^2.2.2",
         "doctrine/annotations": "^1.14.0|^2.0.1",
         "jms/serializer": "^3.30",
