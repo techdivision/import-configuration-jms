@@ -9,8 +9,8 @@
         "jms/serializer": "^3.30",
         "jean85/pretty-package-versions": "^2.0.6",
         "symfony/expression-language": "~6.4.8",
-        "techdivision/import": "^18.1",
-        "techdivision/import-dbal": "^2.0"
+        "techdivision/import": "^18.2",
+        "techdivision/import-dbal": "^2.1"
     },
     "require-dev": {
         "doctrine/dbal": "^4.0.4",
