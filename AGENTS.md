@@ -104,6 +104,58 @@ $eventManager->addListener('configuration.loaded', new CustomListener());
 - Beachte Expression Language Syntax
 - Erwäge Konfiguration-Validierung
 
+## Häufige Use Cases
+
+### XML-Konfiguration-Beispiel
+```xml
+<configuration>
+  <operations>
+    <operation name="product">
+      <plugins>
+        <plugin name="validator" class="\Validator" />
+        <plugin name="price-converter" class="\PriceConverter" />
+      </plugins>
+    </operation>
+  </operations>
+</configuration>
+```
+
+### Expression Language Beispiele
+```php
+// In Konfiguration
+locale: "${env('SHOP_LOCALE', 'en_US')}"
+batch_size: "${env('BATCH_SIZE', 1000)}"
+```
+
+## Performance-Überlegungen
+
+- **Parse-Time**: XML-Parsing: ~50-100ms für Standard Config, ~200-500ms für große (>1MB)
+- **JMS-Overhead**: JMS-Serialisierung ist ~5-10% langsamer als native PHP Arrays
+- **Caching**: Config wird nach Parse gecacht - nur einmalige Parse pro Process
+- **Expression-Language**: EL-Evaluation kostet ~1-2ms pro Expression
+- **Optimal für**: < 50 Operations, < 200 Plugins in einer Config
+
+## Verwandte Module
+
+- **import-configuration**: Definiert Interfaces die dieses Modul implementiert
+- **import-cli**: Nutzt diese JMS-Implementation für CLI
+- **import**: Core Framework nutzt Konfiguration
+- **import-configuration-jms** ← **diese Datei** (JMS Implementation!)
+
+## Troubleshooting & FAQ
+
+**Q: XML-Parsing schlägt fehl**
+- A: XML-Schema prüfen! JMS nutzt Doctrine-Annotations. DTD/XSD nicht immer nötig aber hilfreich.
+
+**Q: Expression Language funktioniert nicht**
+- A: Nicht alle PHP-Funktionen verfügbar! Nur standardisierte EL-Funktionen (strlen, substr, etc).
+
+**Q: Config-Parser sehr langsam**
+- A: Große Configs (>10MB) können langsam sein. Config splitten oder Caching prüfen.
+
+**Q: "Syntax error in expression" mit Umgebungsvariablen**
+- A: EL-Syntax: `${env('NAME')}` oder `${env('NAME', 'default')}`. Quote-Escaping beachten.
+
 ## Bekannte Einschränkungen
 
 - **JMS-Only**: Nur JMS-Serialisierung unterstützt
