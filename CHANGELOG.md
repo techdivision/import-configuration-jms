@@ -1,3 +1,11 @@
+# Version 18.3.0
+
+## Bugfixes
+
+### JsonParser no longer aborts on unreadable/foreign *.json files
+
+* `JsonParser` now skips unreadable/invalid `*.json` files instead of aborting, and no longer misflags empty-but-valid JSON as an error
+
 # Version 18.2.0
 
 ## Features

@@ -8,6 +8,7 @@
         "doctrine/annotations": "^1.14.0|^2.0.1",
         "jms/serializer": "^3.30",
         "jean85/pretty-package-versions": "^2.0.6",
+        "psr/log": "^1.0 || ^2.0 || ^3.0",
         "symfony/expression-language": "~6.4.8",
         "techdivision/import": "^18.2",
         "techdivision/import-dbal": "^2.1"
