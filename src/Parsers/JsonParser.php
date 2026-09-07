@@ -14,10 +14,11 @@
 
 namespace TechDivision\Import\Configuration\Jms\Parsers;
 
+use Psr\Log\LoggerInterface;
+use TechDivision\Import\Configuration\Jms\ConfigurationParserInterface;
 use TechDivision\Import\Configuration\Jms\Iterators\DirnameFilter;
 use TechDivision\Import\Configuration\Jms\Iterators\FilenameFilter;
 use TechDivision\Import\Configuration\Jms\Utils\ArrayUtilInterface;
-use TechDivision\Import\Configuration\Jms\ConfigurationParserInterface;
 
 /**
  * The JSON configuration parser implementation.
@@ -70,13 +71,24 @@ class JsonParser implements ConfigurationParserInterface
     private $configFiles = [];
 
     /**
+     * Optional logger used to report configuration files that couldn't be loaded, instead of aborting the whole
+     * configuration merge. Falls back to error_log() when not injected, so existing call sites that instantiate this
+     * class directly (e.g. `new JsonParser($arrayUtil)`) keep working unchanged.
+     *
+     * @var \Psr\Log\LoggerInterface|null
+     */
+    private $logger;
+
+    /**
      * Initializes the parser with the array utility instance.
      *
      * @param \TechDivision\Import\Configuration\Jms\Utils\ArrayUtilInterface $arrayUtil The utility instance
+     * @param \Psr\Log\LoggerInterface|null                                   $logger    Optional logger for skipped/unreadable files
      */
-    public function __construct(ArrayUtilInterface $arrayUtil)
+    public function __construct(ArrayUtilInterface $arrayUtil, ?LoggerInterface $logger = null)
     {
         $this->arrayUtil = $arrayUtil;
+        $this->logger = $logger;
     }
 
     /**
@@ -114,7 +126,6 @@ class JsonParser implements ConfigurationParserInterface
      * @param string $directory The directory to be parsed for addtional configuration files
      *
      * @return void
-     * @throws \Exception Is thrown if the configuration can not be loaded from the configuration files
      */
     protected function process(array &$main, string $directory) : void
     {
@@ -125,11 +136,45 @@ class JsonParser implements ConfigurationParserInterface
         // load the content of each found configuration file and merge it
         foreach ($filenames as $filename) {
             $this->configFiles[] = $filename;
-            if (is_file($filename) && $content = json_decode(file_get_contents($filename), true)) {
-                $main = $this->replace($main, $content);
-            } else {
-                throw new \Exception(sprintf('Can\'t load content of file %s', $filename));
+
+            $rawContent = is_file($filename) ? file_get_contents($filename) : false;
+            $content = $rawContent === false ? null : json_decode($rawContent, true);
+
+            // Skip (instead of aborting the whole configuration merge) any file that can't be read or doesn't contain
+            // valid JSON - directories scanned here (e.g. a "custom configuration public dir") can legitimately be
+            // shared with other tools that drop unrelated *.json files there; a single foreign/unreadable/mid-write
+            // file must not be able to break every other import.
+            //
+            // Also fixes a related latent bug where a validly-parsed but empty JSON file (e.g. "{}" or "[]") was
+            // previously misclassified as an error, because json_decode(...) === [] is falsy in PHP.
+            if ($rawContent === false || json_last_error() !== JSON_ERROR_NONE || !is_array($content)) {
+                $this->handleUnreadableFile($filename);
+                continue;
             }
+
+            $main = $this->replace($main, $content);
+        }
+    }
+
+    /**
+     * Reports a configuration file that couldn't be read or didn't contain valid JSON, without aborting the whole
+     * configuration merge
+     *
+     * @param string $filename The path of the file that couldn't be loaded
+     *
+     * @return void
+     */
+    protected function handleUnreadableFile(string $filename): void
+    {
+        // Prepare the message that describes the problem
+        $message = sprintf("Can't load content of file %s, skipping it", $filename);
+
+        // Log a warning if a logger has been injected, otherwise fall back to error_log()
+        if ($this->logger !== null) {
+            $this->logger->warning($message);
+        } else {
+            // phpcs:ignore Magento2.Functions.DiscouragedFunction
+            error_log($message);
         }
     }
 
